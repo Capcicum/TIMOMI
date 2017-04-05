@@ -1,0 +1,13 @@
+class Test1
+
+instance variables
+
+r1 : ReactorMonitor := new ReactorMonitor();
+
+operations
+
+public Run: () ==> ()
+Run() == 
+				r1.Run();
+
+end Test1
