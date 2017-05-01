@@ -1,0 +1,29 @@
+class Test1
+
+instance variables
+
+p1 : Pacemaker := new Pacemaker();
+h1 : Heart := new Heart(15, 10);
+
+operations
+
+public Run: () ==> Heart`Trace
+Run() == 
+				let 
+				  --result1 = p1.Periodic(trace1, <A>, 4),
+				  --result2 = p1.Periodic(trace1, <V>, 4),
+				  --result3 = p1.Periodic(trace1, <A>, 3),
+				 -- result4 = p1.Periodic(trace2, <A>, 4),
+				  --result5 = p1.Periodic(trace2, <V>, 3),
+				  result6 = p1.CreateVPaces(trace4, 2)
+				in 
+					return result6;
+
+values
+
+trace1 = [nil, <A>, nil, nil, <V>, <A>, nil, nil, <V>];
+trace2 = [<A>, nil, <V>, nil, <A>, <V>, <A>, nil, <V>];
+trace3 = [<A>, nil, nil, <V>, nil, nil, nil, <A>, nil, nil, nil, nil];
+trace4 = [<A>, nil, nil, nil, nil, nil, <A>, nil, nil, nil, nil];
+
+end Test1

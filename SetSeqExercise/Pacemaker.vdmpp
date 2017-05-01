@@ -1,0 +1,20 @@
+class Pacemaker 
+
+operations
+
+public CreateVPaces : Heart`Trace * nat ==> Heart`Trace
+CreateVPaces(t, betweenE) == 
+	return 
+	[if x > betweenE+1 
+	then if t(x - betweenE-1) = <A>
+	 then 
+		if t(x-1) = <V>
+		then nil
+		else <V>
+	 else nil
+	else nil
+	| x in set inds t]
+
+
+
+end Pacemaker 

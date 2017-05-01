@@ -1,0 +1,60 @@
+
+class Heart 
+
+types 
+
+public Trace = seq of [Event];
+public Event = <A> | <V>;
+
+instance variables
+
+public EventAPeriod : nat;
+public PeriodBetweenEvents : nat;
+
+operations 
+
+public Heart : nat * nat ==> Heart
+Heart(aPeriod, betweenPeriod) == 
+(
+	EventAPeriod := aPeriod;
+	PeriodBetweenEvents := betweenPeriod;
+);
+
+public CreateIdealHeartTrace : () ==> Trace
+CreateIdealHeartTrace() ==
+	return 
+	[if x mod EventAPeriod = 0
+	 then <A>
+	 elseif ((x - PeriodBetweenEvents) mod EventAPeriod = 0) and 
+	  (x >= PeriodBetweenEvents + EventAPeriod)
+	 then <V> 
+	 else nil
+	  | x in set {1, ..., 100}];
+	  
+public CreateFaultHeartTrace() tr : Trace
+post 	len tr = 100 and 
+			Periodic(tr, <A>, EventAPeriod) 
+			and not Periodic(tr, <V>, EventAPeriod);
+			
+pure public GetEventAPeriod : () ==> nat
+GetEventAPeriod() == 
+ return EventAPeriod;
+ 
+pure public GetPeriodBetweenEvents : () ==> nat
+GetPeriodBetweenEvents() ==
+ return PeriodBetweenEvents;
+
+functions 
+
+public Periodic: Trace * Event * nat1 -> bool
+Periodic(tr,e,p) ==
+ forall t in set inds tr & --All event in t
+ 	tr(t) = e =>  --If tr(t) is equal to e
+ 	 (t + p <= len tr => --then if t + p is less than or equal to the lenght of tr
+ 	  (tr(t + p) = e and --then tr(t + p) should equal e and 
+ 	   forall i in set {t+1, ..., t+p-1} & tr(i) <> e)) --forall element is the set between t+1 and t+p-1 should not equal e
+ 	and -- and 
+ 	 (t + p > len tr => -- if t+p is larger then the lenght of tr then
+ 	  forall i in set {t+1, ..., len tr} & tr(i) <> e);     -- forall element between t+1 to the lenght of tr should not be equal to e
+
+end Heart

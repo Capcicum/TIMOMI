@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.overture.ide.vdmpp.debug.launchConfigurationType">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/Logic_Exercise"/>
+<listEntry value="/SetSeqExercise"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>
@@ -21,7 +21,7 @@
 <stringAttribute key="vdm_launch_config_module" value="Test1()"/>
 <booleanAttribute key="vdm_launch_config_post_checks" value="true"/>
 <booleanAttribute key="vdm_launch_config_pre_checks" value="true"/>
-<stringAttribute key="vdm_launch_config_project" value="Logic_Exercise"/>
+<stringAttribute key="vdm_launch_config_project" value="SetSeqExercise"/>
 <stringAttribute key="vdm_launch_config_remote_control_class" value=""/>
 <booleanAttribute key="vdm_launch_config_remote_debug" value="false"/>
 <booleanAttribute key="vdm_launch_config_show_vm_settings" value="false"/>
