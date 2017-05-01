@@ -1,0 +1,70 @@
+class System
+
+instance variables
+
+private Purses: map Purse`CardId to Purse;
+inv forall x in set dom Purses & Purses(x).GetCardNo() = x; 
+private Log : seq of Transaction := [];
+private SystemAmount : nat;
+
+types
+public Transaction ::
+				debitId : Purse`CardId
+				creditId : Purse`CardId
+				amount : nat;
+
+operations
+
+public System: set of Purse ==> System
+System(PurseSet) == 
+ (Purses := {x.GetCardNo() |-> x | x in set PurseSet};
+ SystemAmount := TotalPurseSum(rng Purses);)
+pre forall p,q in set PurseSet & p <> q => p.GetCardNo() <> q.GetCardNo();
+
+public Transfer: Purse`CardId * Purse`CardId * nat ==> ()
+Transfer(fromId, toId, sum) == 
+	(Purses(fromId).DecreaseBal(sum);
+	Purses(toId).IncreaseBal(sum);)
+pre {fromId, toId} subset dom Purses and 
+		fromId <> toId and 
+		Purses(fromId).GetBalance() >= sum
+post SystemAmount = TotalPurseSum(rng Purses);
+		
+public TotalTransferred : () ==> nat
+TotalTransferred() ==
+	return TotalTransferSum(Log)
+
+functions
+
+private TotalPurseSum : set of Purse -> nat
+TotalPurseSum(s) == 
+if s = {}
+then 0 
+else 
+	let 
+		e in set s 
+	in 
+		e.GetBalance() + TotalPurseSum(s\{e})
+measure Card;
+
+private TotalTransferSum : seq of Transaction -> nat
+TotalTransferSum(trans) ==
+	if trans =[]
+	then 0
+	else 
+		let 
+			tx = hd trans
+		in
+			tx.amount + TotalTransferSum(tl trans)
+measure Len;
+
+Len: seq of Transaction -> nat
+Len(l) ==
+	len l;
+
+Card : set of Purse -> nat
+Card(c) ==
+	card c;
+		   
+
+end System
