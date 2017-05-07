@@ -1,0 +1,14 @@
+class Charity
+
+instance variables 
+
+account : real := 0
+
+operations 
+
+public Donate : real ==> ()
+Donate(pdon) ==
+	account := account + pdon
+pre pdon <= 0;
+
+end Charity

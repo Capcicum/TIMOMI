@@ -1,0 +1,25 @@
+class ValueHandler
+
+instance variables
+
+sum : real := 0;
+
+operations 
+
+pure public GetSum : () ==> real
+GetSum() ==
+	return sum;
+
+public SetSum : real ==> ()
+SetSum(ps) ==
+	sum := ps; 
+
+public ClearSum : () ==> ()
+ClearSum() ==
+	sum := 0;
+
+public AddToSum : real ==> ()
+AddToSum(pv) ==
+	sum := sum + pv;
+
+end ValueHandler 

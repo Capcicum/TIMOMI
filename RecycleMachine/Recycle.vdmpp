@@ -1,0 +1,26 @@
+class Recycle
+
+types
+
+public RecylceMark = [<A> | <B> | <C>];
+public Barcode  = bool;
+public Shape = <Disp> | <Can> | <GUHL> | <GOHL> | <PUL> | <POL>;
+public BoxType = bool;
+
+public RecycleItem ::
+	rm : RecylceMark
+	bc : Barcode
+	s : Shape;
+
+public RecycleBox :: 
+	bt : BoxType
+	ri : seq of RecycleItem
+inv rb == len rb.ri <= 30;
+
+public Recycle = RecycleItem | RecycleBox;
+
+public Receipt ::
+	id : nat
+	value : real;
+
+end Recycle 

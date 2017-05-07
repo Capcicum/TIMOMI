@@ -1,0 +1,66 @@
+class RecycleMachine 
+
+instance variables 
+
+storage : seq of Recycle`Recycle := [];
+storageCapacity : nat;
+vh : ValueHandler := new ValueHandler();
+rr : RecycleRules := new RecycleRules();
+charity : Charity := new Charity();
+
+operations
+
+public RecycleMachine : nat ==> RecycleMachine
+RecycleMachine(psc) ==
+	storageCapacity := psc;
+ 
+public HandleRecycle : Recycle`Recycle ==> ()
+HandleRecycle(pr) == 
+	if is_Recycle`RecycleItem(pr)
+	then HandleRecycleItem(pr)
+	else HandleRecycleBox(pr);
+
+private HandleRecycleItem : Recycle`RecycleItem ==> ()
+HandleRecycleItem(pri) ==
+		if rr.IsRecycleValid(pri)
+		then (vh.AddToSum(rr.GetPrice(pri));
+					storage := storage^[pri]);
+
+private HandleRecycleBox : Recycle`RecycleBox ==> ()
+HandleRecycleBox(prb) ==
+	if ScanBottles(prb)
+	then (vh.AddToSum(TotalRecycleSum(prb.ri));
+					storage := storage^[prb]);
+	
+private ScanBottles : Recycle`RecycleBox ==> bool
+ScanBottles(prb) ==
+	return forall i in set inds prb.ri & rr.IsRecycleValid(prb.ri(i));
+					
+public GetStorageLeft : () ==> nat
+GetStorageLeft() ==
+	return storageCapacity - len storage; 
+		
+public GetReceipt : () ==> Recycle`Receipt
+GetReceipt() == 
+	let 
+		sum = vh.GetSum()
+	in 
+		(vh.ClearSum();
+		return mk_Recycle`Receipt(1, sum));
+		
+public Donate : () ==> ()
+Donate() ==
+	(charity.Donate(vh.GetSum());
+	vh.ClearSum());
+	
+private TotalRecycleSum : seq of Recycle`RecycleItem ==> real
+TotalRecycleSum(pri) ==
+	if pri =[]
+	then return 0
+	else 
+		let 
+			riValue = hd pri
+		in
+			return rr.GetPrice(riValue) + TotalRecycleSum(tl pri);
+
+end RecycleMachine

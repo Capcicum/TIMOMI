@@ -1,0 +1,14 @@
+class test 
+
+instance variables
+
+rm : RecycleMachine := new RecycleMachine();
+
+operations 
+
+public Run : () ==> Recycle`Receipt
+Run() ==
+	(rm.HandleRecycle(mk_Recycle`RecycleItem(<B>, true, <Disp>));
+	return rm.GetReceipt());
+
+end test
