@@ -20,17 +20,19 @@ HandleRecycle(pr) ==
 	then HandleRecycleItem(pr)
 	else HandleRecycleBox(pr);
 
-private HandleRecycleItem : Recycle`RecycleItem ==> ()
+private HandleRecycleItem : Recycle`Recycle ==> ()
 HandleRecycleItem(pri) ==
 		if rr.IsRecycleValid(pri)
 		then (vh.AddToSum(rr.GetPrice(pri));
-					storage := storage^[pri]);
+					storage := storage^[pri])
+pre is_Recycle`RecycleItem(pri);
 
-private HandleRecycleBox : Recycle`RecycleBox ==> ()
+private HandleRecycleBox : Recycle`Recycle ==> ()
 HandleRecycleBox(prb) ==
 	if ScanBottles(prb)
-	then (vh.AddToSum(TotalRecycleSum(prb.ri));
-					storage := storage^[prb]);
+	then (vh.AddToSum(TotalRecycleSum(prb.ri, rr));
+				storage := storage^[prb])
+pre is_Recycle`RecycleBox(prb);
 	
 private ScanBottles : Recycle`RecycleBox ==> bool
 ScanBottles(prb) ==
@@ -53,14 +55,17 @@ Donate() ==
 	(charity.Donate(vh.GetSum());
 	vh.ClearSum());
 	
-private TotalRecycleSum : seq of Recycle`RecycleItem ==> real
-TotalRecycleSum(pri) ==
-	if pri =[]
-	then return 0
-	else 
-		let 
-			riValue = hd pri
-		in
-			return rr.GetPrice(riValue) + TotalRecycleSum(tl pri);
+functions	
+
+private TotalRecycleSum : seq of Recycle`RecycleItem * RecycleRules -> real
+TotalRecycleSum(pri, prr) ==
+	if pri = []
+	then 0
+	else prr.GetPrice(hd pri) + TotalRecycleSum(tl pri, prr)
+measure Len;
+
+Len : seq of Recycle`RecycleItem * RecycleRules -> nat
+Len(pri, -) ==
+	len pri;
 
 end RecycleMachine

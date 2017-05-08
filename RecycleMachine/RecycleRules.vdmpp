@@ -2,24 +2,20 @@ class RecycleRules
 
 instance variables
 
-ruleSet : map Recycle`RecycleItem to real := {|->};
+functions
 
-functions 
-
-operations
-
-public RecycleRules : () ==> RecycleRules
-RecycleRules() == 
-	ruleSet := Rules; 
-	 
-pure public IsRecycleValid : Recycle`RecycleItem ==> bool
+public IsRecycleValid : Recycle`RecycleItem -> bool
 IsRecycleValid(pri) ==
-	return pri in set dom ruleSet;
+	pri in set dom Rules;
 
-pure public GetPrice : Recycle`RecycleItem ==> real 
+public GetPrice : Recycle`RecycleItem -> real 
 GetPrice(pri) ==
-	return ruleSet(pri)
+	Rules(pri)
 pre IsRecycleValid(pri);
+
+public GetBoxPrice : () -> real
+GetBoxPrice() ==
+	BoxPrice;
 
 values
 
@@ -44,5 +40,7 @@ mk_Recycle`RecycleItem(<C>, false, <GOHL>) |-> 3,
 mk_Recycle`RecycleItem(<C>, false, <POL>) |-> 3,
 mk_Recycle`RecycleItem(nil, true, <Can>) |-> 0,
 mk_Recycle`RecycleItem(nil, false, <Can>) |-> 0};
+
+BoxPrice = 12.5;
 	
 end RecycleRules
