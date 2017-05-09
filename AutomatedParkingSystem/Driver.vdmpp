@@ -1,0 +1,42 @@
+class Driver
+
+types
+
+--public creditCardInformation = GLOBAL`String;
+--public parkingCard = GLOBAL`String;
+--public PaymentMethod = creditCardInformation | parkingCard;
+
+
+instance variables
+	creditCardInformation : GLOBAL`String;
+inv len 
+	
+	parkingCard : GLOBAL`String; 
+
+operations
+
+public Driver : GLOBAL`String * GLOBAL`String ==> Driver
+Driver(pCardInfo, pParkCard) == (
+	creditCardInformation := pCardInfo;
+	parkingCard := pParkCard);
+	
+public InsertPaymentCard : ElevationGarage ==> ()
+InsertPaymentCard(pElevGar) ==
+	pElevGar.HandlePaymentCard();
+		
+	
+	
+--public ParkCar : ElevationGarage ==> ()
+--ParkCar() ==
+
+
+--public RetriveCar : ElevationGarage () ==> ()
+--RetriveCar() ==
+
+--public InsertCreditCard : ElevationGarage ==> ()
+--InsertCreditCard() ==
+
+--public InsertCreditCard : InformationStation ==> ()
+--InsertCreditCard() ==
+
+end Driver

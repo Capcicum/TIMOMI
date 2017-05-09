@@ -1,0 +1,42 @@
+class ParkingLevel
+
+types
+public LicensePlate = seq of char;
+
+instance variables
+	parkingSpots : set of Car;
+inv forall x,y in set parkingSpots &
+	x <> y => x.getLicensePlate() <> y.getLicensePlate()
+	
+	--parkingSpots : map licensePlate to Car := {|->}; HUSK Eksempel i slides collection!
+
+operations
+
+-- Set implementation: --
+public addCar : Car ==> ()
+addCar(pCar) ==
+	parkingSpots := parkingSpots union {pCar}
+pre pCar.getLicensePlate() not in set {i.getLicensePlate() | i in set parkingSpots};
+
+public getCar : LicensePlate ==> Car
+getCar(pLP) ==
+	let Car in set parkingSpots be st Car.getLicensePlate() = pLP
+	in
+		return Car
+pre CarExists(pLP,parkingSpots);
+
+public removeCar : LicensePlate ==> ()
+removeCar(pLP) ==
+	parkingSpots := parkingSpots \ {getCar(pLP)}
+pre CarExists(pLP, parkingSpots)
+-- end of Set implementation --
+
+
+functions
+-- Set implementation: --
+CarExists: LicensePlate * set of Car -> bool
+CarExists(pLP,pPSpots) ==
+	exists Car in set pPSpots & Car.getLicensePlate() = pLP
+-- end of Set implementation --
+
+end ParkingLevel

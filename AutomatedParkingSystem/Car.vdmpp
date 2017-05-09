@@ -1,0 +1,25 @@
+class Car
+
+types
+
+instance variables
+	licensePlate : GLOBAL`String; 
+	parkingPermit: bool;
+
+operations 
+
+public Car : GLOBAL`String * bool ==> Car
+Car(pLicPlate, pParkPerm) == (
+	licensePlate := pLicPlate;
+	parkingPermit := pParkPerm);
+	
+pure public getLicensePlate : () ==> GLOBAL`String
+getLicensePlate() ==
+  return licensePlate;
+  
+pure public getParkingPermit : () ==> bool
+getParkingPermit() ==
+	return parkingPermit;
+
+end Car
+

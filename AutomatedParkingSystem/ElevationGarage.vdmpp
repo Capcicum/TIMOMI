@@ -1,0 +1,21 @@
+class ElevationGarage
+
+instance variables
+	EntranceGateClosed : bool := true;
+	ExitGateClosed : bool := true;
+	paymentStation : PaymentStation;
+	camera : Camera;
+
+operations
+
+public ElevationGarage: PaymentStation * Camera ==> ElevationGarage
+ElevationGarage(pPayStat, pCam) == (
+	paymentStation := pPayStat;
+	camera := pCam);
+	
+public HandlePaymentCard: () ==> () -- TODO
+HandlePaymentCard() ==
+	IO`println("Handling Payment Card");
+
+
+end ElevationGarage
