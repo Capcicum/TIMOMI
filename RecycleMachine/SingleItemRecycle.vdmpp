@@ -1,0 +1,12 @@
+class SingleItemRecycle
+
+operations
+
+private HandleRecycleItem : Recycle`RecycleItem ==> [Recycle`RecycleItem]
+HandleRecycleItem(pri) ==
+		if RecycleMachine`rr.IsRecycleValid(pri)
+		then (RecycleMachine`vh.AddToSum(RecycleMachine`rr.GetPrice(pri));
+					return nil)
+		else return pri
+
+end SingleItemRecycle
