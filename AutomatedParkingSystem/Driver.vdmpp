@@ -9,8 +9,6 @@ types
 
 instance variables
 	creditCardInformation : GLOBAL`String;
-inv len 
-	
 	parkingCard : GLOBAL`String; 
 
 operations
