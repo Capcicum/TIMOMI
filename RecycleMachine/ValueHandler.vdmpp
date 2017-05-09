@@ -3,6 +3,7 @@ class ValueHandler
 instance variables
 
 sum : real := 0;
+charity : real :=0;
 
 operations 
 
@@ -21,5 +22,15 @@ ClearSum() ==
 public AddToSum : real ==> ()
 AddToSum(pv) ==
 	sum := sum + pv;
+	
+public GetReceipt : () ==> Recycle`Receipt
+GetReceipt() == 
+		(ClearSum();
+		return mk_Recycle`Receipt(1, GetSum()));
+		
+public Donate : () ==> ()
+Donate() ==
+	(charity := GetSum();
+	ClearSum());
 
 end ValueHandler 
