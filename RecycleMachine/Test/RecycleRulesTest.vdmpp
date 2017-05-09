@@ -1,0 +1,48 @@
+class RecycleRulesTest is subclass of TestCase
+	
+values
+ 
+Rules = {mk_Recycle`RecycleItem(<A>, true, <Disp>),
+mk_Recycle`RecycleItem(<B>, true, <Disp>),
+mk_Recycle`RecycleItem(<C>, true, <Disp>),
+mk_Recycle`RecycleItem(<A>, true, <GUHL>),
+mk_Recycle`RecycleItem(<B>, true, <PUL>),
+mk_Recycle`RecycleItem(<C>, true, <GOHL>),
+mk_Recycle`RecycleItem(<C>, true, <POL>),
+mk_Recycle`RecycleItem(nil, true, <GUHL>),
+mk_Recycle`RecycleItem(nil, true, <PUL>),
+mk_Recycle`RecycleItem(nil, true, <GOHL>),
+mk_Recycle`RecycleItem(nil, true, <POL>),
+mk_Recycle`RecycleItem(nil, false, <GUHL>),
+mk_Recycle`RecycleItem(nil, false, <PUL>),
+mk_Recycle`RecycleItem(nil, false, <GOHL>),
+mk_Recycle`RecycleItem(nil, false, <POL>),
+mk_Recycle`RecycleItem(<A>, false, <GUHL>),
+mk_Recycle`RecycleItem(<B>, false, <PUL>),
+mk_Recycle`RecycleItem(<C>, false, <GOHL>),
+mk_Recycle`RecycleItem(<C>, false, <POL>),
+mk_Recycle`RecycleItem(nil, true, <Can>),
+mk_Recycle`RecycleItem(nil, false, <Can>),
+mk_Recycle`RecycleItem(<A>, true, nil),
+mk_Recycle`RecycleItem(<B>, true, nil),
+mk_Recycle`RecycleItem(<C>, true, nil)}
+
+operations 
+
+protected runTest : () ==> ()
+runTest() == 
+	(IsRecycleValidTest();	
+	GetBoxPriceTest());
+
+protected IsRecycleValidTest : () ==> ()
+IsRecycleValidTest() ==
+	(dcl rr : RecycleRules := new RecycleRules(); 
+	for all x in set Rules do assertTrue(rr.IsRecycleValid(x)));
+	
+protected GetBoxPriceTest : () ==> ()
+GetBoxPriceTest() == 
+	(dcl rr : RecycleRules := new RecycleRules();
+	assertTrue(rr.GetBoxPrice() = 12.5));
+	
+
+end RecycleRulesTest

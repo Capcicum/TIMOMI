@@ -39,7 +39,10 @@ mk_Recycle`RecycleItem(<B>, false, <PUL>) |-> 1.5,
 mk_Recycle`RecycleItem(<C>, false, <GOHL>) |-> 3,
 mk_Recycle`RecycleItem(<C>, false, <POL>) |-> 3,
 mk_Recycle`RecycleItem(nil, true, <Can>) |-> 0,
-mk_Recycle`RecycleItem(nil, false, <Can>) |-> 0};
+mk_Recycle`RecycleItem(nil, false, <Can>) |-> 0,
+mk_Recycle`RecycleItem(<A>, true, nil) |-> 1,
+mk_Recycle`RecycleItem(<B>, true, nil) |-> 1.5,
+mk_Recycle`RecycleItem(<C>, true, nil) |-> 3};
 
 BoxPrice = 12.5;
 	

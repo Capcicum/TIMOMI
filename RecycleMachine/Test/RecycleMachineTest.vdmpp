@@ -1,0 +1,15 @@
+class RecycleMachineTest
+
+operations 
+
+	public Execute : () ==> ()
+	Execute() ==
+		let ts : TestSuite = new TestSuite(),
+			result = new TestResult()
+		in
+			(ts.addTest(new RecycleRulesTest());
+			ts.run(result);
+			IO`println(result.toString()););
+		
+
+end RecycleMachineTest

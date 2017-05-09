@@ -4,7 +4,7 @@ types
 
 public RecylceMark = [<A> | <B> | <C>];
 public Barcode  = bool;
-public Shape = <Disp> | <Can> | <GUHL> | <GOHL> | <PUL> | <POL>;
+public Shape = [<Disp> | <Can> | <GUHL> | <GOHL> | <PUL> | <POL>];
 public BoxType = bool;
 
 public RecycleItem ::
