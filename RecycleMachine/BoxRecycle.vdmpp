@@ -11,7 +11,7 @@ HandleRecycleBox(prb) ==
 	
 functions
 
-private ScanBottles : Recycle`RecycleBox * RecycleRules -> bool
+private ScanBottles : Recycle`RecycleBox * RecycleRules -> bools
 ScanBottles(prb, prr) ==
 		forall i in set inds prb.ri & prr.IsRecycleValid(prb.ri(i)) and
 		forall j,k in set inds prb.ri & prb.ri(j).s = prb.ri(k).s;	

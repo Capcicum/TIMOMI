@@ -1,0 +1,56 @@
+class Storage 
+
+instance variables
+
+itemStorage : seq of Recycle`Recycle := [];
+boxStorage : seq of Recycle`Recycle := [];
+itemLimit : nat;
+boxLimit : nat;
+
+operations
+
+public Storage : nat * nat ==> Storage
+Storage(pil, pbl) ==
+	(itemLimit := pil;
+	boxLimit := pbl);
+	
+public Store : Recycle`Recycle ==> ()
+Store(prr) ==
+	if is_Recycle`RecycleItem(prr)
+	then itemStorage := itemStorage ^ [prr]
+	else boxStorage := boxStorage ^ [prr];
+
+public StorageAvailableItem : () ==> bool
+StorageAvailableItem() ==
+	return len itemStorage < itemLimit;
+	
+public StorageAvailableBox : () ==> bool 
+StorageAvailableBox() ==
+	return len boxStorage < boxLimit;
+
+public ClearStorage : () ==> ()
+ClearStorage() == 
+	(ClearItemStorage();
+	ClearBoxStorage());
+	
+public ClearItemStorage : () ==> ()
+ClearItemStorage() ==
+	RemoveItems(itemLimit);
+	
+public ClearBoxStorage : () ==> ()
+ClearBoxStorage() ==
+	RemoveBoxes(boxLimit);
+
+public RemoveItems : nat ==> ()
+RemoveItems(pcount) ==
+	if len itemStorage <= pcount
+	then	itemStorage := []
+	else	itemStorage := [itemStorage(x) | x in set inds itemStorage & x < len itemStorage - pcount];
+
+public RemoveBoxes : nat ==> ()
+RemoveBoxes(pcount) ==
+	if len boxStorage <= pcount
+	then	boxStorage := []
+	else	boxStorage := [boxStorage(x) | x in set inds boxStorage & x < len boxStorage - pcount];
+
+end Storage

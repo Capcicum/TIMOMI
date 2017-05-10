@@ -5,5 +5,8 @@ instance variables
 storage : seq of Recycle`Recycle := [];
 public static vh : ValueHandler := new ValueHandler();
 public static rr : RecycleRules := new RecycleRules();
+public static rmc : RecycleMachineController := new RecycleMachineController();
+public static sic : SingleItemRecycle := new SingleItemRecycle();
+public static sto : Storage := new Storage();
 
 end RecycleMachine

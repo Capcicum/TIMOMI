@@ -1,0 +1,21 @@
+class RecycleMachineController
+
+operations 
+
+public RecycleDetected : () ==> ()
+RecycleDetected() ==	
+	if not RecycleMachine`sic.isScanning
+	then RecycleMachine`sic.Scan()
+	else RecycleMachine`sic.Reject();
+	
+public ValidateItem : Recycle`Recycle ==> ()
+ValidateItem(prr) ==
+	if RecycleMachine`rr.IsRecycleValid(pri)
+	then 
+		(if RecycleMachine`sto.StorageAvailableItem()
+		then (RecycleMachine`vh.AddToSum(RecycleMachine`rr.GetPrice(pri));
+					RecycleMachine`sic.StoreRecycle())
+		else RecycleMachine`sic.Reject())
+	else RecycleMachine`sic.Reject();
+
+end RecycleMachineController
