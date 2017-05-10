@@ -1,19 +1,18 @@
-class Car
-
-types
-
+class Car is subclass of GLOBAL
+			   		         
 instance variables
-	licensePlate : GLOBAL`String; 
 	parkingPermit: bool;
+	licensePlate : LicensePlateInfo;
 
 operations 
 
-public Car : GLOBAL`String * bool ==> Car
-Car(pLicPlate, pParkPerm) == (
-	licensePlate := pLicPlate;
-	parkingPermit := pParkPerm);
-	
-pure public getLicensePlate : () ==> GLOBAL`String
+public Car : LicensePlateInfo * bool ==> Car
+Car(plp, ppp) == (
+	licensePlate := plp;
+	parkingPermit := ppp);
+
+
+pure public getLicensePlate : () ==> LicensePlateInfo
 getLicensePlate() ==
   return licensePlate;
   

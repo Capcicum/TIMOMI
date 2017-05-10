@@ -1,40 +1,47 @@
 class Driver
 
-types
-
---public creditCardInformation = GLOBAL`String;
---public parkingCard = GLOBAL`String;
---public PaymentMethod = creditCardInformation | parkingCard;
-
-
 instance variables
-	creditCardInformation : GLOBAL`String;
-	parkingCard : GLOBAL`String; 
-
+	parkingCard : bool;
+ 	creditCardInformation : GLOBAL`String;
+ 	car : Car;
+		 
 operations
 
-public Driver : GLOBAL`String * GLOBAL`String ==> Driver
-Driver(pCardInfo, pParkCard) == (
-	creditCardInformation := pCardInfo;
-	parkingCard := pParkCard);
+public Driver : bool * GLOBAL`String * Car ==> Driver
+Driver(pParkCard, pCredCard, pCar) == (
+	parkingCard := pParkCard;
+	creditCardInformation := pCredCard;
+	car := pCar);
+
 	
-public InsertPaymentCard : ElevationGarage ==> ()
-InsertPaymentCard(pElevGar) ==
-	pElevGar.HandlePaymentCard();
-		
+public findFreeParkingSpot : ElevationGarage ==> () -- TODO
+findFreeParkingSpot(peg) ==
+	is not yet specified;
+
+public insertPayment : ElevationGarage * TransactionSystem ==> () -- TODO
+insertPayment(peg, pts) ==
+	is not yet specified;
+	--if not parkingCard
+	--then 
 	
+public parkCar : ElevationGarage ==> () -- TODO
+parkCar(peg) ==
+	is not yet specified;
+
+public retriveCar : InformationStation ==> () -- TODO
+retriveCar(pis) ==
+	is not yet specified;
 	
---public ParkCar : ElevationGarage ==> ()
---ParkCar() ==
 
 
---public RetriveCar : ElevationGarage () ==> ()
---RetriveCar() ==
+pure public getCreditCardInformation : () ==> GLOBAL`String
+getCreditCardInformation() == 
+	return creditCardInformation;
 
---public InsertCreditCard : ElevationGarage ==> ()
---InsertCreditCard() ==
+pure public getParkingCard : () ==> bool
+getParkingCard() == 
+	return parkingCard;
 
---public InsertCreditCard : InformationStation ==> ()
---InsertCreditCard() ==
+
 
 end Driver

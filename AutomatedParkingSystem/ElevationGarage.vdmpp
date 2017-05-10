@@ -1,21 +1,20 @@
-class ElevationGarage
+class ElevationGarage is subclass of GLOBAL
 
 instance variables
-	EntranceGateClosed : bool := true;
-	ExitGateClosed : bool := true;
-	paymentStation : PaymentStation;
+	EntranceGate : GateState;
+	ExitGate : GateState;
 	camera : Camera;
 
 operations
 
-public ElevationGarage: PaymentStation * Camera ==> ElevationGarage
-ElevationGarage(pPayStat, pCam) == (
-	paymentStation := pPayStat;
+public ElevationGarage: Camera ==> ElevationGarage
+ElevationGarage(pCam) == (
+	EntranceGate := <Opend>;
+	ExitGate := <Closed>;
 	camera := pCam);
 	
-public HandlePaymentCard: () ==> () -- TODO
-HandlePaymentCard() ==
-	IO`println("Handling Payment Card");
+
+
 
 
 end ElevationGarage

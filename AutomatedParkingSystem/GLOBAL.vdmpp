@@ -1,17 +1,17 @@
 class GLOBAL
 types
--- TODO Define types here
+-- General types --
 
 public String = seq of char;
 
-values
--- TODO Define values here
-instance variables
--- TODO Define instance variables here
-operations
--- TODO Define operations here
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+-- Car  --
+public CountryIdentifier = [<Danish> | <European> | <Other>];
+public RegistrationLetters = String; 
+	
+public LicensePlateInfo :: ci  : CountryIdentifier
+				   		             rl  : RegistrationLetters;	
+				   		           
+-- Elevation Station -- 		
+public GateState = [<Opend> | <Closed>];
+		   		        
 end GLOBAL

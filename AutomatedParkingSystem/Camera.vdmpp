@@ -2,6 +2,8 @@ class Camera
 
 operations
 
-
+public validateLicensePlate : () ==> () -- TODO
+	validateLicensePlate() ==
+	is not yet specified
 
 end Camera
