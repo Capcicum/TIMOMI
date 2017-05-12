@@ -1,0 +1,35 @@
+class Conveyor 
+
+instance variables
+
+protected conveyor : seq of Recycle`Recycle := [];
+protected isScanning : bool := false
+
+operations 
+
+public InputRecycle : Recycle`Recycle ==> ()
+InputRecycle(prr) == 
+	(conveyor := conveyor ^ [prr];
+	RecycleMachine`rmc.RecycleDetected(self)
+	);
+	
+public Scan : () ==> ()
+Scan() ==
+	(isScanning := true;
+	-- step 10
+	isScanning := false);
+	
+public StoreRecycle : () ==> ()
+StoreRecycle () ==
+	RecycleMachine`sto.Store(hd conveyor);
+	
+public Reject : () ==> ()
+Reject() ==
+ conveyor := [];
+ 
+pure public GetIsScanning : () ==> bool
+GetIsScanning() ==
+	return isScanning;
+
+
+end Conveyor

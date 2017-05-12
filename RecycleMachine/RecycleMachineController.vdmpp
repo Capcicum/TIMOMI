@@ -1,21 +1,77 @@
 class RecycleMachineController
 
+instance variables
+
+sum : real := 0;
+charity : real :=0;
+
 operations 
 
-public RecycleDetected : () ==> ()
-RecycleDetected() ==	
-	if not RecycleMachine`sic.isScanning
-	then RecycleMachine`sic.Scan()
-	else RecycleMachine`sic.Reject();
+pure public GetSum : () ==> real
+GetSum() ==
+	return sum;
+
+public SetSum : real ==> ()
+SetSum(ps) ==
+	sum := ps; 
+
+public ClearSum : () ==> ()
+ClearSum() ==
+	sum := 0;
+
+public AddToSum : real ==> ()
+AddToSum(pv) ==
+	sum := sum + pv;
+	
+public GetReceipt : () ==> Recycle`Receipt
+GetReceipt() == 
+		(ClearSum();
+		return mk_Recycle`Receipt(1, GetSum()));
+		
+public Donate : () ==> ()
+Donate() ==
+	(charity := GetSum();
+	ClearSum());
+
+public RecycleDetected : Conveyor ==> ()
+RecycleDetected(pscan) ==	
+	if not pscan.GetIsScanning()
+	then pscan.Scan()
+	else pscan.Reject();
 	
 public ValidateItem : Recycle`Recycle ==> ()
 ValidateItem(prr) ==
-	if RecycleMachine`rr.IsRecycleValid(pri)
+	if RecycleMachine`rr.IsRecycleValid(prr)
 	then 
 		(if RecycleMachine`sto.StorageAvailableItem()
-		then (RecycleMachine`vh.AddToSum(RecycleMachine`rr.GetPrice(pri));
+		then (AddToSum(RecycleMachine`rr.GetPrice(prr));
 					RecycleMachine`sic.StoreRecycle())
 		else RecycleMachine`sic.Reject())
 	else RecycleMachine`sic.Reject();
+
+private HandleRecycleBox : Recycle`RecycleBox ==> [Recycle`RecycleBox]
+HandleRecycleBox(prb) ==
+	if ScanBottles(prb, RecycleMachine`rr)
+	then (AddToSum(TotalRecycleSum(prb.ri, RecycleMachine`rr));
+				return nil)
+	else return prb;
+	
+functions 
+
+private TotalRecycleSum : seq of Recycle`RecycleItem * RecycleRules -> real
+TotalRecycleSum(pri, prr) ==
+	if pri = []
+	then 0
+	else prr.GetPrice(hd pri) + TotalRecycleSum(tl pri, prr)
+measure Len;
+
+Len : seq of Recycle`RecycleItem * RecycleRules -> nat
+Len(pri, -) ==
+	len pri;
+
+private ScanBottles : Recycle`RecycleBox * RecycleRules -> bool
+ScanBottles(prb, prr) ==
+		forall i in set inds prb.ri & prr.IsRecycleValid(prb.ri(i)) and
+		forall j,k in set inds prb.ri & prb.ri(j).s = prb.ri(k).s;	
 
 end RecycleMachineController

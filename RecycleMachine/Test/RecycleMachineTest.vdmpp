@@ -8,6 +8,7 @@ operations
 			result = new TestResult()
 		in
 			(ts.addTest(new RecycleRulesTest());
+			ts.addTest(new StorageTest());
 			ts.run(result);
 			IO`println(result.toString()););
 		

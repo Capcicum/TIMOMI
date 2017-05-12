@@ -1,0 +1,11 @@
+class SingleItemConveyor is subclass of Conveyor
+
+operations
+	
+public Scan : () ==> ()
+Scan() ==
+	(isScanning := true;
+	-- step 10
+	isScanning := false);
+
+end SingleItemConveyor

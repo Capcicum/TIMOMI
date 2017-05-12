@@ -1,0 +1,70 @@
+class StorageTest  is subclass of TestCase
+
+values
+item : Recycle`Recycle = mk_Recycle`RecycleItem(<A>, true, <Disp>);
+box : Recycle`Recycle = mk_Recycle`RecycleBox(true, [item]);
+operations 
+
+protected runTest : () ==> ()
+runTest() == 
+	(StoreTest();
+	StorageAvailableTest();
+	ClearStorageTest();
+	RemoveTest());
+	
+protected StoreTest : () ==> ()
+StoreTest() ==
+	(	dcl storage : Storage := new Storage(4, 4);
+		storage.Store(item);
+		storage.Store(item);
+		storage.Store(box);
+		storage.Store(box);
+		assertTrue(len storage.GetItemStorage() = 2);
+		assertTrue(len storage.GetBoxStorage() = 2);
+		assertTrue(storage.GetItemStorage()(1) = item);
+		assertTrue(storage.GetBoxStorage()(1) = box));
+
+protected StorageAvailableTest : () ==> ()
+StorageAvailableTest() ==
+	(	dcl storage : Storage := new Storage(4, 4);
+		storage.Store(item);
+		storage.Store(item);
+		storage.Store(box);
+		storage.Store(box);
+		assertTrue(storage.StorageAvailableItem());
+		assertTrue(storage.StorageAvailableBox());
+		storage.Store(item);
+		storage.Store(item);
+		storage.Store(box);
+		storage.Store(box);
+		assertFalse(storage.StorageAvailableItem());
+		assertFalse(storage.StorageAvailableBox()););
+		
+protected ClearStorageTest : () ==> ()
+ClearStorageTest() ==
+		(	dcl storage : Storage := new Storage(4, 4);
+		storage.Store(item);
+		storage.Store(item);
+		storage.Store(box);
+		storage.Store(box);
+		storage.ClearStorage();
+		assertTrue(len storage.GetItemStorage() = 0);
+		assertTrue(len storage.GetBoxStorage() = 0));
+
+protected RemoveTest : () ==> ()
+RemoveTest() ==
+	(	dcl storage : Storage := new Storage(4, 4);
+		storage.Store(item);
+		storage.Store(item);
+		storage.Store(box);
+		storage.Store(box);
+		storage.RemoveItems(1);
+		storage.RemoveBoxes(1);
+		assertTrue(len storage.GetItemStorage() = 1);
+		assertTrue(len storage.GetBoxStorage() = 1);
+		storage.RemoveItems(1);
+		storage.RemoveBoxes(1);
+		assertTrue(len storage.GetItemStorage() = 0);
+		assertTrue(len storage.GetBoxStorage() = 0));
+
+end StorageTest

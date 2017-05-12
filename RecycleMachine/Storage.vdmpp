@@ -14,6 +14,14 @@ Storage(pil, pbl) ==
 	(itemLimit := pil;
 	boxLimit := pbl);
 	
+public GetItemStorage : () ==> seq of Recycle`Recycle
+GetItemStorage() ==
+	return itemStorage;
+	
+public GetBoxStorage : () ==> seq of Recycle`Recycle
+GetBoxStorage() ==
+	return boxStorage;
+	
 public Store : Recycle`Recycle ==> ()
 Store(prr) ==
 	if is_Recycle`RecycleItem(prr)
