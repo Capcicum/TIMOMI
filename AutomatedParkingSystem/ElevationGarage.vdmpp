@@ -1,4 +1,8 @@
-class ElevationGarage is subclass of GLOBAL
+class ElevationGarage
+
+types
+
+public GateState = [<Opend> | <Closed>];
 
 instance variables
 	EntranceGate : GateState;
@@ -9,11 +13,23 @@ operations
 
 public ElevationGarage: Camera ==> ElevationGarage
 ElevationGarage(pCam) == (
-	EntranceGate := <Opend>;
-	ExitGate := <Closed>;
+	GarageFree();
 	camera := pCam);
 	
+public GarageFree: () ==> ()
+GarageFree() == (
+	EntranceGate := <Opend>;
+	ExitGate := <Closed>;);
 
+public GarageBusy: () ==> ()
+GarageBusy() == (
+	EntranceGate := <Closed>;
+	ExitGate := <Closed>;);
+	
+public GarageReadyForExit: () ==> ()
+GarageReadyForExit() == (
+	EntranceGate := <Closed>;
+	ExitGate := <Opend>;);
 
 
 

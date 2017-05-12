@@ -1,18 +1,22 @@
-class Driver
+class Driver is subclass of GLOBAL
 
 instance variables
-	parkingCard : bool;
- 	creditCardInformation : GLOBAL`String;
- 	car : Car;
+	paymentInfo : PaymentInfo;
+	car : Car;
 		 
 operations
 
-public Driver : bool * GLOBAL`String * Car ==> Driver
-Driver(pParkCard, pCredCard, pCar) == (
-	parkingCard := pParkCard;
-	creditCardInformation := pCredCard;
-	car := pCar);
+public Driver : String * Car ==> Driver
+Driver(pParkingCard, pCar) == (
+		paymentInfo := pParkingCard;
+		car := pCar;
+	);
 
+public Driver : seq of nat * Car ==> Driver
+Driver(pCreditCard, pCar) == (
+		paymentInfo := pCreditCard;
+		car := pCar;
+	);
 	
 public findFreeParkingSpot : ElevationGarage ==> () -- TODO
 findFreeParkingSpot(peg) ==
@@ -33,14 +37,13 @@ retriveCar(pis) ==
 	is not yet specified;
 	
 
+pure public getCreditCardInfo : () ==> seq of nat
+getCreditCardInfo() == 
+	return paymentInfo;
 
-pure public getCreditCardInformation : () ==> GLOBAL`String
-getCreditCardInformation() == 
-	return creditCardInformation;
-
-pure public getParkingCard : () ==> bool
-getParkingCard() == 
-	return parkingCard;
+pure public getParkingCardInfo : () ==> String
+getParkingCardInfo() == 
+	return paymentInfo;
 
 
 

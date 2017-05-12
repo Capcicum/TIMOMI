@@ -2,22 +2,22 @@ class Car is subclass of GLOBAL
 			   		         
 instance variables
 	parkingPermit: bool;
-	licensePlate : LicensePlateInfo;
+	licensePlate : LicensePlate;
 
 operations 
 
-public Car : LicensePlateInfo * bool ==> Car
+public Car : LicensePlate * bool  ==> Car
 Car(plp, ppp) == (
 	licensePlate := plp;
 	parkingPermit := ppp);
 
 
-pure public getLicensePlate : () ==> LicensePlateInfo
+pure public getLicensePlate : () ==> LicensePlate
 getLicensePlate() ==
   return licensePlate;
   
-pure public getParkingPermit : () ==> bool
-getParkingPermit() ==
+pure public hasParkingPermit : () ==> bool
+hasParkingPermit() ==
 	return parkingPermit;
 
 end Car

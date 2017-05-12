@@ -6,12 +6,27 @@ public String = seq of char;
 
 -- Car  --
 public CountryIdentifier = [<Danish> | <European> | <Other>];
-public RegistrationLetters = String; 
-	
-public LicensePlateInfo :: ci  : CountryIdentifier
-				   		             rl  : RegistrationLetters;	
-				   		           
--- Elevation Station -- 		
-public GateState = [<Opend> | <Closed>];
+
+public RegistrationLetters = String
+inv rl == len rl = 2;
+
+public NumberSeries = seq of nat
+inv ns == len ns <= 5;
+
+public LicensePlate :: ci : CountryIdentifier
+				   		         rl : RegistrationLetters
+				   		         ns : NumberSeries;					   		         
+
+-- Driver --
+
+public CreditCard = seq of nat
+inv cc == len cc = 16;
+
+public ParkingCard = String
+inv pc == len pc = 5;
+
+public PaymentInfo = CreditCard | ParkingCard;
+
+---
 		   		        
 end GLOBAL
