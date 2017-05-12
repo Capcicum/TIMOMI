@@ -1,0 +1,16 @@
+class AutomatedParkingSystem
+
+instance variables
+
+public static eg1 : ElevationGarage := new ElevationGarage();
+public static eg2 : ElevationGarage := new ElevationGarage();
+
+public static ins : InformationStation := new InformationStation();
+
+public static pl : ParkingLevel := new ParkingLevel();
+
+public static ts : TransactionSystem := new TransactionSystem();
+
+end AutomatedParkingSystem
+
+

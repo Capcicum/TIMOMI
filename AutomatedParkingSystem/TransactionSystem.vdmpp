@@ -1,7 +1,17 @@
-class TransactionSystem
+class TransactionSystem is subclass of GLOBAL
 
-
-
-
+functions
+public getParkingRate : LicensePlate -> real
+getParkingRate(plp) ==
+	cases plp.ci:
+		<Danish> -> 5,
+		<European> -> 10,
+		<Other> -> 15
+	end;
+		
+public calculateParkingFee : LicensePlate -> real -- TODO
+calculateParkingFee(plp) ==
+	is not yet specified;
+	-- getParkingRate(plp);
 
 end TransactionSystem

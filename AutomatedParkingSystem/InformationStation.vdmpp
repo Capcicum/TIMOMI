@@ -1,16 +1,31 @@
 class InformationStation
 
+instance variables
+	elevationGarages : seq of ElevationGarage; -- TODO Overvej -> Concurrency?
+
 operations
-pure public getFreeElevationGarage : set of ElevationGarage ==> ElevationGarage -- TODO Til nye Drivers
-getFreeElevationGarage(peg) ==
-	is not yet specified;
 	
-pure public getRetrivalGarage : set of ElevationGarage ==> ElevationGarage -- TODO Til Drivers der skal retrieve
+
+pure public findFreeGarage : () ==> ElevationGarage -- TODO Til nye Drivers
+findFreeGarage() ==
+	is not yet specified; -- return element i seq of ElevationGarage
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+pure public getRetrivalGarage : seq of ElevationGarage ==> [ElevationGarage] -- TODO Til Drivers der skal retrieve
 getRetrivalGarage(peg) ==
 	is not yet specified;
-	
-pure public getParkingReceipt : () ==> nat -- TODO 
-getParkingReceipt() ==	
-	is not yet specified;
+
 	
 end InformationStation
