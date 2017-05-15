@@ -1,9 +1,11 @@
-class AutomatedParkingSystem
+class APS
 
 instance variables
 
 public static eg1 : ElevationGarage := new ElevationGarage();
 public static eg2 : ElevationGarage := new ElevationGarage();
+garages : seq of ElevationGarage := [eg1, eg2];
+
 
 public static ins : InformationStation := new InformationStation();
 
@@ -11,6 +13,6 @@ public static pl : ParkingLevel := new ParkingLevel();
 
 public static ts : TransactionSystem := new TransactionSystem();
 
-end AutomatedParkingSystem
+end APS
 
 

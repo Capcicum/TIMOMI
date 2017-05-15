@@ -1,7 +1,4 @@
-class InformationStation
-
-instance variables
-	elevationGarages : seq of ElevationGarage; -- TODO Overvej -> Concurrency?
+class InformationStation is subclass of GLOBAL
 
 operations
 	
@@ -12,14 +9,9 @@ findFreeGarage() ==
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+public registerCar : Car * PaymentInfo ==> () -- TODO Til nye Drivers
+registerCar(pcar, ppi) ==
+	is not yet specified; -- return element i seq of ElevationGarage	
 	
 	
 	

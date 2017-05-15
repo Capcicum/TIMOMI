@@ -18,18 +18,18 @@ ElevationGarage(pCam) == (
 	garageFree();
 	camera := pCam);
 	
-public handleParking: Car * PaymentInfo ==> [Car]
-handleParking(pcar, ppi) ==
-	is not yet specified;
-	-- if camera.isLicensePlateValid(pcar)
-	-- then (garageBusy();
-	--			InformationStation.registerCar(pcar, ppi);
-	--			--STEP
-	--			ParkingLevel.parkCar(pcar)
-	--			garageFree();
-	-- else if  
-	-- return pcar;
-	
+public handleParking: Car * PaymentInfo ==> [Car] -- use APS
+handleParking(pcar, ppi) == (
+	if camera.validateLicensePlate(pcar) and APS`ts.validatePaymentInfo(ppi,camera.hasParkingPermit(pcar))
+		then(garageBusy();
+				 APS`ins.registerCar(pcar,ppi);
+				 -- STEP
+				 APS`pl.parkCar(pcar);
+				 garageFree();
+				 return nil;)
+	else
+		return pcar;);
+
 	
 public isGarageFree: () ==> bool
 isGarageFree() == 
