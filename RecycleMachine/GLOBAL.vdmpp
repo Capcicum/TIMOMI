@@ -1,14 +1,15 @@
-class Recycle
+class GLOBAL
 
 types
 
-public RecylceMark = [<A> | <B> | <C>];
+public RecycleMark = [<A> | <B> | <C>];
 public Barcode  = bool;
 public Shape = [<Disp> | <Can> | <GUHL> | <GOHL> | <PUL> | <POL>];
 public BoxType = bool;
+public Time = nat;
 
 public RecycleItem ::
-	rm : RecylceMark
+	rm : RecycleMark
 	bc : Barcode
 	s : Shape;
 
@@ -23,4 +24,4 @@ public Receipt ::
 	id : nat
 	value : real;
 
-end Recycle 
+end GLOBAL 

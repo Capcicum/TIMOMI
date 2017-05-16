@@ -1,31 +1,31 @@
-class RecycleRulesTest is subclass of TestCase
+class RecycleRulesTest is subclass of TestCase, GLOBAL
 	
 values
  
-Rules = {mk_Recycle`RecycleItem(<A>, true, <Disp>),
-mk_Recycle`RecycleItem(<B>, true, <Disp>),
-mk_Recycle`RecycleItem(<C>, true, <Disp>),
-mk_Recycle`RecycleItem(<A>, true, <GUHL>),
-mk_Recycle`RecycleItem(<B>, true, <PUL>),
-mk_Recycle`RecycleItem(<C>, true, <GOHL>),
-mk_Recycle`RecycleItem(<C>, true, <POL>),
-mk_Recycle`RecycleItem(nil, true, <GUHL>),
-mk_Recycle`RecycleItem(nil, true, <PUL>),
-mk_Recycle`RecycleItem(nil, true, <GOHL>),
-mk_Recycle`RecycleItem(nil, true, <POL>),
-mk_Recycle`RecycleItem(nil, false, <GUHL>),
-mk_Recycle`RecycleItem(nil, false, <PUL>),
-mk_Recycle`RecycleItem(nil, false, <GOHL>),
-mk_Recycle`RecycleItem(nil, false, <POL>),
-mk_Recycle`RecycleItem(<A>, false, <GUHL>),
-mk_Recycle`RecycleItem(<B>, false, <PUL>),
-mk_Recycle`RecycleItem(<C>, false, <GOHL>),
-mk_Recycle`RecycleItem(<C>, false, <POL>),
-mk_Recycle`RecycleItem(nil, true, <Can>),
-mk_Recycle`RecycleItem(nil, false, <Can>),
-mk_Recycle`RecycleItem(<A>, true, nil),
-mk_Recycle`RecycleItem(<B>, true, nil),
-mk_Recycle`RecycleItem(<C>, true, nil)}
+Rules = {mk_RecycleItem(<A>, true, <Disp>),
+mk_RecycleItem(<B>, true, <Disp>),
+mk_RecycleItem(<C>, true, <Disp>),
+mk_RecycleItem(<A>, true, <GUHL>),
+mk_RecycleItem(<B>, true, <PUL>),
+mk_RecycleItem(<C>, true, <GOHL>),
+mk_RecycleItem(<C>, true, <POL>),
+mk_RecycleItem(nil, true, <GUHL>),
+mk_RecycleItem(nil, true, <PUL>),
+mk_RecycleItem(nil, true, <GOHL>),
+mk_RecycleItem(nil, true, <POL>),
+mk_RecycleItem(nil, false, <GUHL>),
+mk_RecycleItem(nil, false, <PUL>),
+mk_RecycleItem(nil, false, <GOHL>),
+mk_RecycleItem(nil, false, <POL>),
+mk_RecycleItem(<A>, false, <GUHL>),
+mk_RecycleItem(<B>, false, <PUL>),
+mk_RecycleItem(<C>, false, <GOHL>),
+mk_RecycleItem(<C>, false, <POL>),
+mk_RecycleItem(nil, true, <Can>),
+mk_RecycleItem(nil, false, <Can>),
+mk_RecycleItem(<A>, true, nil),
+mk_RecycleItem(<B>, true, nil),
+mk_RecycleItem(<C>, true, nil)}
 
 operations 
 

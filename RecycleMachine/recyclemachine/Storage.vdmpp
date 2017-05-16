@@ -1,9 +1,9 @@
-class Storage 
+class Storage is subclass of GLOBAL
 
 instance variables
 
-itemStorage : seq of Recycle`Recycle := [];
-boxStorage : seq of Recycle`Recycle := [];
+itemStorage : seq of Recycle := [];
+boxStorage : seq of Recycle := [];
 itemLimit : nat;
 boxLimit : nat;
 
@@ -14,17 +14,17 @@ Storage(pil, pbl) ==
 	(itemLimit := pil;
 	boxLimit := pbl);
 	
-public GetItemStorage : () ==> seq of Recycle`Recycle
+public GetItemStorage : () ==> seq of Recycle
 GetItemStorage() ==
 	return itemStorage;
 	
-public GetBoxStorage : () ==> seq of Recycle`Recycle
+public GetBoxStorage : () ==> seq of Recycle
 GetBoxStorage() ==
 	return boxStorage;
 	
-public Store : Recycle`Recycle ==> ()
+public Store : Recycle ==> ()
 Store(prr) ==
-	if is_Recycle`RecycleItem(prr)
+	if is_RecycleItem(prr)
 	then itemStorage := itemStorage ^ [prr]
 	else boxStorage := boxStorage ^ [prr];
 
@@ -53,12 +53,12 @@ public RemoveItems : nat ==> ()
 RemoveItems(pcount) ==
 	if len itemStorage <= pcount
 	then	itemStorage := []
-	else	itemStorage := [itemStorage(x) | x in set inds itemStorage & x < len itemStorage - pcount];
+	else	itemStorage := [itemStorage(x) | x in set inds itemStorage & x <= len itemStorage - pcount];
 
 public RemoveBoxes : nat ==> ()
 RemoveBoxes(pcount) ==
 	if len boxStorage <= pcount
 	then	boxStorage := []
-	else	boxStorage := [boxStorage(x) | x in set inds boxStorage & x < len boxStorage - pcount];
+	else	boxStorage := [boxStorage(x) | x in set inds boxStorage & x <= len boxStorage - pcount];
 
 end Storage

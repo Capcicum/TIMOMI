@@ -1,8 +1,8 @@
-class StorageTest  is subclass of TestCase
+class StorageTest  is subclass of TestCase, GLOBAL
 
 values
-item : Recycle`Recycle = mk_Recycle`RecycleItem(<A>, true, <Disp>);
-box : Recycle`Recycle = mk_Recycle`RecycleBox(true, [item]);
+item : Recycle = mk_RecycleItem(<A>, true, <Disp>);
+box : Recycle = mk_RecycleBox(true, [item]);
 operations 
 
 protected runTest : () ==> ()

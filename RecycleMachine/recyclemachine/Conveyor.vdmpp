@@ -1,0 +1,38 @@
+class Conveyor is subclass of GLOBAL
+
+instance variables
+
+protected conveyor : seq of Recycle := [];
+protected isRunning : bool := false;
+protected scanProgress : nat := 0;
+
+operations 
+
+public InputRecycle : Recycle ==> ()
+InputRecycle(prr) == 
+	(conveyor := conveyor ^ [prr];
+	RecycleMachine`recycleMachineController.RecycleDetected(self)
+	);
+	
+public Scan : () ==> ()
+Scan() ==
+	(scanProgress := scanProgress + 1;
+	if scanProgress = 10
+	then (RecycleMachine`recycleMachineController.ValidateItem(hd conveyor);
+				)
+	isRunning := false);
+	
+public StoreRecycle : () ==> ()
+StoreRecycle () ==
+	RecycleMachine`sto.Store(hd conveyor);
+	
+public Reject : () ==> ()
+Reject() ==
+ conveyor := [];
+ 
+pure public GetIsScanning : () ==> bool
+GetIsScanning() ==
+	return isRunning;
+
+
+end Conveyor

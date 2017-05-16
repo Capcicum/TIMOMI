@@ -1,0 +1,89 @@
+class RecycleMachineController is subclass of GLOBAL
+
+instance variables
+
+sum : real := 0;
+charity : real :=0;
+
+operations 
+
+pure public GetSum : () ==> real
+GetSum() ==
+	return sum;
+
+public SetSum : real ==> ()
+SetSum(ps) ==
+	sum := ps; 
+
+public ClearSum : () ==> ()
+ClearSum() ==
+	sum := 0;
+
+public AddToSum : real ==> ()
+AddToSum(pv) ==
+	sum := sum + pv;
+	
+public GetReceipt : () ==> ()
+GetReceipt() == 
+		(World`env.HandleEvent(World`timerRef.GetTime(), <Receipt>, GetSum());
+		ClearSum());
+		
+public Donate : () ==> ()
+Donate() ==
+		(World`env.HandleEvent(World`timerRef.GetTime(), <Donate>, GetSum());
+		ClearSum());
+
+public RecycleDetected : Conveyor ==> ()
+RecycleDetected(pscan) ==	
+	if not pscan.GetIsScanning()
+	then pscan.Scan()
+	else pscan.Reject();
+	
+public ValidateItem : Recycle ==> ()
+ValidateItem(prr) ==
+if is_RecycleItem(prr)
+then
+	(if RecycleMachine`rr.IsRecycleValid(prr)
+	then 
+		(if RecycleMachine`sto.StorageAvailableItem()
+		then (AddToSum(RecycleMachine`rr.GetPrice(prr));
+					RecycleMachine`singleItemConveyor.StoreRecycle())
+		else RecycleMachine`singleItemConveyor.Reject())
+	else RecycleMachine`singleItemConveyor.Reject())
+else
+	HandleRecycleBox(prr);
+
+private HandleRecycleBox : RecycleBox ==> ()
+HandleRecycleBox(prb) ==
+	if ScanBottles(prb, RecycleMachine`rr)
+	then (AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum(prb.ri, RecycleMachine`rr));
+				RecycleMachine`singleItemConveyor.StoreRecycle())
+	else RecycleMachine`singleItemConveyor.Reject();
+	
+public IsFinished: () ==> bool
+IsFinished() ==
+	return true;
+	
+public Step: () ==> ()
+Step() ==
+	skip;
+	
+functions 
+
+private TotalRecycleSum : seq of RecycleItem * RecycleRules -> real
+TotalRecycleSum(pri, prr) ==
+	if pri = []
+	then 0
+	else prr.GetPrice(hd pri) + TotalRecycleSum(tl pri, prr)
+measure Len;
+
+Len : seq of RecycleItem * RecycleRules -> nat
+Len(pri, -) ==
+	len pri;
+
+private ScanBottles : RecycleBox * RecycleRules -> bool
+ScanBottles(prb, prr) ==
+		forall i in set inds prb.ri & prr.IsRecycleValid(prb.ri(i)) and
+		forall j,k in set inds prb.ri & prb.ri(j).s = prb.ri(k).s;	
+
+end RecycleMachineController

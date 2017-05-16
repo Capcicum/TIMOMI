@@ -1,0 +1,21 @@
+class SingleItemConveyor is subclass of Conveyor
+
+operations
+
+public IsFinished: () ==> bool
+IsFinished() ==
+	return true;
+
+public Step: () ==> ()
+Step() ==
+	(
+		if len conveyor = 1 
+		then Scan()
+		else if conveyor = 0 
+		then 
+		else
+		
+		
+	);
+
+end SingleItemConveyor

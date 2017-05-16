@@ -1,0 +1,112 @@
+class Environment is subclass of GLOBAL
+
+types 
+
+public CustomerChoice = [<Donate> | <Receipt>];
+
+public Input = (CustomerChoice * seq of Inline);
+
+public RecItemInline	= (RecycleMark * Barcode * Shape);
+
+public BoxItemInline  = (BoxType * seq of RecItemInline);
+
+public RecycleInline = (RecItemInline | BoxItemInline);
+
+public Inline = (Time * RecycleInline);
+
+public Outline = (Time * CustomerChoice * real);
+
+instance variables
+ 
+io : IO := new IO();
+
+busy : bool := true;
+
+inlines : seq of Inline := [];
+outlines : seq of Outline := [];
+
+cusTime : CustomerChoice := nil;
+
+operations 
+
+public Environment : seq of char  ==> Environment
+Environment(fname) ==
+	def mk_(-,mk_(choice, input)) = io.freadval[Input](fname)
+	in (inlines := input;
+			cusTime := choice);
+	
+private CreateSignal : () ==> ()
+CreateSignal() ==
+   ( 
+    if len inlines > 0 
+    then	(dcl curTime : Time := World`timerRef.GetTime(),
+    			done : bool := false;
+          while not done do
+             let mk_(time, rec) = hd inlines
+             in 
+             	if time <= curTime
+             	then
+                (
+                let 
+                	recItem = MakeRecycle(rec)
+                in
+               		(if is_RecycleMark(rec.#1)
+                	then RecycleMachine`singleItemConveyor.InputRecycle(recItem)
+                	else RecycleMachine`boxConveyor.InputRecycle(recItem));
+								inlines := tl inlines;
+                done := len inlines = 0
+                )
+              else done := true
+           );
+       if len inlines = 0
+       then 
+       	if cusTime = <Donate>
+       	then RecycleMachine`recycleMachineController.Donate() 
+       	else RecycleMachine`recycleMachineController.GetReceipt();
+       busy := false;
+    );
+
+public HandleEvent : Time * CustomerChoice * real ==> ()
+HandleEvent(pt, pcc, pa) ==
+	outlines := outlines ^ [mk_(pt, pcc, pa)];
+	
+public IsFinished : () ==> bool
+IsFinished() ==
+	return inlines = [] and not busy;
+
+public ShowResult : () ==> ()
+ShowResult() ==
+	def -= io.writeval[seq of Outline](outlines) in skip;
+
+public Run : () ==> ()
+Run() ==
+	(
+	while not (IsFinished()
+						and
+						RecycleMachine`recycleMachineController.IsFinished()
+						and
+						RecycleMachine`singleItemConveyor.IsFinished()
+						and
+						RecycleMachine`boxConveyor.IsFinished())
+	do
+		(
+		CreateSignal();
+		RecycleMachine`recycleMachineController.Step();
+		RecycleMachine`singleItemConveyor.Step();
+		RecycleMachine`boxConveyor.Step();
+		World`timerRef.StepTime();
+		);
+	);
+
+functions
+
+private MakeRecycle : RecycleInline -> Recycle
+MakeRecycle(rec) ==
+	if is_RecycleMark(rec.#1)
+	then 
+		mk_RecycleItem(rec.#1, rec.#2, rec.#3)
+ 	else 
+		mk_RecycleBox(rec.#1, 
+			[mk_RecycleItem(recI.#1, recI.#2, recI.#3) | recI in seq rec.#2])
+
+end Environment
