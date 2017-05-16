@@ -1,7 +1,18 @@
 class InformationStation is subclass of GLOBAL
 
+values
+
+parkingRateDB : map CountryIdentifier to nat
+						= {<Danish> |-> 5,
+						 	<European> |-> 10,
+						 	<Other> |-> 15};
+
+functions
+public calculateParkingRate : LicensePlate -> nat
+calculateParkingRate(plp) ==
+	is not yet specified;
+
 operations
-	
 
 pure public findFreeGarage : () ==> ElevationGarage -- TODO Til nye Drivers
 findFreeGarage() ==
@@ -9,7 +20,7 @@ findFreeGarage() ==
 	
 	
 	
-public registerCar : Car * PaymentInfo ==> () -- TODO Til nye Drivers
+public registerCar : LicensePlate * PaymentInfo ==> () -- TODO Til nye Drivers
 registerCar(pcar, ppi) ==
 	is not yet specified; -- return element i seq of ElevationGarage	
 	
@@ -18,6 +29,7 @@ registerCar(pcar, ppi) ==
 pure public getRetrivalGarage : seq of ElevationGarage ==> [ElevationGarage] -- TODO Til Drivers der skal retrieve
 getRetrivalGarage(peg) ==
 	is not yet specified;
+	
 
 	
 end InformationStation

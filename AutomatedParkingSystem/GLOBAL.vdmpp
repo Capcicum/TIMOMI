@@ -15,11 +15,14 @@ inv num == num <= 99999;
 
 public LicensePlate :: ci : CountryIdentifier
 				   		         rl : RegistrationLetters
-				   		         ns : NumberSeries;					   		         
+				   		         ns : NumberSeries;	
+				   		         
+public Car :: licensePlate : LicensePlate
+							parkingPermit : bool;				   		         
 
 -- Driver --
 
-public CreditCard = seq of nat
+public CreditCard = seq of nat -- TODO
 inv num == len num = 16;
 
 public ParkingCard = String

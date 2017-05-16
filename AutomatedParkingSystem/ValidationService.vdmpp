@@ -1,5 +1,73 @@
-class ValidationService
+class ValidationService is subclass of GLOBAL
 
+values
+
+-- Ref: https://da.wikipedia.org/wiki/Nummerplade
+
+bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC"};
+bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å'};
+
+
+
+
+
+-- Todo Add restrictions for CreditCard & ParkingCard
+
+functions
+
+-- LicensePlate
+
+public validateLicensePlate : LicensePlate -> bool 
+validateLicensePlate(plp) ==  
+	validateRegistrationLetters(plp) and validateNumberSeries(plp);
+
+
+public validateRegistrationLetters : LicensePlate -> bool
+validateRegistrationLetters(plp) ==	
+	not plp.rl in set bannedRegistrationCombinations and 
+	not plp.rl(1) in set bannedRegistrationLetters and
+	not plp.rl(2) in set bannedRegistrationLetters and
+	not plp.rl(2) = 'O';
+	
+	
+public validateNumberSeries : LicensePlate -> bool
+validateNumberSeries(plp) == 
+	plp.ns >= 5000 and plp.ns <= 5399 or
+	plp.ns >= 20000 and plp.ns <= 77999 or
+	plp.ns >= 98000 and plp.ns <= 99999;
+
+-- 5000-5399	Faste prøveskilte, biler
+-- 20000-59999	Personbiler mv.
+-- 60000-75999	Personbiler mv. med kvadratisk bagnummerplade
+-- 76000-76999	Diplomatbiler, diplomater
+-- 77000-77999	Diplomatbiler, internationale organisationer mv.
+
+-- 98000-99699	Taxier, udlejningslimousiner mv.
+-- 99700-99999	Taxier, udlejningslimousiner mv. med kvadratisk bagnummerplade
+
+-- PaymentInfo
+
+public validatePaymentInfo : PaymentInfo * bool -> bool
+validatePaymentInfo(ppi, pHasParkingPermit) ==
+	if is_CreditCard(ppi)
+		then validateCreditCard(ppi)
+	else if is_ParkingCard(ppi) and pHasParkingPermit
+			then validateParkingCard(ppi)
+	else false;
+	
+		
+public calculateParkingFee : LicensePlate -> real -- TODO
+calculateParkingFee(plp) ==
+	is not yet specified;
+	-- getParkingRate(plp);
+
+public validateCreditCard : PaymentInfo -> bool
+validateCreditCard(ppi) == 
+	is not yet specified;
+	
+public validateParkingCard : PaymentInfo -> bool
+validateParkingCard(ppi) ==
+	is not yet specified;
 
 
 end ValidationService

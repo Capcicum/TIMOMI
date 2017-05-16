@@ -7,49 +7,60 @@ public GateState = [<Open> | <Closed>];
 instance variables
 	EntranceGate : GateState := <Open>;
 	ExitGate : GateState := <Closed>;
-	camera : [Camera] := nil;
-	car : [Car] := nil; -- Overvej
-	
+	car : [Car] := nil; 
+	isFree : bool := true;
 
 operations
-
-public ElevationGarage: () ==> ElevationGarage
-ElevationGarage() == (
-	camera := new Camera());
 	
-public handleParking: Car * PaymentInfo ==> [Car]
-handleParking(pcar, ppi) == (
-	if camera.validateLicensePlate(pcar) and APS`ts.validatePaymentInfo(ppi,camera.hasParkingPermit(pcar))
+public parkCar : Car ==> ()
+parkCar(pcar) == (
+	car := pcar;
+	isFree := false;)
+pre car = nil;	
+	
+public handleParking:  PaymentInfo ==> ()
+handleParking(ppi) == (	
+	if not isFree
+	then (if APS`validationService.validateLicensePlate(car.licensePlate) and 
+	APS`validationService.validatePaymentInfo(ppi,car.parkingPermit)
 		then(garageBusy();
-				 APS`ins.registerCar(pcar,ppi);
+				 APS`informationStation.registerCar(car.licensePlate,ppi);
 				 -- STEP
-				 APS`pl.parkCar(pcar);
-				 garageFree();
-				 return nil;)
-	else
-		return pcar;);
-
-	
---function
+				 APS`parkingLevel.parkCar(car);
+				 car := nil;
+				 garageFree();)
+	else 
+		--handleEvent
+		(garageReadyForExit();
+		car := nil;
+		garageFree();
+		);););
+		
+-- public retriveCar: 
+		
 public isGarageFree: () ==> bool
 isGarageFree() == 
-	return EntranceGate = <Open> and ExitGate = <Closed>;
+	return isFree;
 	
-public garageFree: () ==> ()
+public garageFree: () ==> () -- Lav et STM
 garageFree() == (
-	EntranceGate := <Open>;
-	ExitGate := <Closed>;);
+	if EntranceGate = <Closed>
+	then EntranceGate := <Open>;
+	if ExitGate = <Open>
+	then ExitGate := <Closed>;
+	isFree := true;)
+pre EntranceGate = ExitGate and isFree = false;
 
 public garageBusy: () ==> ()
 garageBusy() == (
-	EntranceGate := <Closed>;
-	ExitGate := <Closed>;);
+	EntranceGate := <Closed>;)
+pre EntranceGate = <Open> and ExitGate = <Closed> and isFree = false;
 
 public garageReadyForExit: () ==> ()
 garageReadyForExit() == (
-	EntranceGate := <Closed>;
-	ExitGate := <Open>;);
-
-
+	if EntranceGate = <Closed>
+	then EntranceGate := <Open>;
+	ExitGate := <Open>;)
+pre ExitGate = <Closed> and isFree = false;
 
 end ElevationGarage
