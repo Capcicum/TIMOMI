@@ -18,7 +18,7 @@ ElevationGarage(pCam) == (
 	garageFree();
 	camera := pCam);
 	
-public handleParking: Car * PaymentInfo ==> [Car] -- use APS
+public handleParking: Car * PaymentInfo ==> [Car]
 handleParking(pcar, ppi) == (
 	if camera.validateLicensePlate(pcar) and APS`ts.validatePaymentInfo(ppi,camera.hasParkingPermit(pcar))
 		then(garageBusy();

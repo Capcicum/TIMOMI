@@ -20,8 +20,10 @@ Driver(pCreditCard, pCar) == (
 
 
 
-public parkCar : InformationStation ==> ()
-parkCar(pinfo) == 
+public parkCar : () ==> ()
+parkCar() == 
+	-- Kald på APS kalssen med elev garage, 
+	
 	--eg := pinfo.findFreeGarage(););--.handleParking(car, paymentInfo); -- TODO find ud af hvordan jeg skal tjekke på om InformationStation finder en fri. 
 	-- else -- What to do if no parking spots
 	is not yet specified;
