@@ -1,9 +1,76 @@
-class Camera
+class Camera is subclass of GLOBAL
+
+instance variables
+	licensePlate : LicensePlate;
 
 operations
+	-- TODO
+public validateLicensePlate : Car ==> bool 
+validateLicensePlate(pcar) == (
+	licensePlate := pcar.getLicensePlate();
+	if validateRegistrationLetters(licensePlate) and validateNumberSeries(licensePlate)
+			then return true
+	else return false;);
 
-public validateLicensePlate : () ==> () -- TODO
-	validateLicensePlate() ==
-	is not yet specified
+functions
+
+public validateRegistrationLetters : LicensePlate -> bool
+validateRegistrationLetters(plp) ==	
+	not plp.rl in set bannedRegistrationCombinations and 
+	not plp.rl(1) in set bannedRegistrationLetters and
+	not plp.rl(2) in set bannedRegistrationLetters and
+	not plp.rl(2) = 'O';
+	
+	
+public validateNumberSeries : LicensePlate -> bool
+validateNumberSeries(plp) == 
+	plp.ns >= 5000 and plp.ns <= 5399 or
+	plp.ns >= 20000 and plp.ns <= 77999 or
+	plp.ns >= 98000 and plp.ns <= 99999;
+
+public hasParkingPermit : Car -> bool
+hasParkingPermit(pcar) == (
+	pcar.hasParkingPermit());
+
+
+-- Godkendte:
+-- 5000-5399	Faste prøveskilte, biler
+-- 20000-59999	Personbiler mv.
+-- 60000-75999	Personbiler mv. med kvadratisk bagnummerplade
+-- 76000-76999	Diplomatbiler, diplomater
+-- 77000-77999	Diplomatbiler, internationale organisationer mv.
+
+-- 98000-99699	Taxier, udlejningslimousiner mv.
+-- 99700-99999	Taxier, udlejningslimousiner mv. med kvadratisk bagnummerplader
+
+
+
+values
+--https://da.wikipedia.org/wiki/Nummerplade
+bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC"};
+bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å'};
+
+
+
+--public LicensePlate :: ci : CountryIdentifier
+--				   		         rl : RegistrationLetters
+--				   		         ns : NumberSeries;		
+
+
+
+--public validateRLCombination : LicensePlate  -> bool --Verify  -- Kombination: -- BH, BU, CC, CD, DK, DU, EU, KZ, MU, PY, SS, UD, UN, VC
+--validateRLCombination(plp) == 
+--	not plp.rl in set bannedRegistrationCombinations; 
+--
+--public validateRLLetters : LicensePlate  -> bool--Verify  -- Ulovlige -- I, Q, Æ, Ø, Å Skal kune tjekke på en
+--validateRLLetters(plp) == 
+--	not plp.rl(1) in set bannedRegistrationLetters and
+--	not plp.rl(2) in set bannedRegistrationLetters;
+--	
+--public validateRLO : LicensePlate  -> bool -- Sikre at O kun er første karakter. -- Kun som første karakter: O
+--validateRLO(plp) == 
+--	not plp.rl(2) = 'O';
+--	
+
 
 end Camera

@@ -10,8 +10,8 @@ public CountryIdentifier = [<Danish> | <European> | <Other>];
 public RegistrationLetters = String
 inv rl == len rl = 2;
 
-public NumberSeries = seq of nat
-inv ns == len ns <= 5;
+public NumberSeries = nat
+inv num == num <= 99999;
 
 public LicensePlate :: ci : CountryIdentifier
 				   		         rl : RegistrationLetters
@@ -20,7 +20,7 @@ public LicensePlate :: ci : CountryIdentifier
 -- Driver --
 
 public CreditCard = seq of nat
-inv cc == len cc = 16;
+inv num == len num = 16;
 
 public ParkingCard = String
 inv pc == len pc = 5;

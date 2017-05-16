@@ -1,7 +1,42 @@
-class TransactionSystem
+class TransactionSystem is subclass of GLOBAL
+
+operations
+
+public validatePaymentInfo : PaymentInfo * bool ==> bool
+validatePaymentInfo(ppi, pHasParkingPermit) == (
+	if ppi = CreditCard and validateCreditCard(ppi)
+		then return true
+	else if ppi = ParkingCard and pHasParkingPermit
+			then validateParkingCard(ppi)
+	else return false;);
+
+functions	
+
+public getParkingRate : LicensePlate -> nat
+getParkingRate(plp) ==
+	parkingRates(plp.ci);
+		
+public calculateParkingFee : LicensePlate -> real -- TODO
+calculateParkingFee(plp) ==
+	is not yet specified;
+	-- getParkingRate(plp);
+
+public validateCreditCard : PaymentInfo -> bool
+validateCreditCard(ppi) == 
+	is not yet specified;
+	
+public validateParkingCard : PaymentInfo -> bool
+validateParkingCard(ppi) ==
+	is not yet specified;
 
 
+values
 
-
+parkingRates : map CountryIdentifier to nat
+						= {<Danish> |-> 5,
+						 	<European> |-> 10,
+						 	<Other> |-> 15};
 
 end TransactionSystem
+
+

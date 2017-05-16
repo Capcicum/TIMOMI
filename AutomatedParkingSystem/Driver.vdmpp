@@ -16,26 +16,25 @@ public Driver : seq of nat * Car ==> Driver
 Driver(pCreditCard, pCar) == (
 		paymentInfo := pCreditCard;
 		car := pCar;
-	);
+	);	
+
+
+
+public parkCar : () ==> ()
+parkCar() == 
+	-- Kald på APS kalssen med elev garage, 
 	
-public findFreeParkingSpot : ElevationGarage ==> () -- TODO
-findFreeParkingSpot(peg) ==
+	--eg := pinfo.findFreeGarage(););--.handleParking(car, paymentInfo); -- TODO find ud af hvordan jeg skal tjekke på om InformationStation finder en fri. 
+	-- else -- What to do if no parking spots
 	is not yet specified;
 
-public insertPayment : ElevationGarage * TransactionSystem ==> () -- TODO
-insertPayment(peg, pts) ==
-	is not yet specified;
-	--if not parkingCard
-	--then 
 	
-public parkCar : ElevationGarage ==> () -- TODO
-parkCar(peg) ==
-	is not yet specified;
-
 public retriveCar : InformationStation ==> () -- TODO
 retriveCar(pis) ==
 	is not yet specified;
 	
+
+--GETS
 
 pure public getCreditCardInfo : () ==> seq of nat
 getCreditCardInfo() == 
@@ -44,6 +43,9 @@ getCreditCardInfo() ==
 pure public getParkingCardInfo : () ==> String
 getParkingCardInfo() == 
 	return paymentInfo;
+
+functions
+
 
 
 

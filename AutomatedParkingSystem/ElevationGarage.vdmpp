@@ -1,35 +1,54 @@
-class ElevationGarage
+class ElevationGarage is subclass of GLOBAL
 
 types
 
-public GateState = [<Opend> | <Closed>];
+public GateState = [<Open> | <Closed>];
 
 instance variables
 	EntranceGate : GateState;
 	ExitGate : GateState;
 	camera : Camera;
+	car : [Car] := nil; -- Overvej
+	
 
 operations
 
 public ElevationGarage: Camera ==> ElevationGarage
 ElevationGarage(pCam) == (
-	GarageFree();
+	garageFree();
 	camera := pCam);
 	
-public GarageFree: () ==> ()
-GarageFree() == (
-	EntranceGate := <Opend>;
+public handleParking: Car * PaymentInfo ==> [Car]
+handleParking(pcar, ppi) == (
+	if camera.validateLicensePlate(pcar) and APS`ts.validatePaymentInfo(ppi,camera.hasParkingPermit(pcar))
+		then(garageBusy();
+				 APS`ins.registerCar(pcar,ppi);
+				 -- STEP
+				 APS`pl.parkCar(pcar);
+				 garageFree();
+				 return nil;)
+	else
+		return pcar;);
+
+	
+public isGarageFree: () ==> bool
+isGarageFree() == 
+	return EntranceGate = <Open> and ExitGate = <Closed>;
+	
+public garageFree: () ==> ()
+garageFree() == (
+	EntranceGate := <Open>;
 	ExitGate := <Closed>;);
 
-public GarageBusy: () ==> ()
-GarageBusy() == (
+public garageBusy: () ==> ()
+garageBusy() == (
 	EntranceGate := <Closed>;
 	ExitGate := <Closed>;);
-	
-public GarageReadyForExit: () ==> ()
-GarageReadyForExit() == (
+
+public garageReadyForExit: () ==> ()
+garageReadyForExit() == (
 	EntranceGate := <Closed>;
-	ExitGate := <Opend>;);
+	ExitGate := <Open>;);
 
 
 

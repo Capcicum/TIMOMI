@@ -1,11 +1,10 @@
 class ParkingLevel is subclass of GLOBAL
 
 instance variables
+	
 	parkingSpots : set of Car;
 inv forall x,y in set parkingSpots &
 	x <> y => x.getLicensePlate() <> y.getLicensePlate()
-	
-	--parkingSpots : map licensePlate to Car := {|->}; HUSK Eksempel i slides collection!
 
 operations
 
@@ -27,15 +26,10 @@ getCar(plpi) ==
 		return Car
 pre isCarParked(plpi,parkingSpots);
 
-
--- end of Set implementation --
-
-
 functions
--- Set implementation: --
+
 isCarParked: LicensePlate * set of Car -> bool
 isCarParked(plpi,pps) ==
 	exists Car in set pps & Car.getLicensePlate() = plpi
--- end of Set implementation --
 
 end ParkingLevel
