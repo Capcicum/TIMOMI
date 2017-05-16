@@ -4,8 +4,8 @@ operations
 
 public validatePaymentInfo : PaymentInfo * bool ==> bool
 validatePaymentInfo(ppi, pHasParkingPermit) == (
-	if ppi = CreditCard and validateCreditCard(ppi)
-		then return true
+	if ppi = CreditCard
+		then return validateCreditCard(ppi)
 	else if ppi = ParkingCard and pHasParkingPermit
 			then validateParkingCard(ppi)
 	else return false;);

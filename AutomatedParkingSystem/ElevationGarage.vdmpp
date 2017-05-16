@@ -5,18 +5,17 @@ types
 public GateState = [<Open> | <Closed>];
 
 instance variables
-	EntranceGate : GateState;
-	ExitGate : GateState;
-	camera : Camera;
+	EntranceGate : GateState := <Open>;
+	ExitGate : GateState := <Closed>;
+	camera : [Camera] := nil;
 	car : [Car] := nil; -- Overvej
 	
 
 operations
 
-public ElevationGarage: Camera ==> ElevationGarage
-ElevationGarage(pCam) == (
-	garageFree();
-	camera := pCam);
+public ElevationGarage: () ==> ElevationGarage
+ElevationGarage() == (
+	camera := new Camera());
 	
 public handleParking: Car * PaymentInfo ==> [Car]
 handleParking(pcar, ppi) == (
@@ -31,6 +30,7 @@ handleParking(pcar, ppi) == (
 		return pcar;);
 
 	
+--function
 public isGarageFree: () ==> bool
 isGarageFree() == 
 	return EntranceGate = <Open> and ExitGate = <Closed>;

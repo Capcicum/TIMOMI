@@ -1,4 +1,4 @@
-class APS
+class APS is subclass of GLOBAL
 
 instance variables
 
@@ -12,6 +12,8 @@ public static ins : InformationStation := new InformationStation();
 public static pl : ParkingLevel := new ParkingLevel();
 
 public static ts : TransactionSystem := new TransactionSystem();
+
+public static garageDB : set of LicenseToPayment := {}; 
 
 end APS
 

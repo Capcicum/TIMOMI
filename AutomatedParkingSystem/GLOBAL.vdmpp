@@ -27,6 +27,11 @@ inv pc == len pc = 5;
 
 public PaymentInfo = CreditCard | ParkingCard;
 
+public LicenseToPayment ::
+	licens : LicensePlate
+	info : PaymentInfo; 
+	
+
 ---
 		   		        
 end GLOBAL

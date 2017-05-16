@@ -1,5 +1,7 @@
 class Car is subclass of GLOBAL
-			   		         
+
+--make to record in global
+	   		         
 instance variables
 	parkingPermit: bool;
 	licensePlate : LicensePlate;
