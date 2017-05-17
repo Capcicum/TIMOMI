@@ -34,9 +34,12 @@ handleParking(ppi) == (
 		(garageReadyForExit();
 		car := nil;
 		garageFree();
-		);););
+		)));
 		
--- public retriveCar: 
+public retriveCar: LicensePlate ==> Car
+retriveCar(plp) ==
+	is not yet specified;
+
 		
 public isGarageFree: () ==> bool
 isGarageFree() == 

@@ -1,0 +1,23 @@
+class InformationStation is subclass of GLOBAL
+
+operations
+
+pure public findFreeGarage : () ==> [ElevationGarage] -- TODO Til nye Drivers
+findFreeGarage() ==
+	is not yet specified; -- return element i seq of ElevationGarage
+	
+public registerCar : LicensePlate * PaymentInfo ==> () 
+registerCar(plp, ppi) ==
+	APS`garageDB := APS`garageDB union {mk_LicenseToPayment(plp, ppi)}
+pre mk_LicenseToPayment(plp, ppi) not in set APS`garageDB; -- Er denne pre okay?
+
+public retriveCar : PaymentInfo ==> () -- TODO Til Drivers der skal retrieve
+retriveCar(ppi) ==
+	--if APS`validationService.validatePaymentInfo(ppi)
+	--	then (TODO Retrive  mk_LicenseToPayment fra APS`garageDB indeholdende ppi)
+	--findFreeGarage
+	--elevationgarage.retrive car
+	
+	is not yet specified;
+	
+end InformationStation

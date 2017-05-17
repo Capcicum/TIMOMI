@@ -4,12 +4,8 @@ values
 
 -- Ref: https://da.wikipedia.org/wiki/Nummerplade
 
-bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC"};
-bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å'};
-
-
-
-
+bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
+bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å', ' '};
 
 -- Todo Add restrictions for CreditCard & ParkingCard
 
@@ -17,7 +13,7 @@ functions
 
 -- LicensePlate
 
-public validateLicensePlate : LicensePlate -> bool 
+public validateLicensePlate : LicensePlate -> bool -- Validate non zero?
 validateLicensePlate(plp) ==  
 	validateRegistrationLetters(plp) and validateNumberSeries(plp);
 
@@ -55,11 +51,6 @@ validatePaymentInfo(ppi, pHasParkingPermit) ==
 			then validateParkingCard(ppi)
 	else false;
 	
-		
-public calculateParkingFee : LicensePlate -> real -- TODO
-calculateParkingFee(plp) ==
-	is not yet specified;
-	-- getParkingRate(plp);
 
 public validateCreditCard : PaymentInfo -> bool
 validateCreditCard(ppi) == 

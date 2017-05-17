@@ -13,6 +13,8 @@ public static parkingLevel : ParkingLevel := new ParkingLevel();
 
 public static validationService : ValidationService := new ValidationService();
 
+public static transactionService : TransactionService := new TransactionService(); -- Tilføj til Context diagram
+
 public static garageDB : set of LicenseToPayment := {}; 
 
 end APS

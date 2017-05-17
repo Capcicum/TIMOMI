@@ -1,5 +1,6 @@
 class GLOBAL
 types
+
 -- General types --
 
 public String = seq of char;
@@ -30,10 +31,11 @@ inv pc == len pc = 5;
 
 public PaymentInfo = CreditCard | ParkingCard;
 
+-- Validation --
+
 public LicenseToPayment ::
 	licens : LicensePlate
 	info : PaymentInfo; 
-	
 
 ---
 		   		        
