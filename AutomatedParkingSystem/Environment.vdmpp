@@ -1,6 +1,36 @@
-class Environment
+class Environment is subclass of GLOBAL
+
+types
+
+private inline = UserGoal *  Car * PaymentInfo *  Time; 
+	-- Overvej om Time skal benyttes som:
+	-- Giv en tid med som tiden mellem park og retrive
+	
+protected outline =  UserGoal * Car * nat * Time; -- hvor nat er price
+
+instance variables
+  io : IO := new IO();
+	inlines  : seq of inline  := [];
+	outlines : seq of outline := [];
+	busy : bool := true;
 
 
+operations 
 
+public Environment : String ==> Environment
+Environment(fname) ==
+	is not yet specified;
+	
+public Run : () ==> ()
+Run() ==
+ is not yet specified;
+
+public showResult : () ==> ()
+showResult() ==
+	def -= io.writeval[seq of outline](outlines) in skip;	
+	
+public isFinished : () ==> bool
+isFinished() ==
+	is not yet specified;
 
 end Environment

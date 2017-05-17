@@ -1,5 +1,19 @@
 class World
 
+instance variables
 
+public static env: [Environment] := nil;
+public static timeRef : Timer := Timer`GetInstance();
+
+operations
+
+public World : () ==> World
+World() ==
+	env := new Environment("scenario.txt");
+
+public Run : () ==> ()
+Run() ==
+	(env.Run();
+	 env.showResult());
 
 end World
