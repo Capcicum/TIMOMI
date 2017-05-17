@@ -7,41 +7,48 @@ public GateState = [<Open> | <Closed>];
 instance variables
 	EntranceGate : GateState := <Open>;
 	ExitGate : GateState := <Closed>;
-	car : [Car] := nil; 
+	parkedCar : [Car] := nil; 
 	isFree : bool := true;
 
 operations
 	
 public parkCar : Car ==> ()
 parkCar(pcar) == (
-	car := pcar;
+	parkedCar := pcar;
 	isFree := false;)
-pre car = nil;	
+pre parkedCar = nil;	
 	
 public handleParking:  PaymentInfo ==> ()
 handleParking(ppi) == (	
 	if not isFree
-	then (if APS`validationService.validateLicensePlate(car.licensePlate) and 
-	APS`validationService.validatePaymentInfo(ppi,car.parkingPermit)
+	then (if APS`validationService.validateLicensePlate(parkedCar.licensePlate) and 
+	APS`validationService.validatePaymentInfo(ppi,parkedCar.parkingPermit)
 		then(garageBusy();
-				 APS`informationStation.registerCar(car.licensePlate,ppi);
+				 APS`informationStation.registerCar(parkedCar.licensePlate,ppi);
 				 -- STEP
-				 APS`parkingLevel.parkCar(car);
-				 car := nil;
+				 APS`parkingLevel.parkCar(parkedCar);
+				 parkedCar := nil;
 				 garageFree();)
 	else 
 		--handleEvent
 		(garageReadyForExit();
-		car := nil;
+		parkedCar := nil;
 		garageFree();
 		)));
 		
-public retriveCar: LicensePlate ==> Car
-retriveCar(plp) ==
-	is not yet specified;
-
+public retriveCar: LicensePlate ==> () -- Steps
+retriveCar(plp) == (
+	isFree := false;
+	garageBusy();
+	parkedCar := APS`parkingLevel.retriveCar(plp);
+	garageReadyForExit();
+	-- Handle car removed
+	parkedCar := nil;
+	garageFree();
+	isFree := true)
+pre isFree = true;
 		
-public isGarageFree: () ==> bool
+pure public isGarageFree: () ==> bool
 isGarageFree() == 
 	return isFree;
 	

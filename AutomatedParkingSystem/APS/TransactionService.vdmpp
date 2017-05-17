@@ -7,8 +7,11 @@ parkingRateDB : map CountryIdentifier to nat
 						 	<Other> |-> 15};
 
 functions
+
 public calculateParkingRate : LicensePlate -> nat
 calculateParkingRate(plp) ==
 	is not yet specified;
+	
+
 
 end TransactionService

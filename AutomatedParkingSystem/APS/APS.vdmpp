@@ -4,8 +4,8 @@ instance variables
 
 public static eg1 : ElevationGarage := new ElevationGarage();
 public static eg2 : ElevationGarage := new ElevationGarage();
-garages : seq of ElevationGarage := [eg1, eg2];
 
+public static garages : seq of ElevationGarage := [eg1, eg2];
 
 public static informationStation : InformationStation := new InformationStation();
 
@@ -13,7 +13,7 @@ public static parkingLevel : ParkingLevel := new ParkingLevel();
 
 public static validationService : ValidationService := new ValidationService();
 
-public static transactionService : TransactionService := new TransactionService(); -- Tilføj til Context diagram
+public static transactionService : TransactionService := new TransactionService();
 
 public static garageDB : set of LicenseToPayment := {}; 
 

@@ -1,14 +1,24 @@
 class Timer
-types
--- TODO Define types here
-values
--- TODO Define values here
+
 instance variables
--- TODO Define instance variables here
+	time : nat := 0;
+	private static timerInstance : Timer := new Timer(); 
+
+values
+	stepLength : nat = 1;
+
 operations
--- TODO Define operations here
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+
+public static GetInstance: () ==> Timer
+GetInstance() ==
+  return timerInstance;
+
+public StepTime : () ==> ()
+StepTime() ==
+  time := time + stepLength;
+
+public GetTime : () ==> nat
+GetTime() ==
+  return time;
+
 end Timer

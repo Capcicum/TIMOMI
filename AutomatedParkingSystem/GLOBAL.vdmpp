@@ -5,6 +5,8 @@ types
 
 public String = seq of char;
 
+public UserOutputs = [<ElevationGaragesOccupied> | <InvalidPaymentCard> | <InvalidLicensePlate>];
+
 -- Car  --
 public CountryIdentifier = [<Danish> | <European> | <Other>];
 
@@ -12,7 +14,7 @@ public RegistrationLetters = String
 inv rl == len rl = 2;
 
 public NumberSeries = nat
-inv num == num <= 99999;
+inv num == num <= 99999 and num >= 5000;
 
 public LicensePlate :: ci : CountryIdentifier
 				   		         rl : RegistrationLetters
@@ -27,14 +29,14 @@ public CreditCard = seq of nat -- TODO
 inv num == len num = 16;
 
 public ParkingCard = String
-inv pc == len pc = 5;
+inv pc == len pc = 6;
 
 public PaymentInfo = CreditCard | ParkingCard;
 
 -- Validation --
 
 public LicenseToPayment ::
-	licens : LicensePlate
+	license : LicensePlate
 	info : PaymentInfo; 
 
 ---
