@@ -12,7 +12,7 @@ operations
 public validateLicensePlate : LicensePlate ==> bool 
 validateLicensePlate(plp) == (
 	if validateRegistrationLetters(plp) and validateNumberSeries(plp) and
-	LicensePlate not in set {x.license | x in set APS`garageDB}
+	plp not in set {x.license | x in set APS`garageDB}
 	then return true
 	else return false;);
 
@@ -45,15 +45,15 @@ validatePaymentInfo(ppi) ==
 	if is_CreditCard(ppi)
 		then validateCreditCard(ppi)
 	else if is_ParkingCard(ppi)
-			then validateParkingCard(ppi)
+		then validateParkingCard(ppi)
 	else false;	
 
 public validateCreditCard : PaymentInfo -> bool -- [1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7]
 validateCreditCard(ppi) == 
-	len ppi = 16;
+	len ppi = 6;
 	
 public validateParkingCard : PaymentInfo -> bool -- [p,1,2,3,4,5]
 validateParkingCard(ppi) ==
-	len ppi = 5 and hd ppi = 'p';
+	len ppi = 6 and hd ppi = 'p';
 
 end ValidationService
