@@ -1,5 +1,6 @@
 class GLOBAL
 types
+
 -- General types --
 
 public String = seq of char;
@@ -11,26 +12,33 @@ public RegistrationLetters = String
 inv rl == len rl = 2;
 
 public NumberSeries = nat
-inv num == num <= 99999;
+inv num == num <= 99999 and num >= 5000;
 
 public LicensePlate :: ci : CountryIdentifier
 				   		         rl : RegistrationLetters
-				   		         ns : NumberSeries;					   		         
+				   		         ns : NumberSeries;	
+				   		         
+public Car :: licensePlate : LicensePlate
+							parkingPermit : bool;				   		         
 
 -- Driver --
 
+--public thousands  = String
+--inv ts == len ts = 4 and is_nat1(elems ts);
+
 public CreditCard = seq of nat
-inv num == len num = 16;
+inv num == len num = 6;
 
 public ParkingCard = String
-inv pc == len pc = 5;
+inv pc == len pc = 6;
 
 public PaymentInfo = CreditCard | ParkingCard;
 
+-- Validation --
+
 public LicenseToPayment ::
-	licens : LicensePlate
+	license : LicensePlate
 	info : PaymentInfo; 
-	
 
 ---
 		   		        

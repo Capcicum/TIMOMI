@@ -1,0 +1,70 @@
+class ValidationServiceTest is subclass of TestCase, GLOBAL
+
+--{"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
+--{'I', 'Q', 'ф', 'ь', 'е', ' '};
+
+--	plp.ns >= 5000 and plp.ns <= 5399 or
+--	plp.ns >= 20000 and plp.ns <= 77999 or
+--	plp.ns >= 98000 and plp.ns <= 99999;
+
+values
+car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true); 
+car2 : Car = mk_Car(mk_LicensePlate(<Danish>, "BH", 10000), true);
+car3 : Car = mk_Car(mk_LicensePlate(<European>, "GI", 10000), true);
+car4 : Car = mk_Car(mk_LicensePlate(<Danish>, "GO", 5400), true); 
+car5 : Car = mk_Car(mk_LicensePlate(<Other>, "ее", 80000), true);
+
+payInfo_cred1 : PaymentInfo = [1,2,3,4,5,6];
+payInfo_cred2 : PaymentInfo = [0,0,0,0,0,0];
+
+payInfo_park1 : PaymentInfo = ['p','0','0','0','0','0'];
+payInfo_park2 : PaymentInfo = ['p','1','2','3','4','5'];
+payInfo_park3 : PaymentInfo = ['j','1','2','3','4','5'];
+
+operations 
+
+protected runTest : () ==> ()
+runTest() == 
+	(validateLicensePlateTest();
+	 validateRegistrationLettersTest();
+	 validateNumberSeriesTest();
+	 validatePaymentInfoTest(););
+
+protected validateLicensePlateTest : () ==> ()
+validateLicensePlateTest() == (
+	dcl validationService : ValidationService := new ValidationService();
+	assertTrue(validationService.validateLicensePlate(car1.licensePlate) = true);
+	assertTrue(validationService.validateLicensePlate(car5.licensePlate) = false););
+
+protected validateRegistrationLettersTest : () ==> ()
+validateRegistrationLettersTest() ==	(
+	dcl validationService : ValidationService := new ValidationService();
+	assertTrue(validationService.validateRegistrationLetters(car1.licensePlate) = true);
+	assertTrue(validationService.validateRegistrationLetters(car2.licensePlate) = false);
+	assertTrue(validationService.validateRegistrationLetters(car3.licensePlate) = false);
+	assertTrue(validationService.validateRegistrationLetters(car4.licensePlate) = false);
+	assertTrue(validationService.validateRegistrationLetters(car5.licensePlate) = false););
+	
+protected validateNumberSeriesTest : () ==> ()
+validateNumberSeriesTest() ==	(
+	dcl validationService : ValidationService := new ValidationService();
+	assertTrue(validationService.validateNumberSeries(car1.licensePlate) = true);
+	assertTrue(validationService.validateNumberSeries(car2.licensePlate) = false);
+	assertTrue(validationService.validateNumberSeries(car3.licensePlate) = false);
+	assertTrue(validationService.validateNumberSeries(car4.licensePlate) = false);
+	assertTrue(validationService.validateNumberSeries(car5.licensePlate) = false););
+	
+protected validatePaymentInfoTest : () ==> () 
+validatePaymentInfoTest() == (
+	dcl validationService : ValidationService := new ValidationService();
+	assertTrue(validationService.validatePaymentInfo(payInfo_cred1) = true);
+	assertTrue(validationService.validatePaymentInfo(payInfo_cred2) = true);
+	assertTrue(validationService.validatePaymentInfo(payInfo_cred1, true) = true);
+	assertTrue(validationService.validatePaymentInfo(payInfo_park1, true) = true);
+	assertTrue(validationService.validatePaymentInfo(payInfo_park1) = true);
+	assertTrue(validationService.validatePaymentInfo(payInfo_park2, false) = false);
+	assertTrue(validationService.validatePaymentInfo(payInfo_park3, true) = false););
+
+
+
+end ValidationServiceTest

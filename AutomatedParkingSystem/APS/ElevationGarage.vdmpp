@@ -1,0 +1,76 @@
+class ElevationGarage is subclass of GLOBAL
+
+types
+
+public GateState = [<Open> | <Closed>];
+
+instance variables
+	EntranceGate : GateState := <Open>;
+	ExitGate : GateState := <Closed>;
+	parkedCar : [Car] := nil; 
+	isFree : bool := true;
+
+operations
+	
+public parkCar : Car ==> ()
+parkCar(pcar) == (
+	parkedCar := pcar;
+	isFree := false;)
+pre parkedCar = nil;	
+	
+public handleParking:  PaymentInfo ==> ()
+handleParking(ppi) == (	
+	if not isFree
+	then (if APS`validationService.validateLicensePlate(parkedCar.licensePlate) and 
+	APS`validationService.validatePaymentInfo(ppi,parkedCar.parkingPermit)
+		then(garageBusy();
+				 APS`informationStation.registerCar(parkedCar.licensePlate,ppi);
+				 -- STEP
+				 APS`parkingLevel.parkCar(parkedCar);
+				 parkedCar := nil;
+				 garageFree();)
+	else 
+		--handleEvent
+		(garageReadyForExit();
+		parkedCar := nil;
+		garageFree();
+		)));
+		
+public retriveCar: LicensePlate ==> () -- Steps
+retriveCar(plp) == (
+	isFree := false;
+	garageBusy();
+	parkedCar := APS`parkingLevel.retriveCar(plp);
+	garageReadyForExit();
+	-- Handle car removed
+	parkedCar := nil;
+	garageFree();
+	isFree := true)
+pre isFree = true;
+		
+pure public isGarageFree: () ==> bool
+isGarageFree() == 
+	return isFree;
+	
+public garageFree: () ==> () -- Lav et STM
+garageFree() == (
+	if EntranceGate = <Closed>
+	then EntranceGate := <Open>;
+	if ExitGate = <Open>
+	then ExitGate := <Closed>;
+	isFree := true;)
+pre EntranceGate = ExitGate and isFree = false;
+
+public garageBusy: () ==> ()
+garageBusy() == (
+	EntranceGate := <Closed>;)
+pre EntranceGate = <Open> and ExitGate = <Closed> and isFree = false;
+
+public garageReadyForExit: () ==> ()
+garageReadyForExit() == (
+	if EntranceGate = <Closed>
+	then EntranceGate := <Open>;
+	ExitGate := <Open>;)
+pre ExitGate = <Closed> and isFree = false;
+
+end ElevationGarage

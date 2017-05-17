@@ -1,0 +1,22 @@
+class APS is subclass of GLOBAL
+
+instance variables
+
+public static eg1 : ElevationGarage := new ElevationGarage();
+public static eg2 : ElevationGarage := new ElevationGarage();
+
+public static garages : seq of ElevationGarage := [eg1, eg2];
+
+public static informationStation : InformationStation := new InformationStation();
+
+public static parkingLevel : ParkingLevel := new ParkingLevel();
+
+public static validationService : ValidationService := new ValidationService();
+
+public static transactionService : TransactionService := new TransactionService();
+
+public static garageDB : set of LicenseToPayment := {}; 
+
+end APS
+
+

@@ -1,0 +1,46 @@
+class ParkingLevel is subclass of GLOBAL
+
+-- Inspiration from Airspace & Flying Object example
+
+instance variables
+	parkingSpots : set of Car := {};
+inv forall x,y in set parkingSpots &
+	x <> y => x.licensePlate <> y.licensePlate
+
+operations
+
+public parkCar : Car ==> ()
+parkCar(pc) ==
+	parkingSpots := parkingSpots union {pc}
+pre pc.licensePlate not in set 
+	{i.licensePlate | i in set parkingSpots};
+
+public retriveCar : LicensePlate ==> Car
+retriveCar(plp) == (
+	dcl car : Car := getCar(plp);
+	removeCar(plp);
+	return car);
+	
+public removeCar : LicensePlate ==> ()
+removeCar(plp) ==
+	parkingSpots := parkingSpots \ {getCar(plp)}
+pre isCarParked(plp, parkingSpots);
+
+public getCar : LicensePlate ==> Car
+getCar(plp) ==
+	let Car in set parkingSpots be st Car.licensePlate = plp
+	in
+		return Car
+pre isCarParked(plp,parkingSpots);
+
+public getParkingSpots : () ==> set of Car
+getParkingSpots() == 
+	return parkingSpots;
+
+functions
+
+isCarParked: LicensePlate * set of Car -> bool
+isCarParked(plpi,pps) ==
+	exists Car in set pps & Car.licensePlate = plpi
+
+end ParkingLevel

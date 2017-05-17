@@ -1,0 +1,34 @@
+class InformationStation is subclass of GLOBAL
+
+operations
+
+pure public findFreeGarage : () ==> [ElevationGarage]
+findFreeGarage() == (
+	dcl freeGarages : seq of ElevationGarage := 
+	[elevGarag | elevGarag in seq APS`garages & elevGarag.isGarageFree() = true];
+		 if freeGarages <> []
+		 	then return hd freeGarages
+		 else return nil;);
+		 
+public registerCar : LicensePlate * PaymentInfo ==> () 
+registerCar(plp, ppi) ==
+	APS`garageDB := APS`garageDB union {mk_LicenseToPayment(plp, ppi)}
+pre mk_LicenseToPayment(plp, ppi) not in set APS`garageDB; -- Er denne pre okay?
+
+public retriveCar : PaymentInfo * [LicensePlate] ==> () -- Hiv noe pænge! 
+retriveCar(ppi, plp) == (
+	dcl freeGarage : [ElevationGarage] := findFreeGarage();
+	if freeGarage <> nil
+		
+		then if APS`validationService.validatePaymentInfo(ppi)
+			then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 
+				then freeGarage.retriveCar(plp)
+					
+			else (let liceToPay in set APS`garageDB be st liceToPay.info = ppi
+						in freeGarage.retriveCar(liceToPay.license););
+		-- handle else hvis kortet ikke er valid
+		
+	-- handle else hvis der ikke er fri garage
+);		 
+
+end InformationStation
