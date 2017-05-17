@@ -5,6 +5,10 @@ types
 
 public String = seq of char;
 
+public UserGoal = [<Park> | <Retrive>];
+
+public Time = nat;
+
 -- Car  --
 public CountryIdentifier = [<Danish> | <European> | <Other>];
 
