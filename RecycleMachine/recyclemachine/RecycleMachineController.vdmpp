@@ -94,7 +94,6 @@ Step() ==
 				then HandleRecycleBox()
 				else validationProgress := validationProgress + 1;))
 	
-	
 functions 
 
 private TotalRecycleSum : seq of RecycleItem * RecycleRules -> real

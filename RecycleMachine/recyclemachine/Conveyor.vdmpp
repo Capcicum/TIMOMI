@@ -9,6 +9,7 @@ protected scanProgress : nat := 0;
 protected scanProgressTime :nat := 10;
 
 protected isScanning : bool := false;
+protected isWaitingForValidation : bool := false;
 
 operations 
 
@@ -31,8 +32,10 @@ Scan() ==
 		isScanning := true
 	else if scanProgress >= scanProgressTime
 	then 
-		(RecycleMachine`recycleMachineController.Validate(scanningArea);
-		scanProgress := 0;)
+		if isWaitingForValidation = false
+		then
+			(RecycleMachine`recycleMachineController.Validate(scanningArea);
+			isWaitingForValidation := true;)
 	else if isScanning = true
 	then
 		scanProgress := scanProgress + 1
@@ -43,9 +46,12 @@ Step() ==
 		if entranceArea <> nil and scanningArea = nil
 		then 
 			(MoveConveyor();
-			Scan())
+			Scan();
+			RecycleMachine`recycleMachineController.SetState(<Ready>))
 		else if entranceArea = nil and scanningArea <> nil 
-		then Scan()
+		then 
+			(Scan();
+			RecycleMachine`recycleMachineController.SetState(<Ready>))
 		else if entranceArea <> nil and scanningArea <> nil
 		then 
 			RecycleMachine`recycleMachineController.SetState(<TooManyItems>);
@@ -53,6 +59,8 @@ Step() ==
 public MoveConveyor : () ==> ()
 MoveConveyor() ==
 	(RecycleMachine`storage.Store(scanningArea);
+	if scanningArea <> nil
+	then isWaitingForValidation := false;
 	scanningArea := entranceArea;
  	entranceArea := nil;
  	isScanning := false;

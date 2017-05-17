@@ -17,14 +17,14 @@ Donate() ==
 		
 public SetState : RecycleMachineState ==> ()
 SetState(prms) ==
-	(World`env.HandleEvent(prms);
-	cases prms: 
-		<ItemInvalid> -> io.print("ItemInvalid"),
-		<BoxInvalid> -> io.print("BoxInvalid"),
-		<TooManyItems> -> io.print("TooManyItems"),
-		<TooManyBoxes> -> io.print("TooManyBoxes"),
-		<ItemStorageFull> -> io.print("ItemStorageFull"),
-		<BoxStorageFull> -> io.print("BoxStorageFull") 
-	end;);
+	World`env.HandleEvent(prms);
+	--cases prms: 
+		--<ItemInvalid> -> io.print("ItemInvalid"),
+		--<BoxInvalid> -> io.print("BoxInvalid"),
+		--<TooManyItems> -> io.print("TooManyItems"),
+		--<TooManyBoxes> -> io.print("TooManyBoxes"),
+		--<ItemStorageFull> -> io.print("ItemStorageFull"),
+		--<BoxStorageFull> -> io.print("BoxStorageFull") 
+	--end;);
 
 end UI
