@@ -21,17 +21,11 @@ RecycleMachineController(pivt, pbvt) ==
 	(itemValidationTime := pivt;
 	boxValidationTime := pbvt);
 
-pure public GetSum : () ==> real
-GetSum() ==
-	return sum;
-
-public ClearSum : () ==> ()
-ClearSum() ==
+public HandleUserMoney : () ==> real
+HandleUserMoney() == 
+	(dcl amount : real := sum;
 	sum := 0;
-
-public AddToSum : real ==> ()
-AddToSum(pv) ==
-	sum := sum + pv;
+	return amount);
 
 public SetState : RecycleMachineState ==> ()
 SetState(prms) ==
@@ -41,38 +35,6 @@ SetState(prms) ==
 public Validate : Recycle ==> ()
 Validate(prr) ==
 	itemsForValidation := itemsForValidation ^ [prr];
-
-	
-private HandleRecycleItem : () ==> ()
-HandleRecycleItem() ==
-	if RecycleMachine`rr.IsRecycleValid(hd itemsForValidation)
-	then 
-		(if RecycleMachine`storage.StorageAvailableItem()
-		then (AddToSum(RecycleMachine`rr.GetPrice(hd itemsForValidation));
-					RecycleMachine`singleItemConveyor.MoveConveyor())
-		else 
-			(RecycleMachine`singleItemConveyor.Reject();
-			SetState(<ItemStorageFull>)))
-	else 
-		(RecycleMachine`singleItemConveyor.Reject();
-		SetState(<ItemInvalid>));	
-
-private HandleRecycleBox : () ==> ()
-HandleRecycleBox() ==
-	(isValidating := false;
-	validationProgress := 0;
-	(if ScanBottles(hd itemsForValidation, RecycleMachine`rr)
-	then 
-		(if RecycleMachine`storage.StorageAvailableBox()
-		then 
-			(AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum((hd itemsForValidation).ri, RecycleMachine`rr));
-			RecycleMachine`boxConveyor.MoveConveyor())
-		else
-			(RecycleMachine`boxConveyor.Reject();
-			SetState(<BoxStorageFull>))) 		
-	else (RecycleMachine`boxConveyor.Reject();
-				SetState(<BoxInvalid>)));
-	itemsForValidation := tl itemsForValidation);
 	
 public IsFinished: () ==> bool
 IsFinished() ==
@@ -92,24 +54,63 @@ Step() ==
 			else
 				(if validationProgress = boxValidationTime
 				then HandleRecycleBox()
-				else validationProgress := validationProgress + 1;))
+				else validationProgress := validationProgress + 1;));
+
+private HandleRecycleItem : () ==> ()
+HandleRecycleItem() ==
+	(isValidating := false;
+	validationProgress := 0;
+	(if RecycleMachine`rr.IsRecycleValid(hd itemsForValidation)
+	then 
+		(if RecycleMachine`storage.StorageAvailableItem()
+			then 
+				(AddToSum(RecycleMachine`rr.GetPrice(hd itemsForValidation));
+				RecycleMachine`singleItemConveyor.ValidationResult(true);)
+		else 
+			(RecycleMachine`singleItemConveyor.ValidationResult(false);
+			SetState(<ItemStorageFull>));)
+	else 
+		(RecycleMachine`singleItemConveyor.ValidationResult(false);
+		SetState(<ItemInvalid>)););	
+	itemsForValidation := tl itemsForValidation);
+	
+private HandleRecycleBox : () ==> ()
+HandleRecycleBox() ==
+	(isValidating := false;
+	validationProgress := 0;
+	(if ScanBottles(hd itemsForValidation, RecycleMachine`rr)
+	then 
+		(if RecycleMachine`storage.StorageAvailableBox()
+		then 
+			(AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum((hd itemsForValidation).ri, RecycleMachine`rr));
+			RecycleMachine`boxConveyor.ValidationResult(true))
+		else
+			(RecycleMachine`boxConveyor.ValidationResult(false);
+			SetState(<BoxStorageFull>))) 		
+	else (RecycleMachine`boxConveyor.ValidationResult(false);
+				SetState(<BoxInvalid>)));
+	itemsForValidation := tl itemsForValidation);
+
+private AddToSum : real ==> ()
+AddToSum(pv) ==
+	sum := sum + pv;
 	
 functions 
 
-private TotalRecycleSum : seq of RecycleItem * RecycleRules -> real
+private TotalRecycleSum : seq of RecycleItem * RecycleService -> real
 TotalRecycleSum(pri, prr) ==
 	if pri = []
 	then 0
 	else prr.GetPrice(hd pri) + TotalRecycleSum(tl pri, prr)
 measure Len;
 
-Len : seq of RecycleItem * RecycleRules -> nat
+Len : seq of RecycleItem * RecycleService -> nat
 Len(pri, -) ==
 	len pri;
 
-private ScanBottles : RecycleBox * RecycleRules -> bool
+private ScanBottles : RecycleBox * RecycleService -> bool
 ScanBottles(prb, prr) ==
 		forall i in set inds prb.ri & prr.IsRecycleValid(prb.ri(i)) and
-		forall j,k in set inds prb.ri & prb.ri(j).s = prb.ri(k).s;	
+		forall j in set inds prb.ri & prb.ri(j).s = <GUHL>;	
 
 end RecycleMachineController

@@ -7,24 +7,22 @@ operations
 
 public GetReceipt : () ==> ()
 GetReceipt() == 
-		(World`env.HandleEvent(World`timerRef.GetTime(), <Receipt>, RecycleMachine`recycleMachineController.GetSum());
-		RecycleMachine`recycleMachineController.ClearSum());
+		World`env.HandleEvent(World`timerRef.GetTime(), <Receipt>, RecycleMachine`recycleMachineController.HandleUserMoney());
 		
 public Donate : () ==> ()
 Donate() ==
-		(World`env.HandleEvent(World`timerRef.GetTime(), <Donate>, RecycleMachine`recycleMachineController.GetSum());
-		RecycleMachine`recycleMachineController.ClearSum());
+		World`env.HandleEvent(World`timerRef.GetTime(), <Donate>, RecycleMachine`recycleMachineController.HandleUserMoney());
 		
 public SetState : RecycleMachineState ==> ()
 SetState(prms) ==
-	World`env.HandleEvent(prms);
-	--cases prms: 
-		--<ItemInvalid> -> io.print("ItemInvalid"),
-		--<BoxInvalid> -> io.print("BoxInvalid"),
-		--<TooManyItems> -> io.print("TooManyItems"),
-		--<TooManyBoxes> -> io.print("TooManyBoxes"),
-		--<ItemStorageFull> -> io.print("ItemStorageFull"),
-		--<BoxStorageFull> -> io.print("BoxStorageFull") 
-	--end;);
+	(World`env.HandleEvent(prms);
+	cases prms: 
+		<ItemInvalid> -> io.print("ItemInvalid\n"),
+		<BoxInvalid> -> io.print("BoxInvalid\n"),
+		<TooManyItems> -> io.print("TooManyItems\n"),
+		<TooManyBoxes> -> io.print("TooManyBoxes\n"),
+		<ItemStorageFull> -> io.print("ItemStorageFull\n"),
+		<BoxStorageFull> -> io.print("BoxStorageFull\n") 
+	end;);
 
 end UI

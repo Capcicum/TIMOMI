@@ -2,19 +2,12 @@ class Environment is subclass of GLOBAL
 
 types 
 
-public CustomerChoice = [<Donate> | <Receipt>];
-
-public Input = (CustomerChoice * seq of RecItemInline * seq of BoxItemInline);
-
-public RecItem = (RecycleMark * Barcode * Shape);
-
-public RecItemInline	= (Time * RecItem);
-
-public BoxItemInline  = (Time * (BoxType * seq of RecItem));
-
-public RecycleInline = RecItemInline | BoxItemInline;
-
-public Outline = (Time * CustomerChoice * real);
+Input = (CustomerChoice * seq of RecItemInline * seq of BoxItemInline);
+RecItem = (RecycleMark * Barcode * Shape);
+RecItemInline	= (Time * RecItem);
+BoxItemInline  = (Time * (BoxType * seq of RecItem));
+RecycleInline = RecItemInline | BoxItemInline;
+Outline = (Time * CustomerChoice * real);
 
 public RecycleEntry ::
 	time : nat
@@ -30,8 +23,8 @@ outlines : seq of Outline := [];
 
 cusTime : CustomerChoice := nil;
 
-public singleItems : seq of RecycleEntry := [];
-public boxes : seq of RecycleEntry := [];
+singleItems : seq of RecycleEntry := [];
+boxes : seq of RecycleEntry := [];
 
 operations 
 
@@ -89,16 +82,16 @@ public HandleEvent : RecycleMachineState ==> ()
 HandleEvent(prms) ==
 	cases prms: 
 		<ItemInvalid> -> def -= RecycleMachine`singleItemConveyor.RemoveRecycle() in skip,
-		<BoxInvalid> -> def -= RecycleMachine`singleItemConveyor.RemoveRecycle() in skip,
+		<BoxInvalid> -> def -= RecycleMachine`boxConveyor.RemoveRecycle() in skip,
 		<TooManyItems> -> (dcl rec : Recycle := RecycleMachine`singleItemConveyor.RemoveRecycle();
 											singleItems := singleItems  ^ [mk_RecycleEntry(World`timerRef.GetTime() + 10, rec)]),
-		<TooManyBoxes> -> (dcl rec : Recycle := RecycleMachine`singleItemConveyor.RemoveRecycle();
-											singleItems := singleItems  ^ [mk_RecycleEntry((boxes(len boxes)).time + 10, rec)]),
+		<TooManyBoxes> -> (dcl rec : Recycle := RecycleMachine`boxConveyor.RemoveRecycle();
+											boxes := boxes  ^ [mk_RecycleEntry((boxes(len boxes)).time + 10, rec)]),
 		<ItemStorageFull> -> RecycleMachine`storage.ClearItemStorage(),
 		<BoxStorageFull> -> RecycleMachine`storage.ClearBoxStorage()
 	end;
 	
-public IsFinished : () ==> bool
+private IsFinished : () ==> bool
 IsFinished() ==
 	return boxes = [] and singleItems = [] and not busy;
 

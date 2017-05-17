@@ -36,12 +36,12 @@ runTest() ==
 
 protected IsRecycleValidTest : () ==> ()
 IsRecycleValidTest() ==
-	(dcl rr : RecycleRules := new RecycleRules(); 
+	(dcl rr : RecycleService := new RecycleService(); 
 	for all x in set Rules do assertTrue(rr.IsRecycleValid(x)));
 	
 protected GetBoxPriceTest : () ==> ()
 GetBoxPriceTest() == 
-	(dcl rr : RecycleRules := new RecycleRules();
+	(dcl rr : RecycleService := new RecycleService();
 	assertTrue(rr.GetBoxPrice() = 12.5));
 	
 

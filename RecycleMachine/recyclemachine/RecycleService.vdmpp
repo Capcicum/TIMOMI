@@ -1,6 +1,4 @@
-class RecycleRules is subclass of GLOBAL
-
-instance variables
+class RecycleService is subclass of GLOBAL
 
 functions
 
@@ -46,4 +44,4 @@ mk_RecycleItem(<C>, true, nil) |-> 3};
 
 BoxPrice = 12.5;
 	
-end RecycleRules
+end RecycleService
