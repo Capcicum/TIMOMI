@@ -4,17 +4,21 @@ types
 
 public CustomerChoice = [<Donate> | <Receipt>];
 
-public Input = (CustomerChoice * seq of Inline);
+public Input = (CustomerChoice * seq of RecItemInline * seq of BoxItemInline);
 
-public RecItemInline	= (RecycleMark * Barcode * Shape);
+public RecItem = (RecycleMark * Barcode * Shape);
 
-public BoxItemInline  = (BoxType * seq of RecItemInline);
+public RecItemInline	= (Time * RecItem);
 
-public RecycleInline = (RecItemInline | BoxItemInline);
+public BoxItemInline  = (Time * (BoxType * seq of RecItem));
 
-public Inline = (Time * RecycleInline);
+public RecycleInline = RecItemInline | BoxItemInline;
 
 public Outline = (Time * CustomerChoice * real);
+
+public RecycleEntry ::
+	time : nat
+	recycle : Recycle;
 
 instance variables
  
@@ -22,57 +26,81 @@ io : IO := new IO();
 
 busy : bool := true;
 
-inlines : seq of Inline := [];
 outlines : seq of Outline := [];
 
 cusTime : CustomerChoice := nil;
+
+public singleItems : seq of RecycleEntry := [];
+public boxes : seq of RecycleEntry := [];
 
 operations 
 
 public Environment : seq of char  ==> Environment
 Environment(fname) ==
-	def mk_(-,mk_(choice, input)) = io.freadval[Input](fname)
-	in (inlines := input;
-			cusTime := choice);
+	def mk_(-,mk_(choice, itemInput, boxInput)) = io.freadval[Input](fname)
+	in (
+	singleItems := [MakeRecycle(x) | x in seq itemInput];
+	boxes := [MakeRecycle(x) | x in seq boxInput];
+	cusTime := choice);
 	
 private CreateSignal : () ==> ()
 CreateSignal() ==
-   ( 
-    if len inlines > 0 
-    then	(dcl curTime : Time := World`timerRef.GetTime(),
-    			done : bool := false;
-          while not done do
-             let mk_(time, rec) = hd inlines
-             in 
-             	if time <= curTime
-             	then
-                (
-                let 
-                	recItem = MakeRecycle(rec)
-                in
-               		(if is_RecycleMark(rec.#1)
-                	then RecycleMachine`singleItemConveyor.InputRecycle(recItem)
-                	else RecycleMachine`boxConveyor.InputRecycle(recItem));
-								inlines := tl inlines;
-                done := len inlines = 0
-                )
-              else done := true
-           );
-       if len inlines = 0
-       then 
-       	if cusTime = <Donate>
-       	then RecycleMachine`recycleMachineController.Donate() 
-       	else RecycleMachine`recycleMachineController.GetReceipt();
-       busy := false;
-    );
+	(if len singleItems > 0 or len boxes > 0 
+	then	
+		(dcl 
+			curTime : Time := World`timerRef.GetTime(),
+			boxDone : bool := false,
+			itemDone : bool := false;
+		busy := true;
+		while not boxDone and not itemDone 
+		do
+			(if len singleItems > 0
+			then
+				(let 
+					item = hd singleItems
+				in 
+					if item.time <= curTime
+					then
+						(RecycleMachine`singleItemConveyor.InputRecycle(item.recycle);
+						singleItems := tl singleItems;
+						itemDone := len singleItems = 0)
+					else itemDone := true)
+			else itemDone := true;
+			if len boxes > 0 
+			then
+				(let 
+					box = hd boxes
+				in 
+					if box.time <= curTime
+					then
+						(RecycleMachine`boxConveyor.InputRecycle(box.recycle);
+						boxes := tl boxes;
+						boxDone := len boxes = 0;)
+					else boxDone := true)
+			else boxDone := true))
+	else 
+		busy := false);
 
 public HandleEvent : Time * CustomerChoice * real ==> ()
 HandleEvent(pt, pcc, pa) ==
 	outlines := outlines ^ [mk_(pt, pcc, pa)];
 	
+public HandleEvent : RecycleMachineState ==> ()
+HandleEvent(prms) ==
+	cases prms: 
+		<ItemInvalid> -> def -= RecycleMachine`singleItemConveyor.RemoveRecycle() in skip,
+		<BoxInvalid> -> def -= RecycleMachine`singleItemConveyor.RemoveRecycle() in skip,
+		<TooManyItems> -> (dcl rec : Recycle := RecycleMachine`singleItemConveyor.RemoveRecycle();
+											singleItems := singleItems  ^ [mk_RecycleEntry(World`timerRef.GetTime() + 10, rec)]),
+		<TooManyBoxes> -> (dcl rec : Recycle := RecycleMachine`singleItemConveyor.RemoveRecycle();
+											singleItems := singleItems  ^ [mk_RecycleEntry((boxes(len boxes)).time + 10, rec)]),
+		<ItemStorageFull> -> RecycleMachine`storage.ClearItemStorage(),
+		<BoxStorageFull> -> RecycleMachine`storage.ClearBoxStorage()
+	end;
+	
 public IsFinished : () ==> bool
 IsFinished() ==
-	return inlines = [] and not busy;
+	return boxes = [] and singleItems = [] and not busy;
 
 public ShowResult : () ==> ()
 ShowResult() ==
@@ -96,17 +124,20 @@ Run() ==
 		RecycleMachine`boxConveyor.Step();
 		World`timerRef.StepTime();
 		);
+  if cusTime = <Donate>
+  then RecycleMachine`ui.Donate() 
+  else RecycleMachine`ui.GetReceipt();
 	);
 
 functions
 
-private MakeRecycle : RecycleInline -> Recycle
+private MakeRecycle : RecycleInline -> RecycleEntry
 MakeRecycle(rec) ==
-	if is_RecycleMark(rec.#1)
+	if is_RecycleMark(rec.#2.#1)
 	then 
-		mk_RecycleItem(rec.#1, rec.#2, rec.#3)
+		mk_RecycleEntry(rec.#1, mk_RecycleItem(rec.#2.#1, rec.#2.#2, rec.#2.#3))
  	else 
-		mk_RecycleBox(rec.#1, 
-			[mk_RecycleItem(recI.#1, recI.#2, recI.#3) | recI in seq rec.#2])
+		mk_RecycleEntry(rec.#1, mk_RecycleBox(rec.#2.#1, 
+			[mk_RecycleItem(recI.#1, recI.#2, recI.#3) | recI in seq rec.#2.#2]));
 
 end Environment

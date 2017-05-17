@@ -1,0 +1,30 @@
+class UI is subclass of GLOBAL
+
+instance variables
+io : IO := new IO();
+
+operations 
+
+public GetReceipt : () ==> ()
+GetReceipt() == 
+		(World`env.HandleEvent(World`timerRef.GetTime(), <Receipt>, RecycleMachine`recycleMachineController.GetSum());
+		RecycleMachine`recycleMachineController.ClearSum());
+		
+public Donate : () ==> ()
+Donate() ==
+		(World`env.HandleEvent(World`timerRef.GetTime(), <Donate>, RecycleMachine`recycleMachineController.GetSum());
+		RecycleMachine`recycleMachineController.ClearSum());
+		
+public SetState : RecycleMachineState ==> ()
+SetState(prms) ==
+	(World`env.HandleEvent(prms);
+	cases prms: 
+		<ItemInvalid> -> io.print("ItemInvalid"),
+		<BoxInvalid> -> io.print("BoxInvalid"),
+		<TooManyItems> -> io.print("TooManyItems"),
+		<TooManyBoxes> -> io.print("TooManyBoxes"),
+		<ItemStorageFull> -> io.print("ItemStorageFull"),
+		<BoxStorageFull> -> io.print("BoxStorageFull") 
+	end;);
+
+end UI

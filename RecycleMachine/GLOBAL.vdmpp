@@ -5,6 +5,7 @@ types
 public RecycleMark = [<A> | <B> | <C>];
 public Barcode  = bool;
 public Shape = [<Disp> | <Can> | <GUHL> | <GOHL> | <PUL> | <POL>];
+public RecycleMachineState = <ItemInvalid> | <BoxInvalid> | <Ready> | <TooManyItems> | <TooManyBoxes> | <ItemStorageFull> | <BoxStorageFull>;
 public BoxType = bool;
 public Time = nat;
 

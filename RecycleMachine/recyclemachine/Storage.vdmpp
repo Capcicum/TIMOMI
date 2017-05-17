@@ -22,11 +22,12 @@ public GetBoxStorage : () ==> seq of Recycle
 GetBoxStorage() ==
 	return boxStorage;
 	
-public Store : Recycle ==> ()
+public Store : [Recycle] ==> ()
 Store(prr) ==
 	if is_RecycleItem(prr)
 	then itemStorage := itemStorage ^ [prr]
-	else boxStorage := boxStorage ^ [prr];
+	else if is_RecycleBox(prr) 
+	then boxStorage := boxStorage ^ [prr];
 
 public StorageAvailableItem : () ==> bool
 StorageAvailableItem() ==

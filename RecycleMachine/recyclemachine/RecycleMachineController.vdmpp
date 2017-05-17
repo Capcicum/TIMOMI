@@ -3,17 +3,27 @@ class RecycleMachineController is subclass of GLOBAL
 instance variables
 
 sum : real := 0;
-charity : real :=0;
+state : RecycleMachineState := <Ready>;
+
+itemsForValidation : seq of Recycle := [];
+
+itemValidationTime : nat;
+boxValidationTime : nat;
+
+validationProgress : nat := 0;
+
+isValidating : bool := false;
 
 operations 
+
+public RecycleMachineController : nat * nat ==> RecycleMachineController
+RecycleMachineController(pivt, pbvt) ==
+	(itemValidationTime := pivt;
+	boxValidationTime := pbvt);
 
 pure public GetSum : () ==> real
 GetSum() ==
 	return sum;
-
-public SetSum : real ==> ()
-SetSum(ps) ==
-	sum := ps; 
 
 public ClearSum : () ==> ()
 ClearSum() ==
@@ -22,51 +32,68 @@ ClearSum() ==
 public AddToSum : real ==> ()
 AddToSum(pv) ==
 	sum := sum + pv;
-	
-public GetReceipt : () ==> ()
-GetReceipt() == 
-		(World`env.HandleEvent(World`timerRef.GetTime(), <Receipt>, GetSum());
-		ClearSum());
-		
-public Donate : () ==> ()
-Donate() ==
-		(World`env.HandleEvent(World`timerRef.GetTime(), <Donate>, GetSum());
-		ClearSum());
 
-public RecycleDetected : Conveyor ==> ()
-RecycleDetected(pscan) ==	
-	if not pscan.GetIsScanning()
-	then pscan.Scan()
-	else pscan.Reject();
+public SetState : RecycleMachineState ==> ()
+SetState(prms) ==
+	(state :=  prms;
+	RecycleMachine`ui.SetState(state));
 	
-public ValidateItem : Recycle ==> ()
-ValidateItem(prr) ==
-if is_RecycleItem(prr)
-then
-	(if RecycleMachine`rr.IsRecycleValid(prr)
+public Validate : Recycle ==> ()
+Validate(prr) ==
+	itemsForValidation := itemsForValidation ^ [prr];
+
+	
+private HandleRecycleItem : () ==> ()
+HandleRecycleItem() ==
+	if RecycleMachine`rr.IsRecycleValid(hd itemsForValidation)
 	then 
-		(if RecycleMachine`sto.StorageAvailableItem()
-		then (AddToSum(RecycleMachine`rr.GetPrice(prr));
-					RecycleMachine`singleItemConveyor.StoreRecycle())
-		else RecycleMachine`singleItemConveyor.Reject())
-	else RecycleMachine`singleItemConveyor.Reject())
-else
-	HandleRecycleBox(prr);
+		(if RecycleMachine`storage.StorageAvailableItem()
+		then (AddToSum(RecycleMachine`rr.GetPrice(hd itemsForValidation));
+					RecycleMachine`singleItemConveyor.MoveConveyor())
+		else 
+			(RecycleMachine`singleItemConveyor.Reject();
+			SetState(<ItemStorageFull>)))
+	else 
+		(RecycleMachine`singleItemConveyor.Reject();
+		SetState(<ItemInvalid>));	
 
-private HandleRecycleBox : RecycleBox ==> ()
-HandleRecycleBox(prb) ==
-	if ScanBottles(prb, RecycleMachine`rr)
-	then (AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum(prb.ri, RecycleMachine`rr));
-				RecycleMachine`singleItemConveyor.StoreRecycle())
-	else RecycleMachine`singleItemConveyor.Reject();
+private HandleRecycleBox : () ==> ()
+HandleRecycleBox() ==
+	(isValidating := false;
+	validationProgress := 0;
+	(if ScanBottles(hd itemsForValidation, RecycleMachine`rr)
+	then 
+		(if RecycleMachine`storage.StorageAvailableBox()
+		then 
+			(AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum((hd itemsForValidation).ri, RecycleMachine`rr));
+			RecycleMachine`boxConveyor.MoveConveyor())
+		else
+			(RecycleMachine`boxConveyor.Reject();
+			SetState(<BoxStorageFull>))) 		
+	else (RecycleMachine`boxConveyor.Reject();
+				SetState(<BoxInvalid>)));
+	itemsForValidation := tl itemsForValidation);
 	
 public IsFinished: () ==> bool
 IsFinished() ==
-	return true;
+	return not isValidating;
 	
 public Step: () ==> ()
 Step() ==
-	skip;
+	if state = <Ready>
+	then 
+		if len itemsForValidation <> 0
+		then 
+			(if is_RecycleItem(hd itemsForValidation)
+			then 
+				(if validationProgress = itemValidationTime
+				then HandleRecycleItem()
+				else validationProgress := validationProgress + 1;)
+			else
+				(if validationProgress = boxValidationTime
+				then HandleRecycleBox()
+				else validationProgress := validationProgress + 1;))
+	
 	
 functions 
 

@@ -3,9 +3,10 @@ class RecycleMachine
 instance variables 
 
 public static rr : RecycleRules := new RecycleRules();
-public static recycleMachineController : RecycleMachineController := new RecycleMachineController();
-public static singleItemConveyor : SingleItemConveyor := new SingleItemConveyor();
-public static boxConveyor : BoxConveyor := new BoxConveyor();
-public static sto : Storage := new Storage(200, 200);
+public static recycleMachineController : RecycleMachineController := new RecycleMachineController(2,3);
+public static singleItemConveyor : Conveyor := new Conveyor();
+public static boxConveyor : Conveyor := new Conveyor();
+public static storage : Storage := new Storage(200, 200);
+public static ui : UI := new UI();
 
 end RecycleMachine

@@ -2,37 +2,71 @@ class Conveyor is subclass of GLOBAL
 
 instance variables
 
-protected conveyor : seq of Recycle := [];
-protected isRunning : bool := false;
+protected entranceArea : [Recycle] := nil;
+protected scanningArea : [Recycle] := nil;
+
 protected scanProgress : nat := 0;
+protected scanProgressTime :nat := 10;
+
+protected isScanning : bool := false;
 
 operations 
 
 public InputRecycle : Recycle ==> ()
 InputRecycle(prr) == 
-	(conveyor := conveyor ^ [prr];
-	RecycleMachine`recycleMachineController.RecycleDetected(self)
-	);
+	entranceArea := prr
+pre entranceArea = nil;
+
+public RemoveRecycle : () ==> Recycle
+RemoveRecycle() ==
+	(dcl rec : Recycle := entranceArea;
+	entranceArea := nil;
+	return rec)
+pre entranceArea <> nil;
 	
 public Scan : () ==> ()
 Scan() ==
-	(scanProgress := scanProgress + 1;
-	if scanProgress = 10
-	then (RecycleMachine`recycleMachineController.ValidateItem(hd conveyor);
-				)
-	isRunning := false);
+	if scanProgress = 0 and isScanning = false
+	then 
+		isScanning := true
+	else if scanProgress >= scanProgressTime
+	then 
+		(RecycleMachine`recycleMachineController.Validate(scanningArea);
+		scanProgress := 0;)
+	else if isScanning = true
+	then
+		scanProgress := scanProgress + 1
+pre entranceArea = nil and scanningArea <> nil;
 	
-public StoreRecycle : () ==> ()
-StoreRecycle () ==
-	RecycleMachine`sto.Store(hd conveyor);
-	
+public Step : () ==> ()
+Step() == 
+		if entranceArea <> nil and scanningArea = nil
+		then 
+			(MoveConveyor();
+			Scan())
+		else if entranceArea = nil and scanningArea <> nil 
+		then Scan()
+		else if entranceArea <> nil and scanningArea <> nil
+		then 
+			RecycleMachine`recycleMachineController.SetState(<TooManyItems>);
+		
+public MoveConveyor : () ==> ()
+MoveConveyor() ==
+	(RecycleMachine`storage.Store(scanningArea);
+	scanningArea := entranceArea;
+ 	entranceArea := nil;
+ 	isScanning := false;
+ 	scanProgress := 0);
+ 	
 public Reject : () ==> ()
 Reject() ==
- conveyor := [];
+ (entranceArea := scanningArea;
+ scanningArea := nil;
+ isScanning := false)
+pre scanningArea <> nil and entranceArea = nil;
  
-pure public GetIsScanning : () ==> bool
-GetIsScanning() ==
-	return isRunning;
-
+public IsFinished: () ==> bool
+IsFinished() ==
+	return not isScanning;
 
 end Conveyor
