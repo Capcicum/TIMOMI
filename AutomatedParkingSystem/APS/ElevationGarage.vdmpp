@@ -36,7 +36,8 @@ handleParking(ppi) == (
 				 parkedCar := nil;
 				 garageFree();)
 				 )
-);
+)
+pre EntranceGate = <Open> and EntranceGate = <Closed> and isFree = false; 
 		
 public retriveCar: LicensePlate ==> () -- Steps
 retriveCar(plp) == (
@@ -49,7 +50,7 @@ retriveCar(plp) == (
 	APS`informationStation.unRegisterCar(plp);
 	garageFree();
 	isFree := true)
-pre isFree = true;
+pre EntranceGate = <Open> and EntranceGate = <Closed> and isFree = true ;
 		
 pure public isGarageFree: () ==> bool
 isGarageFree() == 
@@ -75,5 +76,9 @@ garageReadyForExit() == (
 		 then EntranceGate := <Open>;
 	ExitGate := <Open>;)
 pre ExitGate = <Closed> and isFree = false;
+
+public getGateStates: () ==> seq of GateState
+getGateStates() ==
+	return [EntranceGate, ExitGate]
 
 end ElevationGarage

@@ -26,7 +26,6 @@ public RetrivingUsers ::
 instance variables
 	-- General
   io : IO := new IO();
-	inlines  : seq of inline  := []; -- Todo
 	outlines : seq of outline := [];
 	busy : bool := true;
 	
@@ -38,10 +37,47 @@ operations
 public Environment : String ==> Environment
 Environment(fname) ==
 	def mk_(-,mk_(userPark, userRet)) = io.freadval[inline](fname)
-	in (parkingUsers := [mk_ParkingUsers(x.#1, x.#2, mk_Car(
-												mk_LicensePlate(x.#3.#1.#1, x.#3.#1.#2, x.#3.#1.#3), x.#3.#2)) | x in seq userPark];
+	in (parkingUsers := [mk_ParkingUsers(x.#1, x.#2, mk_Car(mk_LicensePlate(x.#3.#1.#1, x.#3.#1.#2, x.#3.#1.#3), x.#3.#2)) | x in seq userPark];
 			retrivingUsers := [mk_RetrivingUsers(x.#1, x.#2, mk_LicensePlate(x.#3.#1, x.#3.#2, x.#3.#3)) | x in seq userRet];);
 
+
+private createSignal : () ==> ()
+createSignal() ==
+	(if len parkingUsers > 0 or len retrivingUsers > 0 
+	 then	
+			 (dcl 
+					 currentTime   : Time := World`timeRef.getTime(),
+					 parkingDone   : bool := false,
+					 retrivingDone : bool := false;
+			 busy := true;
+			 while not parkingDone and not retrivingDone
+			 			 do
+			 			 	 (if len parkingUsers > 0
+			 			    then
+			 			    		(let
+			 			    		 	  ParkingUser = hd parkingUsers
+			 			    		 in
+			 			    		 	  if ParkingUser.time <= currentTime
+			 			    		 	  then
+			 			    		 	  		(dcl ElevGarage : ElevationGarage := APS`informationStation.findFreeGarage();
+			 			    		 	  		 ElevGarage.parkCar(ParkingUser.car);
+			 			    		 	  		 ElevGarage.handleParking(ParkingUser.payInfo);
+			 			    		 	  		 parkingDone := len parkingUsers = 0)
+			 			    		 	  else parkingDone := true)
+			 			    else parkingDone := true;
+			 			    if len retrivingUsers > 0
+			 			    then
+			 			    		(let
+			 			    				RetrivingUser = hd retrivingUsers
+			 			    		 in
+			 			    		 		if RetrivingUser.time <= currentTime
+			 			    		 		then 
+			 			    		 				(dcl fee : nat1 := APS`informationStation.retriveCar(RetrivingUser.payInfo,RetrivingUser.licPlate); -- Do not return fee
+			 			    		 				 retrivingDone := len retrivingUsers = 0)
+			 			    		 		else retrivingDone := true)
+			 			    else retrivingDone := true))
+	 else busy := false;);		 			 			    		 				 
+			 			    		 				 			 	  
 public Run : () ==> ()
 Run() ==
  	is not yet specified;
@@ -52,10 +88,6 @@ showResult() ==
 	
 public isFinished : () ==> bool
 isFinished() ==
-	is not yet specified;
+	return parkingUsers = [] and retrivingUsers = [] and not busy;
 	
-functions
-
-
-
 end Environment

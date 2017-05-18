@@ -33,7 +33,7 @@ inv pc == len pc = 6;
 
 public PaymentInfo = CreditCard | ParkingCard;
 
-public ParkingFee = nat1;
+public ParkingFee = nat;
 
 -- Validation --
 
