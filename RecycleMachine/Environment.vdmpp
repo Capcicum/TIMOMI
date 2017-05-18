@@ -86,7 +86,7 @@ HandleEvent(prms) ==
 		<TooManyItems> -> (dcl rec : Recycle := RecycleMachine`singleItemConveyor.RemoveRecycle();
 											singleItems := singleItems  ^ [mk_RecycleEntry(World`timerRef.GetTime() + 10, rec)]),
 		<TooManyBoxes> -> (dcl rec : Recycle := RecycleMachine`boxConveyor.RemoveRecycle();
-											boxes := boxes  ^ [mk_RecycleEntry((boxes(len boxes)).time + 10, rec)]),
+											boxes := boxes  ^ [mk_RecycleEntry(World`timerRef.GetTime() + 10, rec)]),
 		<ItemStorageFull> -> RecycleMachine`storage.ClearItemStorage(),
 		<BoxStorageFull> -> RecycleMachine`storage.ClearBoxStorage()
 	end;

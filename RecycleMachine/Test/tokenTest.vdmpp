@@ -1,0 +1,24 @@
+class tokenTest is subclass of TestCase
+
+values
+
+types
+
+operations 
+
+protected runTest : () ==> ()
+runTest() == 
+	(tokentest(););
+
+protected tokentest : () ==> ()
+tokentest() ==
+	(dcl t1 : token := mk_token(1),
+	 t2 : token := mk_token(1),
+	 t3 : token := mk_token(2);
+	assertTrue(t1 = t1);
+	assertTrue(t1 = t2);
+	assertTrue(t3 <> t1););
+	
+
+
+end tokenTest
