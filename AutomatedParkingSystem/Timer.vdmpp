@@ -9,16 +9,16 @@ values
 
 operations
 
-public static GetInstance: () ==> Timer
-GetInstance() ==
+public static getInstance: () ==> Timer
+getInstance() ==
   return timerInstance;
 
-public StepTime : () ==> ()
-StepTime() ==
+public stepTime : () ==> ()
+stepTime() ==
   time := time + stepLength;
 
-public GetTime : () ==> nat
-GetTime() ==
+public getTime : () ==> nat
+getTime() ==
   return time;
 
 end Timer

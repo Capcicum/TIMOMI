@@ -5,8 +5,6 @@ types
 
 public String = seq of char;
 
-public UserGoal = [<Park> | <Retrive>];
-
 public Time = nat;
 
 -- Car  --
@@ -35,11 +33,14 @@ inv pc == len pc = 6;
 
 public PaymentInfo = CreditCard | ParkingCard;
 
+public ParkingFee = nat1;
+
 -- Validation --
 
-public LicenseToPayment ::
-	license : LicensePlate
-	info : PaymentInfo; 
+public ParkedCarInfo ::
+	license  : LicensePlate
+	info 		 : PaymentInfo
+	parkTime : Time; 
 
 ---
 		   		        

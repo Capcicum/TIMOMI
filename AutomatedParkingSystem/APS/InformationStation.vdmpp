@@ -16,31 +16,35 @@ findFreeGarage() == (
 --		return freeGarage
 
 		 
-public retriveCar : PaymentInfo * [LicensePlate] ==> () -- return nat?
+public retriveCar : PaymentInfo * [LicensePlate] ==> ParkingFee -- return nat?
 retriveCar(ppi, plp) == (
 	dcl freeGarage : [ElevationGarage] := findFreeGarage();
 	if freeGarage <> nil
 		
 		then if APS`validationService.validatePaymentInfo(ppi)
-					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 
-									 then freeGarage.retriveCar(plp) -- APS`TransactionService.calculateParkingFee(plp, ppi)
+					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 -- Check if more license to one payment
+									 then (freeGarage.retriveCar(plp);
+									 			 let y in set APS`garageDB be st y.license = plp
+									 			 in
+									 			 return APS`transactionService.calculateParkingFee(plp, ppi, y.parkTime);)
 					 else 
-							 (let liceToPay in set APS`garageDB be st liceToPay.info = ppi
-								in freeGarage.retriveCar(liceToPay.license);); -- APS`TransactionService.calculateParkingFee(plp, ppi)
-		-- else handle hvis kortet ikke er valid <PaymentCardInvalid>
-		
-	-- else handle  hvis der ikke er fri garage <NoFreeGarages>
+							 (let parkedCarInfo in set APS`garageDB be st parkedCarInfo.info = ppi
+								in (
+								freeGarage.retriveCar(parkedCarInfo.license);
+								return APS`transactionService.calculateParkingFee(plp, ppi, parkedCarInfo.parkTime);)) 
+		else return 0--handle hvis kortet ikke er valid <PaymentCardInvalid>
+	else return 0  --handle  hvis der ikke er fri garage <NoFreeGarages>
 );	
 	
-public registerCar : LicensePlate * PaymentInfo ==> () 
-registerCar(plp, ppi) ==
-	APS`garageDB := APS`garageDB union {mk_LicenseToPayment(plp, ppi)}
-pre mk_LicenseToPayment(plp, ppi) not in set APS`garageDB; -- Er denne pre okay?
+public registerCar : LicensePlate * PaymentInfo * Time ==> () 
+registerCar(plp, ppi, ptime) ==
+	APS`garageDB := APS`garageDB union {mk_ParkedCarInfo(plp, ppi, ptime)}
+pre mk_ParkedCarInfo(plp, ppi, ptime) not in set APS`garageDB; -- Er denne pre okay?
 
 
 public unRegisterCar : LicensePlate ==> ()
 unRegisterCar(plp) ==
-	APS`garageDB := APS`garageDB \ { licenseToPayment|
-	licenseToPayment in set APS`garageDB & licenseToPayment.license = plp}; 
+	APS`garageDB := APS`garageDB \ { parkedCarInfo|
+	parkedCarInfo in set APS`garageDB & parkedCarInfo.license = plp}; 
 
 end InformationStation

@@ -15,7 +15,7 @@ instance variables
 
 	public static transactionService : TransactionService := new TransactionService();
 
-	public static garageDB : set of LicenseToPayment := {}; 
+	public static garageDB : set of ParkedCarInfo := {}; 
 
 end APS
 

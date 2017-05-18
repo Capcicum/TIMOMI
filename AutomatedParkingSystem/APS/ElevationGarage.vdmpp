@@ -25,7 +25,7 @@ handleParking(ppi) == (
 				 if APS`validationService.validateLicensePlate(parkedCar.licensePlate) and 
 				 APS`validationService.validatePaymentInfo(ppi,parkedCar.parkingPermit)
 				 		then (garageBusy();
-				 					APS`informationStation.registerCar(parkedCar.licensePlate,ppi);
+				 					APS`informationStation.registerCar(parkedCar.licensePlate,ppi,World`timeRef.getTime());
 				 					-- STEP -- Handle Event <CarParked>
 				 					APS`parkingLevel.parkCar(parkedCar);
 				 					parkedCar := nil;

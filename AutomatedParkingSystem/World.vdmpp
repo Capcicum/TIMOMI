@@ -3,7 +3,7 @@ class World
 instance variables
 
 public static env: [Environment] := nil;
-public static timeRef : Timer := Timer`GetInstance();
+public static timeRef : Timer := Timer`getInstance();
 
 operations
 
