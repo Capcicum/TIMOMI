@@ -2,11 +2,11 @@ class RecycleService is subclass of GLOBAL
 
 functions
 
-public IsRecycleValid : RecycleItem -> bool
+public IsRecycleValid : ItemProperties -> bool
 IsRecycleValid(pri) ==
 	pri in set dom Rules;
 
-public GetPrice : RecycleItem -> real 
+public GetPrice : ItemProperties -> real 
 GetPrice(pri) ==
 	Rules(pri)
 pre IsRecycleValid(pri);
@@ -17,30 +17,30 @@ GetBoxPrice() ==
 
 values
 
-Rules = {mk_RecycleItem(<A>, true, <Disp>) |-> 1,
-mk_RecycleItem(<B>, true, <Disp>) |-> 1.5,
-mk_RecycleItem(<C>, true, <Disp>) |-> 3,
-mk_RecycleItem(<A>, true, <GUHL>) |-> 1,
-mk_RecycleItem(<B>, true, <PUL>) |-> 1.5,
-mk_RecycleItem(<C>, true, <GOHL>) |-> 3,
-mk_RecycleItem(<C>, true, <POL>) |-> 3,
-mk_RecycleItem(nil, true, <GUHL>) |-> 1,
-mk_RecycleItem(nil, true, <PUL>) |-> 1.5,
-mk_RecycleItem(nil, true, <GOHL>) |-> 3,
-mk_RecycleItem(nil, true, <POL>) |-> 3,
-mk_RecycleItem(nil, false, <GUHL>) |-> 1,
-mk_RecycleItem(nil, false, <PUL>) |-> 1.5,
-mk_RecycleItem(nil, false, <GOHL>) |-> 3,
-mk_RecycleItem(nil, false, <POL>) |-> 3,
-mk_RecycleItem(<A>, false, <GUHL>) |-> 1,
-mk_RecycleItem(<B>, false, <PUL>) |-> 1.5,
-mk_RecycleItem(<C>, false, <GOHL>) |-> 3,
-mk_RecycleItem(<C>, false, <POL>) |-> 3,
-mk_RecycleItem(nil, true, <Can>) |-> 0,
-mk_RecycleItem(nil, false, <Can>) |-> 0,
-mk_RecycleItem(<A>, true, nil) |-> 1,
-mk_RecycleItem(<B>, true, nil) |-> 1.5,
-mk_RecycleItem(<C>, true, nil) |-> 3};
+Rules = {mk_ItemProperties(<A>, true, <Disp>) |-> 1,
+mk_ItemProperties(<B>, true, <Disp>) |-> 1.5,
+mk_ItemProperties(<C>, true, <Disp>) |-> 3,
+mk_ItemProperties(<A>, true, <GUHL>) |-> 1,
+mk_ItemProperties(<B>, true, <PUL>) |-> 1.5,
+mk_ItemProperties(<C>, true, <GOHL>) |-> 3,
+mk_ItemProperties(<C>, true, <POL>) |-> 3,
+mk_ItemProperties(nil, true, <GUHL>) |-> 1,
+mk_ItemProperties(nil, true, <PUL>) |-> 1.5,
+mk_ItemProperties(nil, true, <GOHL>) |-> 3,
+mk_ItemProperties(nil, true, <POL>) |-> 3,
+mk_ItemProperties(nil, false, <GUHL>) |-> 1,
+mk_ItemProperties(nil, false, <PUL>) |-> 1.5,
+mk_ItemProperties(nil, false, <GOHL>) |-> 3,
+mk_ItemProperties(nil, false, <POL>) |-> 3,
+mk_ItemProperties(<A>, false, <GUHL>) |-> 1,
+mk_ItemProperties(<B>, false, <PUL>) |-> 1.5,
+mk_ItemProperties(<C>, false, <GOHL>) |-> 3,
+mk_ItemProperties(<C>, false, <POL>) |-> 3,
+mk_ItemProperties(nil, true, <Can>) |-> 0,
+mk_ItemProperties(nil, false, <Can>) |-> 0,
+mk_ItemProperties(<A>, true, nil) |-> 1,
+mk_ItemProperties(<B>, true, nil) |-> 1.5,
+mk_ItemProperties(<C>, true, nil) |-> 3};
 
 BoxPrice = 12.5;
 	

@@ -53,7 +53,7 @@ Step() ==
 		RecycleMachine`recycleMachineController.SetState(<Ready>)
 	else if entranceArea <> nil and scanningArea <> nil
 	then 
-		(if is_RecycleBox(entranceArea)
+		(if is_Box(entranceArea)
 		then RecycleMachine`recycleMachineController.SetState(<TooManyBoxes>)
 		else RecycleMachine`recycleMachineController.SetState(<TooManyItems>)));
 	if isScanning = true
@@ -82,12 +82,20 @@ private Scan : () ==> ()
 Scan() ==
 	if scanProgress >= scanProgressTime
 	then 
-		(RecycleMachine`recycleMachineController.Validate(scanningArea);
+		(if is_Item(scanningArea)
+		then RecycleMachine`recycleMachineController.Validate(scanningArea.rp)
+		else RecycleMachine`recycleMachineController.validate(MakeBoxProperties(scanningArea));
 		isWaitingForValidation := true;
 		isScanning := false;
 		scanProgress := 0)
 	else
 		scanProgress := scanProgress + 1
 pre entranceArea = nil and scanningArea <> nil and isScanning;
+
+functions
+
+private MakeBoxProperties : Box -> BoxProperties
+MakeBoxProperties(pb) ==
+	mk_BoxProperties(pb.bt, [x.ip | x in set pb.ri]);
 
 end Conveyor

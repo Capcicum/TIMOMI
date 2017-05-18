@@ -8,22 +8,29 @@ public Shape = [<Disp> | <Can> | <GUHL> | <GOHL> | <PUL> | <POL>];
 public RecycleMachineState = <ItemInvalid> | <BoxInvalid> | <Ready> | <TooManyItems> | <TooManyBoxes> | <ItemStorageFull> | <BoxStorageFull>;
 public BoxType = bool;
 public Time = nat;
-public CustomerChoice = [<Donate> | <Receipt>];
+public Identifier = token;
+public CustomerChoice = <Donate> | <Receipt>;
 
-public RecycleItem ::
+public ItemProperties ::
 	rm : RecycleMark
 	bc : Barcode
 	s : Shape;
+	
+public Item ::
+	id : Identifier
+	ip : ItemProperties;
 
-public RecycleBox :: 
+public Box :: 
+	id : Identifier
 	bt : BoxType
-	ri : seq of RecycleItem
-inv rb == len rb.ri <= 30;
+	ri : set of Item
+inv rb == card rb.ri <= 30 and forall i,j in set rb.ri & i.id <> j.id;
 
-public Recycle = RecycleItem | RecycleBox;
+public BoxProperties ::
+	bt : BoxType
+	ib : seq of ItemProperties
+inv bp == len bp.ib <= 30;
 
-public Receipt ::
-	id : nat
-	value : real;
+public Recycle = Item | Box;
 
 end GLOBAL 
