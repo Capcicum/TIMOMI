@@ -1,0 +1,8 @@
+class ElevationGarageTest is subclass of TestCase, GLOBAL
+
+
+
+
+
+
+end ElevationGarageTest

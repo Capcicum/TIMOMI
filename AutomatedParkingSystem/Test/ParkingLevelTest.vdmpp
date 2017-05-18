@@ -49,6 +49,4 @@ retriveCarTest() == (
 	assertTrue(is_Car(parkingLevel.retriveCar(car2.licensePlate)));
 	assertTrue(card parkingLevel.getParkingSpots() = 0););
 
-
-
 end ParkingLevelTest

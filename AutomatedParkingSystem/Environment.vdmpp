@@ -23,7 +23,7 @@ Environment(fname) ==
 	
 public Run : () ==> ()
 Run() ==
- is not yet specified;
+ 	is not yet specified;
 
 public showResult : () ==> ()
 showResult() ==

@@ -1,12 +1,5 @@
 class ValidationServiceTest is subclass of TestCase, GLOBAL
 
---{"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
---{'I', 'Q', 'Æ', 'Ø', 'Å', ' '};
-
---	plp.ns >= 5000 and plp.ns <= 5399 or
---	plp.ns >= 20000 and plp.ns <= 77999 or
---	plp.ns >= 98000 and plp.ns <= 99999;
-
 values
 car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true); 
 car2 : Car = mk_Car(mk_LicensePlate(<Danish>, "BH", 10000), true);
@@ -64,7 +57,5 @@ validatePaymentInfoTest() == (
 	assertTrue(validationService.validatePaymentInfo(payInfo_park1) = true);
 	assertTrue(validationService.validatePaymentInfo(payInfo_park2, false) = false);
 	assertTrue(validationService.validatePaymentInfo(payInfo_park3, true) = false););
-
-
 
 end ValidationServiceTest

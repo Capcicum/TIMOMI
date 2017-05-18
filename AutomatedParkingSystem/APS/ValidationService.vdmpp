@@ -11,15 +11,15 @@ operations
 public validateLicensePlate : LicensePlate ==> bool 
 validateLicensePlate(plp) == (
 	if validateRegistrationLetters(plp) and validateNumberSeries(plp) and
-	plp not in set {x.license | x in set APS`garageDB}
-	then return true
+		 plp not in set {x.license | x in set APS`garageDB}
+				 then return true
 	else return false;);
 
 functions
 
 public validateRegistrationLetters : LicensePlate -> bool
 validateRegistrationLetters(plp) ==	
-	plp.rl not in set bannedRegistrationCombinations and 
+  plp.rl not in set bannedRegistrationCombinations and 
 	plp.rl(1) not in set bannedRegistrationLetters and
 	plp.rl(2) not in set bannedRegistrationLetters and
 	plp.rl(2) <> 'O';
@@ -34,17 +34,17 @@ validateNumberSeries(plp) ==
 public validatePaymentInfo : PaymentInfo * bool -> bool -- For parking
 validatePaymentInfo(ppi, pHasParkingPermit) ==
 	if is_CreditCard(ppi)
-		then validateCreditCard(ppi)
+		 then validateCreditCard(ppi)
 	else if is_ParkingCard(ppi) and pHasParkingPermit
-			then validateParkingCard(ppi)
+		 then validateParkingCard(ppi)
 	else false;
 
 public validatePaymentInfo : PaymentInfo -> bool -- For retrival
 validatePaymentInfo(ppi) ==
 	if is_CreditCard(ppi)
-		then validateCreditCard(ppi)
+		 then validateCreditCard(ppi)
 	else if is_ParkingCard(ppi)
-		then validateParkingCard(ppi)
+		 then validateParkingCard(ppi)
 	else false;	
 
 public validateCreditCard : PaymentInfo -> bool -- [1,2,3,4,5,6]

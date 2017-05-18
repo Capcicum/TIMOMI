@@ -1,0 +1,7 @@
+class InformationStationTest is subclass of TestCase, GLOBAL
+
+
+
+
+
+end InformationStationTest

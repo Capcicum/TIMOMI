@@ -1,0 +1,7 @@
+class TransactionServiceTest is subclass of TestCase, GLOBAL
+
+
+
+
+
+end TransactionServiceTest

@@ -7,28 +7,36 @@ findFreeGarage() == (
 	dcl freeGarages : seq of ElevationGarage := 
 	[elevGarag | elevGarag in seq APS`garages & elevGarag.isGarageFree() = true];
 		 if freeGarages <> []
-		 	then return hd freeGarages
-		 else return nil;);
-		 
-public registerCar : LicensePlate * PaymentInfo ==> () 
-registerCar(plp, ppi) ==
-	APS`garageDB := APS`garageDB union {mk_LicenseToPayment(plp, ppi)}
-pre mk_LicenseToPayment(plp, ppi) not in set APS`garageDB; -- Er denne pre okay?
+		 		then return hd freeGarages
+		 else return nil; -- Handle event <NoFreeGarages> 		 -- handle event no free garage
+);
 
-public retriveCar : PaymentInfo * [LicensePlate] ==> () -- Hiv noe pænge! 
+		 
+public retriveCar : PaymentInfo * [LicensePlate] ==> () -- Hiv noe pænge! Overvej return nat
 retriveCar(ppi, plp) == (
 	dcl freeGarage : [ElevationGarage] := findFreeGarage();
 	if freeGarage <> nil
 		
 		then if APS`validationService.validatePaymentInfo(ppi)
-			then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 
-				then freeGarage.retriveCar(plp)
-					
-			else (let liceToPay in set APS`garageDB be st liceToPay.info = ppi
-						in freeGarage.retriveCar(liceToPay.license););
-		-- handle else hvis kortet ikke er valid
+					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 
+									 then freeGarage.retriveCar(plp) -- APS`TransactionService.calculateParkingFee(plp, ppi)
+					 else 
+							 (let liceToPay in set APS`garageDB be st liceToPay.info = ppi
+								in freeGarage.retriveCar(liceToPay.license);); -- APS`TransactionService.calculateParkingFee(plp, ppi)
+		-- else handle hvis kortet ikke er valid <PaymentCardInvalid>
 		
-	-- handle else hvis der ikke er fri garage
-);		 
+	-- else handle  hvis der ikke er fri garage <NoFreeGarages>
+);	
+	
+public registerCar : LicensePlate * PaymentInfo ==> () 
+registerCar(plp, ppi) ==
+	APS`garageDB := APS`garageDB union {mk_LicenseToPayment(plp, ppi)}
+pre mk_LicenseToPayment(plp, ppi) not in set APS`garageDB; -- Er denne pre okay?
+
+
+public unRegisterCar : LicensePlate ==> ()
+unRegisterCar(plp) ==
+	APS`garageDB := APS`garageDB \ { licenseToPayment|
+	licenseToPayment in set APS`garageDB & licenseToPayment.license = plp}; 
 
 end InformationStation

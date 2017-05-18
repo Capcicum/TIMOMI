@@ -1,7 +1,5 @@
 class ParkingLevel is subclass of GLOBAL
 
--- Inspiration from Airspace & Flying Object example
-
 instance variables
 	parkingSpots : set of Car := {};
 inv forall x,y in set parkingSpots &

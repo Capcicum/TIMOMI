@@ -21,20 +21,22 @@ pre parkedCar = nil;
 public handleParking:  PaymentInfo ==> ()
 handleParking(ppi) == (	
 	if not isFree
-	then (if APS`validationService.validateLicensePlate(parkedCar.licensePlate) and 
-	APS`validationService.validatePaymentInfo(ppi,parkedCar.parkingPermit)
-		then(garageBusy();
-				 APS`informationStation.registerCar(parkedCar.licensePlate,ppi);
-				 -- STEP
-				 APS`parkingLevel.parkCar(parkedCar);
+		then (
+				 if APS`validationService.validateLicensePlate(parkedCar.licensePlate) and 
+				 APS`validationService.validatePaymentInfo(ppi,parkedCar.parkingPermit)
+				 		then (garageBusy();
+				 					APS`informationStation.registerCar(parkedCar.licensePlate,ppi);
+				 					-- STEP -- Handle Event <CarParked>
+				 					APS`parkingLevel.parkCar(parkedCar);
+				 					parkedCar := nil;
+				 					garageFree();)
+				 else 
+				 --handle event <ValidationFailed>
+				 (garageReadyForExit();
 				 parkedCar := nil;
 				 garageFree();)
-	else 
-		--handleEvent
-		(garageReadyForExit();
-		parkedCar := nil;
-		garageFree();
-		)));
+				 )
+);
 		
 public retriveCar: LicensePlate ==> () -- Steps
 retriveCar(plp) == (
@@ -42,8 +44,9 @@ retriveCar(plp) == (
 	garageBusy();
 	parkedCar := APS`parkingLevel.retriveCar(plp);
 	garageReadyForExit();
-	-- Handle car removed
+	-- Handle car removed <CarRetrived>
 	parkedCar := nil;
+	APS`informationStation.unRegisterCar(plp);
 	garageFree();
 	isFree := true)
 pre isFree = true;
@@ -55,9 +58,9 @@ isGarageFree() ==
 public garageFree: () ==> () -- Lav et STM
 garageFree() == (
 	if EntranceGate = <Closed>
-	then EntranceGate := <Open>;
+		 then EntranceGate := <Open>;
 	if ExitGate = <Open>
-	then ExitGate := <Closed>;
+		 then ExitGate := <Closed>;
 	isFree := true;)
 pre EntranceGate = ExitGate and isFree = false;
 
@@ -69,7 +72,7 @@ pre EntranceGate = <Open> and ExitGate = <Closed> and isFree = false;
 public garageReadyForExit: () ==> ()
 garageReadyForExit() == (
 	if EntranceGate = <Closed>
-	then EntranceGate := <Open>;
+		 then EntranceGate := <Open>;
 	ExitGate := <Open>;)
 pre ExitGate = <Closed> and isFree = false;
 
