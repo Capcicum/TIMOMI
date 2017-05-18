@@ -1,6 +1,6 @@
 class InformationStationTest is subclass of TestCase, GLOBAL
 
-
+-- Create test for simple Information Station operations
 
 
 

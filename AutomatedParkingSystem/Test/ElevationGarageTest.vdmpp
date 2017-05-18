@@ -1,8 +1,34 @@
 class ElevationGarageTest is subclass of TestCase, GLOBAL
 
+values
+car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true); 
 
+operations 
 
+protected runTest : () ==> ()
+runTest() == 
+	(gateTest1();
+	 gateTest2(););
 
+protected gateTest1 : () ==> ()
+gateTest1() == (
+	dcl elevationGarage : ElevationGarage := new ElevationGarage();
+	elevationGarage.parkCar(car1);
+	assertTrue(elevationGarage.isGarageFree() = false);
+	elevationGarage.garageBusy();
+	assertTrue(elevationGarage.getGateStates() = [<Closed>, <Closed>]);
+	elevationGarage.garageFree();
+	assertTrue(elevationGarage.isGarageFree() = true);
+	assertTrue(elevationGarage.getGateStates() = [<Open>, <Closed>]););
 
-
+protected gateTest2 : () ==> ()
+gateTest2() == (
+	dcl elevationGarage : ElevationGarage := new ElevationGarage();
+	elevationGarage.parkCar(car1);
+	elevationGarage.garageBusy();
+	elevationGarage.garageReadyForExit();
+	assertTrue(elevationGarage.getGateStates() = [<Open>, <Open>]);
+	elevationGarage.garageFree();
+	assertTrue(elevationGarage.getGateStates() = [<Open>, <Closed>]););
+	
 end ElevationGarageTest

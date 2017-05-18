@@ -1,7 +1,38 @@
 class TransactionServiceTest is subclass of TestCase, GLOBAL
 
+values
+car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true); 
 
+payInfo_cred1 : PaymentInfo = [1,2,3,4,5,6];
+payInfo_park1 : PaymentInfo = ['p','0','0','0','0','1'];
+
+retrivalTime : real = 1;
+
+operations
+protected runTest : () ==> ()
+runTest() == 
+	(calculateParkingFeeTest();
+	 parkingRateDBTest());
+	
+protected parkingRateDBTest : () ==> ()
+parkingRateDBTest() == (
+	dcl transactionService : TransactionService := new TransactionService();
+	assertTrue(transactionService.parkingRateDB(<Danish>) = 5);
+	assertTrue(transactionService.parkingRateDB(<European>) = 10);
+	assertTrue(transactionService.parkingRateDB(<Other>) = 15););
+
+protected calculateParkingFeeTest : () ==> ()
+calculateParkingFeeTest() == (
+	dcl transactionService : TransactionService := new TransactionService();
+	World`timeRef.stepTime();
+	World`timeRef.stepTime();
+	World`timeRef.stepTime();
+	World`timeRef.stepTime();
+	World`timeRef.stepTime();
+	assertTrue(transactionService.calculateParkingFee(car1.licensePlate, payInfo_cred1, retrivalTime) = 20);
+	assertTrue(transactionService.calculateParkingFee(car1.licensePlate, payInfo_park1, retrivalTime) = 0););
 
 
 
 end TransactionServiceTest
+

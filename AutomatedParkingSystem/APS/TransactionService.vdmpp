@@ -1,20 +1,21 @@
 class TransactionService is subclass of GLOBAL
 
 values
-parkingRateDB : map CountryIdentifier to nat1
+public parkingRateDB : map CountryIdentifier to ParkingFee
 						= {<Danish> |-> 5,
 						 	<European> |-> 10,
 						 	<Other> |-> 15};
 
 	
-functions
+operations
 
-public calculateParkingFee : LicensePlate * PaymentInfo -> nat
-calculateParkingFee(plp, ppi) ==
+public calculateParkingFee : LicensePlate * PaymentInfo * Time ==> ParkingFee
+calculateParkingFee(plp, ppi, pPtime) ==
 	if is_ParkingCard(ppi)
-		 then 0
-	else parkingRateDB(plp.ci); -- * (currentTime - parkingTime);
-
-
+		 then return 0
+	else return (parkingRateDB(plp.ci) * (World`timeRef.getTime() - pPtime));
+-- Pre worldtime > pptime
+	
+	
 
 end TransactionService
