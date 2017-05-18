@@ -6,7 +6,6 @@ parkingRateDB : map CountryIdentifier to nat1
 						 	<European> |-> 10,
 						 	<Other> |-> 15};
 
-	
 functions
 
 public calculateParkingFee : LicensePlate * PaymentInfo -> nat
@@ -14,7 +13,7 @@ calculateParkingFee(plp, ppi) ==
 	if is_ParkingCard(ppi)
 		 then 0
 	else parkingRateDB(plp.ci); -- * (currentTime - parkingTime);
-
+	
 
 
 end TransactionService

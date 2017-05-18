@@ -2,21 +2,17 @@ class InformationStation is subclass of GLOBAL
 
 operations
 
-pure public findFreeGarage : () ==> [ElevationGarage] -- Mængde
+pure public findFreeGarage : () ==> [ElevationGarage]
 findFreeGarage() == (
 	dcl freeGarages : seq of ElevationGarage := 
-	[elevGarag | elevGarag in seq APS`garages & elevGarag.isGarageFree()];
+	[elevGarag | elevGarag in seq APS`garages & elevGarag.isGarageFree() = true];
 		 if freeGarages <> []
 		 		then return hd freeGarages
-		 else return nil;); -- Handle event <NoFreeGarages> 		 -- handle event no free garage
-
-
---	let freeGarage in seq APS`garages be st elevGarag.isGarageFree()
---	in
---		return freeGarage
+		 else return nil; -- Handle event <NoFreeGarages> 		 -- handle event no free garage
+);
 
 		 
-public retriveCar : PaymentInfo * [LicensePlate] ==> () -- return nat?
+public retriveCar : PaymentInfo * [LicensePlate] ==> () -- Hiv noe pænge! Overvej return nat
 retriveCar(ppi, plp) == (
 	dcl freeGarage : [ElevationGarage] := findFreeGarage();
 	if freeGarage <> nil

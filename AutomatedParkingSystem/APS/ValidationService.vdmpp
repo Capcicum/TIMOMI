@@ -10,8 +10,10 @@ operations
 
 public validateLicensePlate : LicensePlate ==> bool 
 validateLicensePlate(plp) == (
-	return validateRegistrationLetters(plp) and validateNumberSeries(plp) and
-		 plp not in set {x.license | x in set APS`garageDB};);
+	if validateRegistrationLetters(plp) and validateNumberSeries(plp) and
+		 plp not in set {x.license | x in set APS`garageDB}
+				 then return true
+	else return false;);
 
 functions
 
