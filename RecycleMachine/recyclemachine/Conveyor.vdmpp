@@ -83,8 +83,8 @@ Scan() ==
 	if scanProgress >= scanProgressTime
 	then 
 		(if is_Item(scanningArea)
-		then RecycleMachine`recycleMachineController.Validate(scanningArea.rp)
-		else RecycleMachine`recycleMachineController.validate(MakeBoxProperties(scanningArea));
+		then RecycleMachine`recycleMachineController.Validate(scanningArea.ip)
+		else RecycleMachine`recycleMachineController.Validate(MakeBoxProperties(scanningArea));
 		isWaitingForValidation := true;
 		isScanning := false;
 		scanProgress := 0)
@@ -96,6 +96,20 @@ functions
 
 private MakeBoxProperties : Box -> BoxProperties
 MakeBoxProperties(pb) ==
-	mk_BoxProperties(pb.bt, [x.ip | x in set pb.ri]);
+	mk_BoxProperties(pb.bt, Item2ItemProperties(dom pb.ri));
+
+private Item2ItemProperties : set of Item -> seq of ItemProperties
+Item2ItemProperties(psi) == 
+if psi = {}
+then []
+else 
+	let i in set psi
+	in 
+		[i.ip] ^ Item2ItemProperties(psi\{i})
+measure Card;
+
+private Card : set of Item  -> nat
+Card(psi) == 
+	card psi;
 
 end Conveyor

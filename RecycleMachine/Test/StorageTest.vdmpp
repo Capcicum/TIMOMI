@@ -1,8 +1,8 @@
 class StorageTest  is subclass of TestCase, GLOBAL
 
 values
-item : Recycle = mk_RecycleItem(<A>, true, <Disp>);
-box : Recycle = mk_RecycleBox(true, [item]);
+item : Recycle = mk_Item(mk_token(1), mk_ItemProperties(<A>, true, <Disp>));
+box : Recycle = mk_Box(mk_token(2), true, 24, {item |-> 2});
 operations 
 
 protected runTest : () ==> ()

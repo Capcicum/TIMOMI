@@ -22,15 +22,19 @@ public Item ::
 
 public Box :: 
 	id : Identifier
-	bt : BoxType
-	ri : set of Item
-inv rb == card rb.ri <= 30 and forall i,j in set rb.ri & i.id <> j.id;
+	ty : Shape
+	lg : nat
+	ri : map Item to nat
+inv rb == rb.lg <= 30 and forall i,j in set dom rb.ri & i<>j => i.id <> j.id and 
+forall k in set rng rb.ri & k <= rb.lg;
 
 public BoxProperties ::
-	bt : BoxType
+	ty : Shape
 	ib : seq of ItemProperties
 inv bp == len bp.ib <= 30;
 
 public Recycle = Item | Box;
+
+public RecycleProperties = ItemProperties | BoxProperties
 
 end GLOBAL 

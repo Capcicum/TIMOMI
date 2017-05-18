@@ -2,11 +2,16 @@ class Environment is subclass of GLOBAL
 
 types 
 
-Input = (CustomerChoice * seq of RecItemInline * seq of BoxItemInline);
-RecItem = (RecycleMark * Barcode * Shape);
-RecItemInline	= (Time * RecItem);
-BoxItemInline  = (Time * (BoxType * seq of RecItem));
-RecycleInline = RecItemInline | BoxItemInline;
+Input = (CustomerChoice * seq of ItemTimeInline * seq of BoxInline);
+
+ItemPropertyInline = (RecycleMark * Barcode * Shape);
+ItemInline = (Identifier * ItemPropertyInline);
+ItemTimeInline	= (Time * ItemInline);
+
+BoxPropertyInline = (Identifier * BoxType * nat * map ItemInline to nat);
+BoxInline  = (Time * BoxPropertyInline);
+RecycleInline = ItemTimeInline | BoxInline;
+
 Outline = (Time * CustomerChoice * real);
 
 public RecycleEntry ::
@@ -21,7 +26,7 @@ busy : bool := true;
 
 outlines : seq of Outline := [];
 
-cusTime : CustomerChoice := nil;
+cusTime : CustomerChoice;
 
 singleItems : seq of RecycleEntry := [];
 boxes : seq of RecycleEntry := [];
@@ -126,11 +131,28 @@ functions
 
 private MakeRecycle : RecycleInline -> RecycleEntry
 MakeRecycle(rec) ==
-	if is_RecycleMark(rec.#2.#1)
+	if is_BoxType(rec.#2.#2)
 	then 
-		mk_RecycleEntry(rec.#1, mk_RecycleItem(rec.#2.#1, rec.#2.#2, rec.#2.#3))
- 	else 
-		mk_RecycleEntry(rec.#1, mk_RecycleBox(rec.#2.#1, 
-			[mk_RecycleItem(recI.#1, recI.#2, recI.#3) | recI in seq rec.#2.#2]));
+		mk_RecycleEntry(rec.#1, mk_Box(rec.#2.#1, rec.#2.#2, rec.#2.#3, CreateMapping(rec.#2.#4)))
+	else 
+		mk_RecycleEntry(rec.#1, mk_Item(rec.#2.#1, mk_ItemProperties(rec.#2.#2.#1, rec.#2.#2.#2, rec.#2.#2.#3)));
+
+private CreateMapping : map ItemInline to nat -> map Item to nat
+CreateMapping(pmiitn) == 
+if pmiitn = {|->}
+then {|->}
+else 
+	let item in set dom pmiitn
+	in
+		let pos = pmiitn(item)
+		in
+		({mk_Item(item.#1, mk_ItemProperties(item.#2.#1, item.#2.#2, item.#2.#3)) |-> pos} 
+		munion CreateMapping({item} <-: pmiitn))
+measure Card;
+
+private Card : map ItemInline to nat  -> nat
+Card(pmiitn) == 
+	card dom pmiitn;
+	
 
 end Environment

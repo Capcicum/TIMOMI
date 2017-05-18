@@ -2,8 +2,15 @@ class Storage is subclass of GLOBAL
 
 instance variables
 
-itemStorage : seq of Recycle := [];
-boxStorage : seq of Recycle := [];
+itemStorage : set of Item := {};
+inv forall i,j in set itemStorage & i<> j => i.id <> j.id and card itemStorage <= itemLimit; 
+
+boxStorage : set of Box := {};
+inv forall i,j in set boxStorage & i <> j => i.id <> j.id and 
+card boxStorage <= boxLimit 
+and forall k,l in set dom merge {x.ri | x in set boxStorage} & k<>l => k.id <> l.id
+and forall m in set boxStorage & card dom m.ri <= m.lg;
+
 itemLimit : nat;
 boxLimit : nat;
 
@@ -14,33 +21,34 @@ Storage(pil, pbl) ==
 	(itemLimit := pil;
 	boxLimit := pbl);
 	
-public GetItemStorage : () ==> seq of Recycle
+public GetItemStorage : () ==> set of Recycle
 GetItemStorage() ==
 	return itemStorage;
 	
-public GetBoxStorage : () ==> seq of Recycle
+public GetBoxStorage : () ==> set of Recycle
 GetBoxStorage() ==
 	return boxStorage;
 	
 public Store : [Recycle] ==> ()
 Store(prr) ==
-	if is_RecycleItem(prr)
+	if is_Box(prr)
+	then if ExistValidEmptyBox(prr.ty)
+	then 
 	then itemStorage := itemStorage ^ [prr]
-	else if is_RecycleBox(prr) 
+	else if is_Box(prr) 
 	then boxStorage := boxStorage ^ [prr];
+	
+public ExistValidEmptyBox : Shape ==> bool
+ExistValidEmptyBox(ps) ==
+	return exists i in set boxStorage & i.ty = ps and card dom i.ri < i.lg;
 
 public StorageAvailableItem : () ==> bool
 StorageAvailableItem() ==
-	return len itemStorage < itemLimit;
+	return card itemStorage < itemLimit;
 	
 public StorageAvailableBox : () ==> bool 
 StorageAvailableBox() ==
-	return len boxStorage < boxLimit;
-
-public ClearStorage : () ==> ()
-ClearStorage() == 
-	(ClearItemStorage();
-	ClearBoxStorage());
+	return (card boxStorage) < boxLimit;
 	
 public ClearItemStorage : () ==> ()
 ClearItemStorage() ==

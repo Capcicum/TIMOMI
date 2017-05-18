@@ -8,7 +8,8 @@ operations
 
 protected runTest : () ==> ()
 runTest() == 
-	(tokentest(););
+	(tokentest();
+	mapTest(););
 
 protected tokentest : () ==> ()
 tokentest() ==
@@ -18,6 +19,13 @@ tokentest() ==
 	assertTrue(t1 = t1);
 	assertTrue(t1 = t2);
 	assertTrue(t3 <> t1););
+	
+protected mapTest : () ==> ()
+mapTest() == 
+	(dcl mp1 : map nat to nat := {2|->3, 4|->6},
+	 mp2 : map nat to nat := {2|->3};
+	assertTrue(card dom ({2} <: mp1) = 1);
+	assertTrue(card dom ({2} <-: mp2) = 0))
 	
 
 

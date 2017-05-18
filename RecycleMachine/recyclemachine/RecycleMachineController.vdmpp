@@ -5,7 +5,7 @@ instance variables
 sum : real := 0;
 state : RecycleMachineState := <Ready>;
 
-itemsForValidation : seq of Recycle := [];
+itemsForValidation : seq of RecycleProperties := [];
 
 itemValidationTime : nat;
 boxValidationTime : nat;
@@ -32,7 +32,7 @@ SetState(prms) ==
 	(state :=  prms;
 	RecycleMachine`ui.SetState(state));
 	
-public Validate : Recycle ==> ()
+public Validate : RecycleProperties ==> ()
 Validate(prr) ==
 	itemsForValidation := itemsForValidation ^ [prr];
 	
@@ -46,7 +46,7 @@ Step() ==
 	then 
 		if len itemsForValidation <> 0
 		then 
-			(if is_RecycleItem(hd itemsForValidation)
+			(if is_ItemProperties(hd itemsForValidation)
 			then 
 				(if validationProgress = itemValidationTime
 				then HandleRecycleItem()
@@ -82,7 +82,7 @@ HandleRecycleBox() ==
 	then 
 		(if RecycleMachine`storage.StorageAvailableBox()
 		then 
-			(AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum((hd itemsForValidation).ri, RecycleMachine`rr));
+			(AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum((hd itemsForValidation).ib, RecycleMachine`rr));
 			RecycleMachine`boxConveyor.ValidationResult(true))
 		else
 			(RecycleMachine`boxConveyor.ValidationResult(false);
@@ -110,7 +110,7 @@ Len(pri, -) ==
 
 private ScanBottles : BoxProperties * RecycleService -> bool
 ScanBottles(prb, prr) ==
-		forall i in set inds prb.ri & prr.IsRecycleValid(prb.ri(i)) and
-		forall j in set inds prb.ri & prb.ri(j).s = <GUHL>;	
+		forall i in set inds prb.ib & prr.IsRecycleValid(prb.ib(i)) and
+		forall j in set inds prb.ib & prb.ib(j).s = <GUHL>;	
 
 end RecycleMachineController
