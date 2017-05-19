@@ -50,7 +50,7 @@ retriveCar(plp) == (
 	APS`informationStation.unRegisterCar(plp);
 	garageFree();
 	isFree := true)
-pre EntranceGate = <Open> and EntranceGate = <Closed> and isFree = true ;
+pre EntranceGate = <Open> and EntranceGate = <Closed> and isFree = true ; -- Check om db er empty -> må den ikke
 		
 pure public isGarageFree: () ==> bool
 isGarageFree() == 

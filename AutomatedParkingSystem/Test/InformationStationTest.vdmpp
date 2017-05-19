@@ -1,7 +1,35 @@
 class InformationStationTest is subclass of TestCase, GLOBAL
 
--- Create test for simple Information Station operations
+
+values
+
+car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true);
+car2 : Car = mk_Car(mk_LicensePlate(<Other>, "GT", 49001), true); 
 
 
+parkingTime1 : real = 1;
+parkingTime2 : real = 5;
+
+payInfo_cred1 : PaymentInfo = [1,2,3,4,5,6];
+payInfo_park1 : PaymentInfo = ['p','0','0','0','0','1'];
+
+dummyDB : set of ParkedCarInfo = {mk_ParkedCarInfo(car1.licensePlate,payInfo_cred1,parkingTime1), 
+																	mk_ParkedCarInfo(car2.licensePlate,payInfo_park1,parkingTime2)};
+
+operations 
+
+protected runTest : () ==> ()
+runTest() == 
+	(registerCarTest(););
+	
+protected registerCarTest : () ==> ()
+registerCarTest() == (
+	dcl informationStation : InformationStation := new InformationStation();
+	assertTrue(APS`garageDB = {});
+	informationStation.registerCar(car1.licensePlate,payInfo_cred1,parkingTime1);
+	assertTrue(APS`garageDB = {mk_ParkedCarInfo(car1.licensePlate,payInfo_cred1,parkingTime1)});
+	informationStation.registerCar(car2.licensePlate,payInfo_park1,parkingTime2);
+	assertTrue(APS`garageDB = dummyDB););
+	
 
 end InformationStationTest

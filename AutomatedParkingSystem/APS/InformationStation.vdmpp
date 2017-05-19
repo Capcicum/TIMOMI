@@ -34,17 +34,18 @@ retriveCar(ppi, plp) == (
 								return APS`transactionService.calculateParkingFee(plp, ppi, parkedCarInfo.parkTime);)) 
 		else return 0--handle hvis kortet ikke er valid <PaymentCardInvalid>
 	else return 0  --handle  hvis der ikke er fri garage <NoFreeGarages>
-);	
+);	-- Check om db er empty -> må den ikke
 	
 public registerCar : LicensePlate * PaymentInfo * Time ==> () 
 registerCar(plp, ppi, ptime) ==
 	APS`garageDB := APS`garageDB union {mk_ParkedCarInfo(plp, ppi, ptime)}
-pre mk_ParkedCarInfo(plp, ppi, ptime) not in set APS`garageDB; -- Er denne pre okay?
+pre mk_ParkedCarInfo(plp, ppi, ptime) not in set APS`garageDB;
 
 
 public unRegisterCar : LicensePlate ==> ()
 unRegisterCar(plp) ==
 	APS`garageDB := APS`garageDB \ { parkedCarInfo|
-	parkedCarInfo in set APS`garageDB & parkedCarInfo.license = plp}; 
+	parkedCarInfo in set APS`garageDB & parkedCarInfo.license = plp}
+pre let y in set APS`garageDB be st y.license = plp in y in set APS`garageDB;
 
 end InformationStation
