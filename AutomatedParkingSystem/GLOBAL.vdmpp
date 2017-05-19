@@ -26,7 +26,7 @@ public Car :: licensePlate : LicensePlate
 -- Driver --
 
 public CreditCard = seq of nat
-inv num == len num = 6;
+inv num == len num = 6; -- lav noget forall elements in num  <= 9 
 
 public ParkingCard = String
 inv pc == len pc = 6;

@@ -10,6 +10,7 @@ Execute() ==
 		ts.addTest(new ValidationServiceTest());
 		ts.addTest(new TransactionServiceTest());
 		ts.addTest(new ElevationGarageTest());
+		ts.addTest(new InformationStationTest());
 		ts.run(Testresult);
 		IO`println(Testresult.toString()););
 end APSTest

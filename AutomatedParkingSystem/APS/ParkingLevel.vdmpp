@@ -10,8 +10,7 @@ operations
 public parkCar : Car ==> ()
 parkCar(pc) ==
 	parkingSpots := parkingSpots union {pc}
-pre pc.licensePlate not in set 
-	{i.licensePlate | i in set parkingSpots};
+pre pc.licensePlate not in set {x.licensePlate | x in set parkingSpots};
 
 public retriveCar : LicensePlate ==> Car
 retriveCar(plp) == (
@@ -27,8 +26,7 @@ pre isCarParked(plp, parkingSpots);
 public getCar : LicensePlate ==> Car
 getCar(plp) ==
 	let Car in set parkingSpots be st Car.licensePlate = plp
-	in
-		return Car
+	in return Car
 pre isCarParked(plp,parkingSpots);
 
 public getParkingSpots : () ==> set of Car

@@ -2,6 +2,8 @@ class ValidationService is subclass of GLOBAL
 
 values
 
+alphabet = {'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z'};
+
 -- Ref: https://da.wikipedia.org/wiki/Nummerplade
 bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
 bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å', ' '};
@@ -20,7 +22,8 @@ validateRegistrationLetters(plp) ==
   plp.rl not in set bannedRegistrationCombinations and 
 	plp.rl(1) not in set bannedRegistrationLetters and
 	plp.rl(2) not in set bannedRegistrationLetters and
-	plp.rl(2) <> 'O';
+	plp.rl(2) <> 'O'
+pre plp.rl(1) in set alphabet and plp.rl(2) in set alphabet;
 	
 	
 public validateNumberSeries : LicensePlate -> bool
@@ -35,7 +38,8 @@ validatePaymentInfo(ppi, pHasParkingPermit) ==
 		 then validateCreditCard(ppi)
 	else if is_ParkingCard(ppi) and pHasParkingPermit
 		 then validateParkingCard(ppi)
-	else false;
+	else false
+pre forall x in seq ppi & x <> ' '; -- requirsiv? 
 
 public validatePaymentInfo : PaymentInfo -> bool -- For retrival
 validatePaymentInfo(ppi) ==
