@@ -8,9 +8,8 @@ findFreeGarage() == (
 	[elevGarag | elevGarag in seq APS`garages & elevGarag.isGarageFree()];
 		 if freeGarages <> []
 		 		then return hd freeGarages
-		 else return nil;); -- Handle event <NoFreeGarages> 		 -- handle event no free garage
-
-
+		 else return nil;) -- Handle event <NoFreeGarages> 		 -- handle event no free garage
+pre APS`garages <> [];
 --	let freeGarage in seq APS`garages be st elevGarag.isGarageFree()
 --	in
 --		return freeGarage
@@ -34,7 +33,8 @@ retriveCar(ppi, plp) == (
 								return APS`transactionService.calculateParkingFee(plp, ppi, parkedCarInfo.parkTime);)) 
 		else return 0--handle hvis kortet ikke er valid <PaymentCardInvalid>
 	else return 0  --handle  hvis der ikke er fri garage <NoFreeGarages>
-);	-- Check om db er empty -> må den ikke
+)
+pre APS`garageDB <> {};-- Check om db er empty -> må den ikke
 	
 public registerCar : LicensePlate * PaymentInfo * Time ==> () 
 registerCar(plp, ppi, ptime) ==

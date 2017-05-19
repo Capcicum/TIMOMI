@@ -20,16 +20,23 @@ operations
 
 protected runTest : () ==> ()
 runTest() == 
-	(registerCarTest(););
+	(registerAndUnregisterCarTest(););
 	
-protected registerCarTest : () ==> ()
-registerCarTest() == (
+protected registerAndUnregisterCarTest : () ==> ()
+registerAndUnregisterCarTest() == (
 	dcl informationStation : InformationStation := new InformationStation();
+	-- RegisterTest:
 	assertTrue(APS`garageDB = {});
 	informationStation.registerCar(car1.licensePlate,payInfo_cred1,parkingTime1);
 	assertTrue(APS`garageDB = {mk_ParkedCarInfo(car1.licensePlate,payInfo_cred1,parkingTime1)});
 	informationStation.registerCar(car2.licensePlate,payInfo_park1,parkingTime2);
-	assertTrue(APS`garageDB = dummyDB););
+	assertTrue(APS`garageDB = dummyDB);
 	
+	-- UnregisterTest:
+	informationStation.unRegisterCar(car1.licensePlate);
+	assertTrue(APS`garageDB = {mk_ParkedCarInfo(car2.licensePlate,payInfo_park1,parkingTime2)});
+	informationStation.unRegisterCar(car2.licensePlate);
+	assertTrue(APS`garageDB = {}););
+
 
 end InformationStationTest
