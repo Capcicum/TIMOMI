@@ -24,7 +24,7 @@ public Box ::
 	id : Identifier
 	ty : Shape
 	lg : nat
-	ri : map Item to nat
+	ri : inmap Item to nat
 inv rb == rb.lg <= 30 and forall i,j in set dom rb.ri & i<>j => i.id <> j.id and 
 forall k in set rng rb.ri & k <= rb.lg;
 

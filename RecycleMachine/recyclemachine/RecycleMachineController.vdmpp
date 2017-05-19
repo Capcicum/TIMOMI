@@ -62,7 +62,7 @@ HandleRecycleItem() ==
 	validationProgress := 0;
 	(if RecycleMachine`rr.IsRecycleValid(hd itemsForValidation)
 	then 
-		(if RecycleMachine`storage.StorageAvailableItem()
+		(if RecycleMachine`storage.StorageAvailableItem((hd itemsForValidation).s)
 			then 
 				(AddToSum(RecycleMachine`rr.GetPrice(hd itemsForValidation));
 				RecycleMachine`singleItemConveyor.ValidationResult(true);)

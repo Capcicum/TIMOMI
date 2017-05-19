@@ -1,70 +1,83 @@
 class StorageTest  is subclass of TestCase, GLOBAL
 
 values
-item : Recycle = mk_Item(mk_token(1), mk_ItemProperties(<A>, true, <Disp>));
-box : Recycle = mk_Box(mk_token(2), true, 24, {item |-> 2});
+item1 : Recycle = mk_Item(mk_token(1), mk_ItemProperties(<A>, true, <Disp>));
+item2 : Recycle = mk_Item(mk_token(2), mk_ItemProperties(<A>, true, <Disp>));
+item3 : Recycle = mk_Item(mk_token(3), mk_ItemProperties(<A>, true, <Disp>));
+item4 : Recycle = mk_Item(mk_token(3), mk_ItemProperties(<B>, true, <Disp>));
+item5 : Recycle = mk_Item(mk_token(4), mk_ItemProperties(<A>, true, <Disp>));
+item6 : Recycle = mk_Item(mk_token(5), mk_ItemProperties(<A>, true, <Disp>));
+item7 : Recycle = mk_Item(mk_token(6), mk_ItemProperties(<A>, true, <Disp>));
+box1 : Recycle = mk_Box(mk_token(1), <Disp>, 24, {item1 |-> 2});
+box2 : Recycle = mk_Box(mk_token(2), <GUHL>, 24, {item2 |-> 3});
+box3 : Recycle = mk_Box(mk_token(2), <Disp>, 24, {item1 |-> 2});
+box4 : Recycle = mk_Box(mk_token(3), <Disp>, 1, {item3 |-> 1});
 operations 
 
 protected runTest : () ==> ()
 runTest() == 
-	(StoreTest();
-	StorageAvailableTest();
-	ClearStorageTest();
-	RemoveTest());
+	(StorageInvTest();
+	StorePreTest();
+	ExistValidEmptyBoxTest();
+	StoreTest(););
+	--StorageAvailableTest();
+	--ClearStorageTest(););
+	
+protected StorageInvTest : () ==> ()
+StorageInvTest() == 
+	(dcl storage : Storage := new Storage(4,4);
+		assertTrue(storage.StorageInv({item1, item2},{}));
+		assertFalse(storage.StorageInv({item3, item4},{}));
+		assertTrue(storage.StorageInv({},{box1, box2}));
+		assertFalse(storage.StorageInv({},{box2, box3}));
+		assertTrue(storage.StorageInv({item1},{box2}));
+		assertFalse(storage.StorageInv({item1},{box1}));
+		);
+
+protected StorePreTest : () ==> ()
+StorePreTest() ==
+	(dcl storage : Storage := new Storage(4,4);
+		assertTrue(storage.StorePre({item1},{box2}, item3));
+		assertFalse(storage.StorePre({item1},{box2}, item1));
+		assertFalse(storage.StorePre({item1},{box2}, item2)););
+		
+protected ExistValidEmptyBoxTest : () ==> ()
+ExistValidEmptyBoxTest() == 
+		(dcl storage : Storage := new Storage(4,4);
+		assertTrue(storage.ExistValidEmptyBox({box1}, <Disp>));
+		assertFalse(storage.ExistValidEmptyBox({box2}, <Disp>));
+		assertFalse(storage.ExistValidEmptyBox({box4}, <Disp>)););
 	
 protected StoreTest : () ==> ()
 StoreTest() ==
 	(	dcl storage : Storage := new Storage(4, 4);
-		storage.Store(item);
-		storage.Store(item);
-		storage.Store(box);
-		storage.Store(box);
-		assertTrue(len storage.GetItemStorage() = 2);
-		assertTrue(len storage.GetBoxStorage() = 2);
-		assertTrue(storage.GetItemStorage()(1) = item);
-		assertTrue(storage.GetBoxStorage()(1) = box));
+		storage.Store(box2);
+		storage.Store(item5);
+		assertTrue(card storage.GetItemStorage() = 1);
+		assertTrue(card storage.GetBoxStorage() = 1);
+		storage.Store(box4);
+		storage.Store(item6);
+		assertTrue(card storage.GetItemStorage() = 2);
+		assertTrue(card storage.GetBoxStorage() = 2);
+		storage.Store(box1);
+		storage.Store(item7);
+		assertTrue(card storage.GetItemStorage() = 2);
+		assertTrue(card storage.GetBoxStorage() = 3);
+		let boxSet = storage.GetBoxStorage()
+		in
+			let y in set boxSet be st y.id = mk_token(1)
+			in 
+				assertTrue(card (dom y.ri) = 2); 
+		);
 
 protected StorageAvailableTest : () ==> ()
 StorageAvailableTest() ==
 	(	dcl storage : Storage := new Storage(4, 4);
-		storage.Store(item);
-		storage.Store(item);
-		storage.Store(box);
-		storage.Store(box);
-		assertTrue(storage.StorageAvailableItem());
-		assertTrue(storage.StorageAvailableBox());
-		storage.Store(item);
-		storage.Store(item);
-		storage.Store(box);
-		storage.Store(box);
-		assertFalse(storage.StorageAvailableItem());
-		assertFalse(storage.StorageAvailableBox()););
+		storage.Store(item1));
 		
 protected ClearStorageTest : () ==> ()
 ClearStorageTest() ==
 		(	dcl storage : Storage := new Storage(4, 4);
-		storage.Store(item);
-		storage.Store(item);
-		storage.Store(box);
-		storage.Store(box);
-		storage.ClearStorage();
-		assertTrue(len storage.GetItemStorage() = 0);
-		assertTrue(len storage.GetBoxStorage() = 0));
-
-protected RemoveTest : () ==> ()
-RemoveTest() ==
-	(	dcl storage : Storage := new Storage(4, 4);
-		storage.Store(item);
-		storage.Store(item);
-		storage.Store(box);
-		storage.Store(box);
-		storage.RemoveItems(1);
-		storage.RemoveBoxes(1);
-		assertTrue(len storage.GetItemStorage() = 1);
-		assertTrue(len storage.GetBoxStorage() = 1);
-		storage.RemoveItems(1);
-		storage.RemoveBoxes(1);
-		assertTrue(len storage.GetItemStorage() = 0);
-		assertTrue(len storage.GetBoxStorage() = 0));
+		storage.Store(item1););
 
 end StorageTest

@@ -8,7 +8,7 @@ ItemPropertyInline = (RecycleMark * Barcode * Shape);
 ItemInline = (Identifier * ItemPropertyInline);
 ItemTimeInline	= (Time * ItemInline);
 
-BoxPropertyInline = (Identifier * BoxType * nat * map ItemInline to nat);
+BoxPropertyInline = (Identifier * Shape * nat * map ItemInline to nat);
 BoxInline  = (Time * BoxPropertyInline);
 RecycleInline = ItemTimeInline | BoxInline;
 

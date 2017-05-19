@@ -7,7 +7,7 @@ operations
 		let ts : TestSuite = new TestSuite(),
 			result = new TestResult()
 		in
-			(ts.addTest(new tokenTest());
+			(ts.addTest(new StorageTest());
 			ts.run(result);
 			IO`println(result.toString()););
 		

@@ -3,13 +3,12 @@ class Storage is subclass of GLOBAL
 instance variables
 
 itemStorage : set of Item := {};
-inv forall i,j in set itemStorage & i<> j => i.id <> j.id and card itemStorage <= itemLimit; 
+inv card itemStorage <= itemLimit; 
 
 boxStorage : set of Box := {};
-inv forall i,j in set boxStorage & i <> j => i.id <> j.id and 
-card boxStorage <= boxLimit 
-and forall k,l in set dom merge {x.ri | x in set boxStorage} & k<>l => k.id <> l.id
-and forall m in set boxStorage & card dom m.ri <= m.lg;
+inv card boxStorage <= boxLimit;
+
+inv StorageInv(itemStorage, boxStorage);
 
 itemLimit : nat;
 boxLimit : nat;
@@ -31,20 +30,28 @@ GetBoxStorage() ==
 	
 public Store : [Recycle] ==> ()
 Store(prr) ==
-	if is_Box(prr)
-	then if ExistValidEmptyBox(prr.ty)
+	if is_Item(prr)
 	then 
-	then itemStorage := itemStorage ^ [prr]
-	else if is_Box(prr) 
-	then boxStorage := boxStorage ^ [prr];
-	
-public ExistValidEmptyBox : Shape ==> bool
-ExistValidEmptyBox(ps) ==
-	return exists i in set boxStorage & i.ty = ps and card dom i.ri < i.lg;
+		if ExistValidEmptyBox(boxStorage, prr.ip.s)
+		then 
+			let x in set boxStorage be st x.ty = prr.ip.s and card dom x.ri < x.lg
+			in 
+				let y in set {1,...,x.lg} be st {y} inter rng x.ri = {}
+				in
+					(dcl box: Box := x;
+					box.ri := box.ri munion {prr |-> y};
+					boxStorage := boxStorage\{x} union {box})
+		else 
+			itemStorage := itemStorage union {prr}
+	else if is_Box(prr)
+	then
+		boxStorage := boxStorage union {prr}
+pre StorePre(itemStorage, boxStorage, prr)
+post StorageInv(itemStorage, boxStorage);
 
-public StorageAvailableItem : () ==> bool
-StorageAvailableItem() ==
-	return card itemStorage < itemLimit;
+public StorageAvailableItem : Shape ==> bool
+StorageAvailableItem(ps) ==
+	return ExistValidEmptyBox(boxStorage, ps) or card itemStorage < itemLimit;
 	
 public StorageAvailableBox : () ==> bool 
 StorageAvailableBox() ==
@@ -52,22 +59,36 @@ StorageAvailableBox() ==
 	
 public ClearItemStorage : () ==> ()
 ClearItemStorage() ==
-	RemoveItems(itemLimit);
+	itemStorage := {};
 	
 public ClearBoxStorage : () ==> ()
 ClearBoxStorage() ==
-	RemoveBoxes(boxLimit);
+	boxStorage := {};
+	
+functions 
 
-public RemoveItems : nat ==> ()
-RemoveItems(pcount) ==
-	if len itemStorage <= pcount
-	then	itemStorage := []
-	else	itemStorage := [itemStorage(x) | x in set inds itemStorage & x <= len itemStorage - pcount];
+public StorageInv : set of Item * set of Box -> bool 
+StorageInv(psi, psb) ==
+(forall i in set psb & card dom i.ri <= i.lg and
+	forall j in set psi & 
+		forall k in set dom i.ri & k.id <> j.id) and 
+(forall l, m in set psb & l <> m => l.id <> m.id and
+	forall n in set dom l.ri &
+		forall o in set dom m.ri & n.id <> o.id) and 
+(forall p,q in set psi & p <> q => p.id <> q.id); 
 
-public RemoveBoxes : nat ==> ()
-RemoveBoxes(pcount) ==
-	if len boxStorage <= pcount
-	then	boxStorage := []
-	else	boxStorage := [boxStorage(x) | x in set inds boxStorage & x <= len boxStorage - pcount];
+public StorePre : set of Item * set of Box * Recycle -> bool
+StorePre(psi, psb, pr) == 
+	if is_Item(pr)
+	then 
+		((forall i in set psi & i.id <> pr.id) and 
+		(forall j in set psb & 
+			forall k in set dom j.ri & k.id <> pr.id))
+	else 
+		forall i in set psb & i.id <> pr.id;
+
+public ExistValidEmptyBox : set of Box * Shape -> bool
+ExistValidEmptyBox(psb, ps) ==
+	exists i in set psb & i.ty = ps and card dom i.ri < i.lg;
 
 end Storage

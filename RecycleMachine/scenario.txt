@@ -1,6 +1,6 @@
 mk_(<Receipt>, 
 [mk_(1, mk_(mk_token(1), mk_(<A>, true, <Disp>))), 
 mk_(7, mk_(mk_token(2), mk_(<A>, true, <Disp>)))], 
-[mk_(7, mk_(mk_token(1), true, 24, {mk_(mk_token(3), mk_(<A>, true, <GUHL>)) |-> 1, mk_(mk_token(4), mk_(<A>, true, <GUHL>)) |-> 2})), 
-mk_(7, mk_(mk_token(2), true, 24, {mk_(mk_token(5), mk_(<A>, true, <GUHL>)) |-> 1, mk_(mk_token(6), mk_(<A>, true, <GUHL>)) |-> 2}))
+[mk_(7, mk_(mk_token(1), <Disp>, 24, {mk_(mk_token(3), mk_(<A>, true, <GUHL>)) |-> 1, mk_(mk_token(4), mk_(<A>, true, <GUHL>)) |-> 2})), 
+mk_(7, mk_(mk_token(2), <Disp>, 24, {mk_(mk_token(5), mk_(<A>, true, <GUHL>)) |-> 1, mk_(mk_token(6), mk_(<A>, true, <GUHL>)) |-> 2}))
 ])

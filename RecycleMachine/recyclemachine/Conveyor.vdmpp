@@ -96,7 +96,7 @@ functions
 
 private MakeBoxProperties : Box -> BoxProperties
 MakeBoxProperties(pb) ==
-	mk_BoxProperties(pb.bt, Item2ItemProperties(dom pb.ri));
+	mk_BoxProperties(pb.ty, Item2ItemProperties(dom pb.ri));
 
 private Item2ItemProperties : set of Item -> seq of ItemProperties
 Item2ItemProperties(psi) == 
