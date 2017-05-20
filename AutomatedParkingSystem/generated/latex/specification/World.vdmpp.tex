@@ -1,0 +1,41 @@
+\begin{vdmpp}[breaklines=true]
+class World
+
+instance variables
+
+public static env: [Environment] := nil;
+public static timeRef : Timer := Timer`getInstance();
+
+operations
+
+(*@
+\label{World:10}
+@*)
+public World : () ==> World
+World() ==
+ env := new Environment("scenario.txt");
+
+(*@
+\label{Run:14}
+@*)
+public Run : () ==> ()
+Run() ==
+ (env.Run(););
+
+end World
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[Run:14]{Run} & 14&100.0\% & 28 \\
+\hline
+\hyperref[World:10]{World} & 10&100.0\% & 32 \\
+\hline
+\hline
+World.vdmpp & & 100.0\% & 60 \\
+\hline
+\end{longtable}
+

@@ -1,0 +1,34 @@
+\begin{vdmpp}[breaklines=true]
+class APSTest
+operations 
+
+(*@
+\label{Execute:4}
+@*)
+public Execute : () ==> ()
+Execute() ==
+ let ts : TestSuite = new TestSuite(),
+ Testresult = new TestResult()
+ in
+  (ts.addTest(new ParkingLevelTest());
+  ts.addTest(new ValidationServiceTest());
+  ts.addTest(new TransactionServiceTest());
+  ts.addTest(new ElevationGarageTest());
+  ts.addTest(new InformationStationTest());
+  ts.run(Testresult);
+  IO`println(Testresult.toString()););
+end APSTest
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[Execute:4]{Execute} & 4&100.0\% & 1 \\
+\hline
+\hline
+APSTest.vdmpp & & 100.0\% & 1 \\
+\hline
+\end{longtable}
+

@@ -10,8 +10,6 @@ private UserRetrive = (Time * PaymentInfo * tupleLicensePlate);
 
 private tupleCar = (tupleLicensePlate * bool);
 private tupleLicensePlate = (CountryIdentifier * RegistrationLetters * NumberSeries);
-		
-protected outline = (Car * ParkingFee * Time);
 
 public ParkingUsers ::
 	time    : Time
@@ -24,9 +22,7 @@ public RetrivingUsers ::
 	licPlate: LicensePlate;
 
 instance variables
-	-- General
   io : IO := new IO();
-	outlines : seq of outline := [];
 	busy : bool := true;
 	
 	parkingUsers   : seq of ParkingUsers := [];	
@@ -62,7 +58,9 @@ createSignal() ==
 			 			    		 	  		(dcl ElevGarage : ElevationGarage := APS`informationStation.findFreeGarage();
 			 			    		 	  		 ElevGarage.parkCar(ParkingUser.car);
 			 			    		 	  		 ElevGarage.handleParking(ParkingUser.payInfo);
-			 			    		 	  		 parkingDone := len parkingUsers = 0)
+			 			    		 	  		 parkingUsers := tl parkingUsers;
+			 			    		 	  		 parkingDone := len parkingUsers = 0
+			 			    		 	  		 )
 			 			    		 	  else parkingDone := true)
 			 			    else parkingDone := true;
 			 			    if len retrivingUsers > 0
@@ -72,19 +70,22 @@ createSignal() ==
 			 			    		 in
 			 			    		 		if RetrivingUser.time <= currentTime
 			 			    		 		then 
-			 			    		 				(dcl fee : nat1 := APS`informationStation.retriveCar(RetrivingUser.payInfo,RetrivingUser.licPlate); -- Do not return fee
+			 			    		 				(APS`informationStation.retriveCar(RetrivingUser.payInfo,RetrivingUser.licPlate);
+			 			    		 				 retrivingUsers := tl retrivingUsers;
 			 			    		 				 retrivingDone := len retrivingUsers = 0)
 			 			    		 		else retrivingDone := true)
 			 			    else retrivingDone := true))
-	 else busy := false;);		 			 			    		 				 
+	 else busy := false)	
+pre parkingUsers <> [] => retrivingUsers <> [] 
+post is_((APS`informationStation.findFreeGarage)(), ElevationGarage);			 			    		 				 
 			 			    		 				 			 	  
 public Run : () ==> ()
-Run() ==
- 	is not yet specified;
-
-public showResult : () ==> ()
-showResult() ==
-	def -= io.writeval[seq of outline](outlines) in skip;	
+Run() == (
+ 	while not isFinished()
+ 	do
+ 		(createSignal();
+ 		 World`timeRef.stepTime();
+ 		 io.print("STATUS: Step\n")));
 	
 public isFinished : () ==> bool
 isFinished() ==

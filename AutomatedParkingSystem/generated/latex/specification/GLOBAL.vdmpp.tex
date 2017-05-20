@@ -1,3 +1,4 @@
+\begin{vdmpp}[breaklines=true]
 class GLOBAL
 types
 
@@ -17,11 +18,11 @@ public NumberSeries = nat
 inv num == num <= 99999 and num >= 5000;
 
 public LicensePlate :: ci : CountryIdentifier
-				   		         rl : RegistrationLetters
-				   		         ns : NumberSeries;	
-				   		         
+                  rl : RegistrationLetters
+                  ns : NumberSeries; 
+                  
 public Car :: licensePlate : LicensePlate
-							parkingPermit : bool;				   		         
+       parkingPermit : bool;                  
 
 -- PaymentInfo --
 
@@ -30,7 +31,7 @@ inv num == len num = 6 and forall x in seq num & x <= 9;
 
 public ParkingCard = String
 inv pc == len pc = 6;
-		
+  
 public PaymentInfo = CreditCard | ParkingCard;
 
 public ParkingFee = nat;
@@ -38,10 +39,22 @@ public ParkingFee = nat;
 -- Validation --
 
 public ParkedCarInfo ::
-	license  : LicensePlate
-	info 		 : PaymentInfo
-	parkTime : Time; 
+ license  : LicensePlate
+ info    : PaymentInfo
+ parkTime : Time; 
 
 ---
-		   		        
+               
 end GLOBAL
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hline
+GLOBAL.vdmpp & & 100.0\% & 0 \\
+\hline
+\end{longtable}
+

@@ -1,0 +1,104 @@
+\begin{vdmpp}[breaklines=true]
+class ValidationService is subclass of GLOBAL
+
+values
+
+alphabet = {'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z'};
+
+-- Ref: https://da.wikipedia.org/wiki/Nummerplade
+bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
+bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å', ' '};
+
+operations
+
+(*@
+\label{validateLicensePlate:13}
+@*)
+public validateLicensePlate : LicensePlate ==> bool 
+validateLicensePlate(plp) == (
+ return validateRegistrationLetters(plp) and validateNumberSeries(plp) and
+   plp not in set {x.license | x in set APS`garageDB};);
+
+
+functions
+(*@
+\label{validateRegistrationLetters:20}
+@*)
+
+public validateRegistrationLetters : LicensePlate -> bool
+validateRegistrationLetters(plp) == 
+  plp.rl not in set bannedRegistrationCombinations and 
+ plp.rl(1) not in set bannedRegistrationLetters and
+ plp.rl(2) not in set bannedRegistrationLetters and
+ plp.rl(2) <> 'O'
+pre plp.rl(1) in set alphabet and plp.rl(2) in set alphabet;
+ 
+(*@
+\label{validateNumberSeries:29}
+@*)
+ 
+public validateNumberSeries : LicensePlate -> bool
+validateNumberSeries(plp) == 
+ plp.ns >= 5000 and plp.ns <= 5399 or
+ plp.ns >= 20000 and plp.ns <= 77999 or
+ plp.ns >= 98000 and plp.ns <= 99999;
+(*@
+\label{validatePaymentInfo:35}
+@*)
+
+public validatePaymentInfo : PaymentInfo * bool -> bool -- For parking
+validatePaymentInfo(ppi, pHasParkingPermit) ==
+ if is_CreditCard(ppi)
+   then validateCreditCard(ppi)
+ else if is_ParkingCard(ppi) and pHasParkingPermit
+   then validateParkingCard(ppi)
+ else false
+pre forall x in seq ppi & x <> ' '; 
+
+public validatePaymentInfo : PaymentInfo -> bool -- For retrival
+validatePaymentInfo(ppi) ==
+ if is_CreditCard(ppi)
+   then validateCreditCard(ppi)
+ else if is_ParkingCard(ppi)
+   then validateParkingCard(ppi)
+ else (*@\vdmnotcovered{false}@*); 
+(*@
+\label{validateCreditCard:52}
+@*)
+
+public validateCreditCard : PaymentInfo -> bool -- [1,2,3,4,5,6]
+validateCreditCard(ppi) == 
+ len ppi = 6 and ppi <> [];
+(*@
+\label{validateParkingCard:56}
+@*)
+ 
+public validateParkingCard : PaymentInfo -> bool -- [p,1,2,3,4,5]
+validateParkingCard(ppi) ==
+ len ppi = 6 and hd ppi = 'p' and ppi <> [];
+
+end ValidationService
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[validateCreditCard:52]{validateCreditCard} & 52&100.0\% & 51 \\
+\hline
+\hyperref[validateLicensePlate:13]{validateLicensePlate} & 13&100.0\% & 73 \\
+\hline
+\hyperref[validateNumberSeries:29]{validateNumberSeries} & 29&100.0\% & 150 \\
+\hline
+\hyperref[validateParkingCard:56]{validateParkingCard} & 56&100.0\% & 27 \\
+\hline
+\hyperref[validatePaymentInfo:35]{validatePaymentInfo} & 35&90.9\% & 39 \\
+\hline
+\hyperref[validateRegistrationLetters:20]{validateRegistrationLetters} & 20&100.0\% & 78 \\
+\hline
+\hline
+ValidationService.vdmpp & & 99.4\% & 418 \\
+\hline
+\end{longtable}
+

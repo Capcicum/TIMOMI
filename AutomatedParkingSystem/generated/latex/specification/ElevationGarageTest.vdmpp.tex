@@ -1,0 +1,62 @@
+\begin{vdmpp}[breaklines=true]
+class ElevationGarageTest is subclass of TestCase, GLOBAL
+
+values
+car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true); 
+
+operations 
+
+(*@
+\label{runTest:8}
+@*)
+protected runTest : () ==> ()
+runTest() == 
+ (gateTest1();
+  gateTest2(););
+
+(*@
+\label{gateTest1:13}
+@*)
+protected gateTest1 : () ==> ()
+gateTest1() == (
+ dcl elevationGarage : ElevationGarage := new ElevationGarage();
+ elevationGarage.parkCar(car1);
+ assertTrue(elevationGarage.isGarageFree() = false);
+ elevationGarage.garageBusy();
+ assertTrue(elevationGarage.getGateStates() = [<Closed>, <Closed>]);
+ elevationGarage.garageFree();
+ assertTrue(elevationGarage.isGarageFree() = true);
+ assertTrue(elevationGarage.getGateStates() = [<Open>, <Closed>]););
+
+(*@
+\label{gateTest2:24}
+@*)
+protected gateTest2 : () ==> ()
+gateTest2() == (
+ dcl elevationGarage : ElevationGarage := new ElevationGarage();
+ elevationGarage.parkCar(car1);
+ elevationGarage.garageBusy();
+ elevationGarage.garageReadyForExit();
+ assertTrue(elevationGarage.getGateStates() = [<Open>, <Open>]);
+ elevationGarage.garageFree();
+ assertTrue(elevationGarage.getGateStates() = [<Open>, <Closed>]););
+ 
+end ElevationGarageTest
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[gateTest1:13]{gateTest1} & 13&100.0\% & 1 \\
+\hline
+\hyperref[gateTest2:24]{gateTest2} & 24&100.0\% & 1 \\
+\hline
+\hyperref[runTest:8]{runTest} & 8&100.0\% & 1 \\
+\hline
+\hline
+ElevationGarageTest.vdmpp & & 100.0\% & 3 \\
+\hline
+\end{longtable}
+
