@@ -1,20 +1,10 @@
 class TransactionService is subclass of GLOBAL
 
-types
-
-
-
 values
 public parkingRateDB : map CountryIdentifier to ParkingFee
 					= {<Danish> |-> 5,
 						 <European> |-> 10,
 						 <Other> |-> 15};
---inv parkingRateDB(<Danish>) = 5;
-
---inv (forall m1, m2 in set parkingRateDB & 
---    (forall d3 in set (dom m1), d4 in set(dom m2) &
---	  ((d3 = d4) => (m1(d3) == m2(d4)))));
-
 
 operations
 
@@ -26,7 +16,4 @@ calculateParkingFee(plp, ppi, pPtime) ==
 pre pPtime > 0 and plp.ci in set dom parkingRateDB
 post is_(RESULT,nat);
 	
-
-	
-
 end TransactionService

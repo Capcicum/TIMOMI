@@ -1,10 +1,9 @@
 class ValidationService is subclass of GLOBAL
-
+-- Ref: https://da.wikipedia.org/wiki/Nummerplade
 values
 
 alphabet = {'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z'};
 
--- Ref: https://da.wikipedia.org/wiki/Nummerplade
 bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
 bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å', ' '};
 

@@ -40,7 +40,7 @@ handleParking(ppi) == (
 )
 pre EntranceGate = <Open> and ExitGate = <Closed> and isFree = false; 
 		
-public retriveCar: LicensePlate ==> () -- Steps
+public retriveCar: LicensePlate ==> () 
 retriveCar(plp) == (
 	isFree := false;
 	garageBusy();

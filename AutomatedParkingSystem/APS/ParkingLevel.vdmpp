@@ -35,7 +35,7 @@ getParkingSpots() ==
 
 functions
 
-isCarParked: LicensePlate * set of Car -> bool
+private isCarParked: LicensePlate * set of Car -> bool
 isCarParked(plpi,pps) ==
 	exists Car in set pps & Car.licensePlate = plpi
 

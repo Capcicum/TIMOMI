@@ -17,7 +17,7 @@ retriveCar(ppi, plp) == (
 	if freeGarage <> nil
 		
 		then if APS`validationService.validatePaymentInfo(ppi)
-					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 -- Check if more license to one payment
+					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 
 								
 								then (let y in set APS`garageDB be st y.license = plp
 								in

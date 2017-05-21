@@ -1,7 +1,6 @@
 class APS is subclass of GLOBAL
 
 instance variables
-
 	public static eg1 : ElevationGarage := new ElevationGarage();
 	public static eg2 : ElevationGarage := new ElevationGarage();
 
@@ -18,7 +17,6 @@ instance variables
 	public static garageDB : set of ParkedCarInfo := {}; 
 	
 	public static io : IO := new IO();
-
 end APS
 
 
