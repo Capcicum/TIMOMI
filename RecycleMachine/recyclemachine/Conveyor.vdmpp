@@ -2,16 +2,15 @@ class Conveyor is subclass of GLOBAL
 
 instance variables
 
-entranceArea : [Recycle] := nil;
-scanningArea : [Recycle] := nil;
+entranceArea 			: [Recycle] 		:= nil;
+scanningArea 			: [Recycle] 		:= nil;
+scanStartTime 		: nat 					:= 0;
+scanProgressTime 	: nat;
+state 						: ConveyorState := <Idle>;
 
-scanProgress : nat := 0;
-inv scanProgress <= scanProgressTime;
+types 
 
-scanProgressTime :nat;
-
-isScanning : bool := false;
-isWaitingForValidation : bool := false;
+ConveyorState = <Idle> | <Scanning> | <Waiting>;
 
 operations 
 		
@@ -21,13 +20,12 @@ Conveyor(pspt) ==
 	
 public ValidationResult : bool ==> ()
 ValidationResult(pr) ==
-	(if pr
-	then
-		MoveConveyor() 
-	else
-		Reject();
-	isWaitingForValidation := false)
-pre isWaitingForValidation and scanningArea <> nil;
+	(state := <Idle>;
+	if pr
+	then MoveConveyor() 
+	else Reject();)
+pre state = <Waiting> and scanningArea <> nil and entranceArea = nil
+post scanningArea = nil;
 
 public InputRecycle : Recycle ==> ()
 InputRecycle(prr) == 
@@ -46,7 +44,8 @@ Step() ==
 	((if entranceArea <> nil and scanningArea = nil
 	then 
 		(MoveConveyor();
-		isScanning := true;
+		state := <Scanning>;
+		scanStartTime := World`timerRef.GetTime();
 		RecycleMachine`recycleMachineController.SetState(<Ready>))
 	else if entranceArea = nil and scanningArea <> nil 
 	then 
@@ -56,41 +55,36 @@ Step() ==
 		(if is_Box(entranceArea)
 		then RecycleMachine`recycleMachineController.SetState(<TooManyBoxes>)
 		else RecycleMachine`recycleMachineController.SetState(<TooManyItems>)));
-	if isScanning = true
+	if state = <Scanning>
 	then 
 		Scan());
 
-public IsFinished: () ==> bool
+pure public IsFinished: () ==> bool
 IsFinished() ==
-	return not (isScanning or isWaitingForValidation);
+	return state = <Idle> and entranceArea = nil and scanningArea = nil;
 		
 private MoveConveyor : () ==> ()
 MoveConveyor() ==
 	(RecycleMachine`storage.Store(scanningArea);
 	scanningArea := entranceArea;
- 	entranceArea := nil;
- 	scanProgress := 0);
+ 	entranceArea := nil;)
+pre state = <Idle>;
  	
 private Reject : () ==> ()
 Reject() ==
  (entranceArea := scanningArea;
- scanningArea := nil;
- scanProgress := 0)
-pre scanningArea <> nil and entranceArea = nil;
+ scanningArea := nil;)
+pre scanningArea <> nil and entranceArea = nil and state = <Idle>;
  
 private Scan : () ==> ()
 Scan() ==
-	if scanProgress >= scanProgressTime
+	if World`timerRef.GetTime() - scanStartTime >= scanProgressTime
 	then 
 		(if is_Item(scanningArea)
 		then RecycleMachine`recycleMachineController.Validate(scanningArea.ip)
 		else RecycleMachine`recycleMachineController.Validate(MakeBoxProperties(scanningArea));
-		isWaitingForValidation := true;
-		isScanning := false;
-		scanProgress := 0)
-	else
-		scanProgress := scanProgress + 1
-pre entranceArea = nil and scanningArea <> nil and isScanning;
+		state := <Waiting>;)
+pre entranceArea = nil and scanningArea <> nil and state = <Scanning>;
 
 functions
 

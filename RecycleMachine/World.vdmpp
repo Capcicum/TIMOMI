@@ -4,6 +4,7 @@ instance variables
 
 public static env : [Environment] := nil;
 public static timerRef : Timer := Timer`GetInstance();
+public static rm : RecycleMachine := new RecycleMachine();
 
 operations 
 

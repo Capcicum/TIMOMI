@@ -19,9 +19,9 @@ runTest() ==
 	(StorageInvTest();
 	StorePreTest();
 	ExistValidEmptyBoxTest();
-	StoreTest(););
+	StoreTest();
 	--StorageAvailableTest();
-	--ClearStorageTest(););
+	ClearStorageTest(););
 	
 protected StorageInvTest : () ==> ()
 StorageInvTest() == 
@@ -78,6 +78,14 @@ StorageAvailableTest() ==
 protected ClearStorageTest : () ==> ()
 ClearStorageTest() ==
 		(	dcl storage : Storage := new Storage(4, 4);
-		storage.Store(item1););
+		storage.Store(item1);
+		storage.Store(box2);
+		assertTrue(card storage.GetItemStorage() = 1);
+		assertTrue(card storage.GetBoxStorage() = 1);
+		storage.ClearItemStorage();
+		storage.ClearBoxStorage();
+		assertTrue(card storage.GetItemStorage() = 0);
+		assertTrue(card storage.GetBoxStorage() = 0);
+		);
 
 end StorageTest

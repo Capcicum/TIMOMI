@@ -22,7 +22,7 @@ public Item ::
 
 public Box :: 
 	id : Identifier
-	ty : Shape
+	ty : [Shape]
 	lg : nat
 	ri : inmap Item to nat
 inv rb == rb.lg <= 30 and forall i,j in set dom rb.ri & i<>j => i.id <> j.id and 

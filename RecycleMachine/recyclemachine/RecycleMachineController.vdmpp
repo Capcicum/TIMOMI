@@ -2,17 +2,13 @@ class RecycleMachineController is subclass of GLOBAL
 
 instance variables
 
-sum : real := 0;
-state : RecycleMachineState := <Ready>;
-
-itemsForValidation : seq of RecycleProperties := [];
-
-itemValidationTime : nat;
-boxValidationTime : nat;
-
-validationProgress : nat := 0;
-
-isValidating : bool := false;
+sum 								: real 											:= 0;
+state 							: RecycleMachineState 			:= <Ready>;
+itemsForValidation 	: seq of RecycleProperties 	:= [];
+itemValidationTime 	: nat;
+boxValidationTime 	: nat;
+validationProgress 	: nat 											:= 0;
+isValidating 				: bool 											:= false;
 
 operations 
 
@@ -60,11 +56,11 @@ private HandleRecycleItem : () ==> ()
 HandleRecycleItem() ==
 	(isValidating := false;
 	validationProgress := 0;
-	(if RecycleMachine`rr.IsRecycleValid(hd itemsForValidation)
+	(if RecycleMachine`recycleService.IsRecycleValid(hd itemsForValidation)
 	then 
 		(if RecycleMachine`storage.StorageAvailableItem((hd itemsForValidation).s)
 			then 
-				(AddToSum(RecycleMachine`rr.GetPrice(hd itemsForValidation));
+				(AddToSum(RecycleMachine`recycleService.GetPrice(hd itemsForValidation));
 				RecycleMachine`singleItemConveyor.ValidationResult(true);)
 		else 
 			(RecycleMachine`singleItemConveyor.ValidationResult(false);
@@ -78,11 +74,12 @@ private HandleRecycleBox : () ==> ()
 HandleRecycleBox() ==
 	(isValidating := false;
 	validationProgress := 0;
-	(if ScanBottles(hd itemsForValidation, RecycleMachine`rr)
+	(if ScanBox(hd itemsForValidation, RecycleMachine`recycleService)
 	then 
 		(if RecycleMachine`storage.StorageAvailableBox()
 		then 
-			(AddToSum(RecycleMachine`rr.GetBoxPrice() + TotalRecycleSum((hd itemsForValidation).ib, RecycleMachine`rr));
+			(AddToSum(RecycleMachine`recycleService.GetBoxPrice() + 
+				TotalRecycleSum((hd itemsForValidation).ib, RecycleMachine`recycleService));
 			RecycleMachine`boxConveyor.ValidationResult(true))
 		else
 			(RecycleMachine`boxConveyor.ValidationResult(false);
@@ -104,13 +101,14 @@ TotalRecycleSum(pri, prr) ==
 	else prr.GetPrice(hd pri) + TotalRecycleSum(tl pri, prr)
 measure Len;
 
-Len : seq of ItemProperties * RecycleService -> nat
+private Len : seq of ItemProperties * RecycleService -> nat
 Len(pri, -) ==
 	len pri;
 
-private ScanBottles : BoxProperties * RecycleService -> bool
-ScanBottles(prb, prr) ==
+private ScanBox : BoxProperties * RecycleService -> bool
+ScanBox(prb, prr) ==
 		forall i in set inds prb.ib & prr.IsRecycleValid(prb.ib(i)) and
-		forall j in set inds prb.ib & prb.ib(j).s = <GUHL>;	
+		forall j in set inds prb.ib & prb.ib(j).s = prb.ty and 
+		prb.ty <> nil;	
 
 end RecycleMachineController

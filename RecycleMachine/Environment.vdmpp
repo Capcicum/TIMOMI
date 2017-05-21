@@ -59,7 +59,7 @@ CreateSignal() ==
 				in 
 					if item.time <= curTime
 					then
-						(RecycleMachine`singleItemConveyor.InputRecycle(item.recycle);
+						(World`rm.singleItemConveyor.InputRecycle(item.recycle);
 						singleItems := tl singleItems;
 						itemDone := len singleItems = 0)
 					else itemDone := true)
@@ -71,7 +71,7 @@ CreateSignal() ==
 				in 
 					if box.time <= curTime
 					then
-						(RecycleMachine`boxConveyor.InputRecycle(box.recycle);
+						(World`rm.boxConveyor.InputRecycle(box.recycle);
 						boxes := tl boxes;
 						boxDone := len boxes = 0;)
 					else boxDone := true)
@@ -86,14 +86,23 @@ HandleEvent(pt, pcc, pa) ==
 public HandleEvent : RecycleMachineState ==> ()
 HandleEvent(prms) ==
 	cases prms: 
-		<ItemInvalid> -> def -= RecycleMachine`singleItemConveyor.RemoveRecycle() in skip,
-		<BoxInvalid> -> def -= RecycleMachine`boxConveyor.RemoveRecycle() in skip,
-		<TooManyItems> -> (dcl rec : Recycle := RecycleMachine`singleItemConveyor.RemoveRecycle();
-											singleItems := singleItems  ^ [mk_RecycleEntry(World`timerRef.GetTime() + 10, rec)]),
-		<TooManyBoxes> -> (dcl rec : Recycle := RecycleMachine`boxConveyor.RemoveRecycle();
-											boxes := boxes  ^ [mk_RecycleEntry(World`timerRef.GetTime() + 10, rec)]),
-		<ItemStorageFull> -> RecycleMachine`storage.ClearItemStorage(),
-		<BoxStorageFull> -> RecycleMachine`storage.ClearBoxStorage()
+		<ItemInvalid> -> def -= World`rm.singleItemConveyor.RemoveRecycle() in skip,
+		
+		<BoxInvalid> -> def -= World`rm.boxConveyor.RemoveRecycle() in skip,
+		
+		<TooManyItems> -> (dcl rec : Recycle := World`rm.singleItemConveyor.RemoveRecycle();
+											singleItems := singleItems  ^ [mk_RecycleEntry(GetNewTime(singleItems, World`timerRef), rec)]),
+											
+		<TooManyBoxes> -> (dcl rec : Recycle := World`rm.boxConveyor.RemoveRecycle();
+											boxes := boxes  ^ [mk_RecycleEntry(GetNewTime(boxes, World`timerRef), rec)]),
+											
+		<ItemStorageFull> -> (dcl rec : Recycle := World`rm.singleItemConveyor.RemoveRecycle();
+											singleItems := singleItems  ^ [mk_RecycleEntry(GetNewTime(singleItems, World`timerRef), rec)];
+											World`rm.storage.ClearItemStorage()),
+											
+		<BoxStorageFull> -> (dcl rec : Recycle := World`rm.boxConveyor.RemoveRecycle();
+											boxes := boxes  ^ [mk_RecycleEntry(GetNewTime(boxes, World`timerRef), rec)];
+											World`rm.storage.ClearBoxStorage())
 	end;
 	
 private IsFinished : () ==> bool
@@ -109,29 +118,29 @@ Run() ==
 	(
 	while not (IsFinished()
 						and
-						RecycleMachine`recycleMachineController.IsFinished()
+						World`rm.recycleMachineController.IsFinished()
 						and
-						RecycleMachine`singleItemConveyor.IsFinished()
+						World`rm.singleItemConveyor.IsFinished()
 						and
-						RecycleMachine`boxConveyor.IsFinished())
+						World`rm.boxConveyor.IsFinished())
 	do
 		(
 		CreateSignal();
-		RecycleMachine`recycleMachineController.Step();
-		RecycleMachine`singleItemConveyor.Step();
-		RecycleMachine`boxConveyor.Step();
+		World`rm.recycleMachineController.Step();
+		World`rm.singleItemConveyor.Step();
+		World`rm.boxConveyor.Step();
 		World`timerRef.StepTime();
 		);
   if cusTime = <Donate>
-  then RecycleMachine`ui.Donate() 
-  else RecycleMachine`ui.GetReceipt();
+  then World`rm.ui.Donate() 
+  else World`rm.ui.GetReceipt();
 	);
 
 functions
 
 private MakeRecycle : RecycleInline -> RecycleEntry
 MakeRecycle(rec) ==
-	if is_BoxType(rec.#2.#2)
+	if is_Shape(rec.#2.#2)
 	then 
 		mk_RecycleEntry(rec.#1, mk_Box(rec.#2.#1, rec.#2.#2, rec.#2.#3, CreateMapping(rec.#2.#4)))
 	else 
@@ -154,5 +163,10 @@ private Card : map ItemInline to nat  -> nat
 Card(pmiitn) == 
 	card dom pmiitn;
 	
+private GetNewTime : seq of RecycleEntry * Timer -> nat
+GetNewTime(psre, pt) == 
+	if psre <> []
+	then psre(len psre).time + 10
+	else pt.GetTime() + 10; 
 
 end Environment

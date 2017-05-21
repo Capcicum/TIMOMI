@@ -19,7 +19,7 @@ public StepTime : () ==> ()
 StepTime() ==
   time := time + stepLength;
 
-public GetTime : () ==> nat
+pure public GetTime : () ==> nat
 GetTime() ==
   return time;
 

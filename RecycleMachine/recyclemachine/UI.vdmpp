@@ -17,12 +17,12 @@ public SetState : RecycleMachineState ==> ()
 SetState(prms) ==
 	(World`env.HandleEvent(prms);
 	cases prms: 
-		<ItemInvalid> -> io.print("ItemInvalid\n"),
-		<BoxInvalid> -> io.print("BoxInvalid\n"),
-		<TooManyItems> -> io.print("TooManyItems\n"),
-		<TooManyBoxes> -> io.print("TooManyBoxes\n"),
-		<ItemStorageFull> -> io.print("ItemStorageFull\n"),
-		<BoxStorageFull> -> io.print("BoxStorageFull\n") 
+		<ItemInvalid> -> (io.print("ItemInvalid "); io.println(World`timerRef.GetTime())),
+		<BoxInvalid> -> (io.print("BoxInvalid "); io.println(World`timerRef.GetTime())),
+		<TooManyItems> -> (io.print("TooManyItems "); io.println(World`timerRef.GetTime())),
+		<TooManyBoxes> -> (io.print("TooManyBoxes "); io.println(World`timerRef.GetTime())),
+		<ItemStorageFull> -> (io.print("ItemStorageFull "); io.println(World`timerRef.GetTime())),
+		<BoxStorageFull> -> (io.print("BoxStorageFull "); io.println(World`timerRef.GetTime())) 
 	end;);
 
 end UI

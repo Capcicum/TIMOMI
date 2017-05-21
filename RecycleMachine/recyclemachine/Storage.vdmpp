@@ -18,13 +18,14 @@ operations
 public Storage : nat * nat ==> Storage
 Storage(pil, pbl) ==
 	(itemLimit := pil;
-	boxLimit := pbl);
+	boxLimit := pbl)
+pre StorageInv(itemStorage, boxStorage);
 	
-public GetItemStorage : () ==> set of Recycle
+pure public GetItemStorage : () ==> set of Recycle
 GetItemStorage() ==
 	return itemStorage;
 	
-public GetBoxStorage : () ==> set of Recycle
+pure public GetBoxStorage : () ==> set of Recycle
 GetBoxStorage() ==
 	return boxStorage;
 	
@@ -36,7 +37,7 @@ Store(prr) ==
 		then 
 			let x in set boxStorage be st x.ty = prr.ip.s and card dom x.ri < x.lg
 			in 
-				let y in set {1,...,x.lg} be st {y} inter rng x.ri = {}
+				let y in set {z | z in set {1,...,x.lg} & {z} inter rng x.ri = {}}
 				in
 					(dcl box: Box := x;
 					box.ri := box.ri munion {prr |-> y};
@@ -46,14 +47,14 @@ Store(prr) ==
 	else if is_Box(prr)
 	then
 		boxStorage := boxStorage union {prr}
-pre StorePre(itemStorage, boxStorage, prr)
-post StorageInv(itemStorage, boxStorage);
+pre StorePre(itemStorage, boxStorage, prr) and card boxStorage <= boxLimit and card itemStorage <= itemLimit 
+post StorageInv(itemStorage, boxStorage) and card boxStorage <= boxLimit and card itemStorage <= itemLimit;
 
-public StorageAvailableItem : Shape ==> bool
+pure public StorageAvailableItem : Shape ==> bool
 StorageAvailableItem(ps) ==
 	return ExistValidEmptyBox(boxStorage, ps) or card itemStorage < itemLimit;
 	
-public StorageAvailableBox : () ==> bool 
+pure public StorageAvailableBox : () ==> bool 
 StorageAvailableBox() ==
 	return (card boxStorage) < boxLimit;
 	
@@ -77,16 +78,19 @@ StorageInv(psi, psb) ==
 		forall o in set dom m.ri & n.id <> o.id) and 
 (forall p,q in set psi & p <> q => p.id <> q.id); 
 
-public StorePre : set of Item * set of Box * Recycle -> bool
+public StorePre : set of Item * set of Box * [Recycle] -> bool
 StorePre(psi, psb, pr) == 
 	if is_Item(pr)
 	then 
 		((forall i in set psi & i.id <> pr.id) and 
 		(forall j in set psb & 
 			forall k in set dom j.ri & k.id <> pr.id))
-	else 
-		forall i in set psb & i.id <> pr.id;
-
+	else if is_Box(pr)
+	then
+		forall i in set psb & i.id <> pr.id
+	else
+		true;
+		
 public ExistValidEmptyBox : set of Box * Shape -> bool
 ExistValidEmptyBox(psb, ps) ==
 	exists i in set psb & i.ty = ps and card dom i.ri < i.lg;
