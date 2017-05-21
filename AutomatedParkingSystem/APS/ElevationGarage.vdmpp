@@ -26,38 +26,38 @@ handleParking(ppi) == (
 				 APS`validationService.validatePaymentInfo(ppi,parkedCar.parkingPermit)
 				 		then (garageBusy();
 				 					APS`informationStation.registerCar(parkedCar.licensePlate,ppi,World`timeRef.getTime());
-				 					-- STEP -- Handle Event <CarParked>
 				 					APS`parkingLevel.parkCar(parkedCar);
+				 					printParkingReceipt(ppi);
+				 					APS`io.print("STATUS: garageDB contains: ");APS`io.print(APS`garageDB); APS`io.print("\n");
 				 					parkedCar := nil;
 				 					garageFree();)
 				 else 
-				 --handle event <ValidationFailed>
-				 (garageReadyForExit();
+				 (garageReadyForExit();	 
+				 APS`io.print("STATUS: Error - <ValidationFailed>\n"); 
 				 parkedCar := nil;
 				 garageFree();)
 				 )
 )
-pre EntranceGate = <Open> and EntranceGate = <Closed> and isFree = false; 
+pre EntranceGate = <Open> and ExitGate = <Closed> and isFree = false; 
 		
-public retriveCar: LicensePlate ==> () -- Steps
+public retriveCar: LicensePlate ==> () 
 retriveCar(plp) == (
 	isFree := false;
 	garageBusy();
 	parkedCar := APS`parkingLevel.retriveCar(plp);
 	garageReadyForExit();
-	-- Handle car removed <CarRetrived>
 	parkedCar := nil;
 	APS`informationStation.unRegisterCar(plp);
 	garageFree();
 	isFree := true)
-pre EntranceGate = <Open> and EntranceGate = <Closed> and 
+pre EntranceGate = <Open> and ExitGate = <Closed> and 
 		isFree = true and APS`garageDB <> {} ; 
 		
 pure public isGarageFree: () ==> bool
 isGarageFree() == 
 	return isFree;
 	
-public garageFree: () ==> () -- Lav et STM
+public garageFree: () ==> ()
 garageFree() == (
 	if EntranceGate = <Closed>
 		 then EntranceGate := <Open>;
@@ -80,6 +80,18 @@ pre ExitGate = <Closed> and isFree = false;
 
 public getGateStates: () ==> seq of GateState
 getGateStates() ==
-	return [EntranceGate, ExitGate]
+	return [EntranceGate, ExitGate];
+
+public printParkingReceipt : PaymentInfo ==> ()
+printParkingReceipt(ppi) == (
+		APS`io.print("---------------------\n"); 
+		APS`io.print("  Parking Receipt  \n"); 
+		APS`io.print("Car: "); APS`io.print(parkedCar); APS`io.print("\n");
+		APS`io.print("Current time: "); APS`io.print(World`timeRef.getTime()); APS`io.print("\n");
+		APS`io.print("Payment method: ");
+		if is_ParkingCard(ppi)
+			then APS`io.print("Parking Card\n")
+		else APS`io.print("Credit Card\n");
+		APS`io.print("---------------------\n"););
 
 end ElevationGarage

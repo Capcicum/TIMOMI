@@ -2,50 +2,67 @@ class InformationStation is subclass of GLOBAL
 
 operations
 
-pure public findFreeGarage : () ==> [ElevationGarage] -- Mængde
+pure public findFreeGarage : () ==> [ElevationGarage] 
 findFreeGarage() == (
-	dcl freeGarages : seq of ElevationGarage := 
-	[elevGarag | elevGarag in seq APS`garages & elevGarag.isGarageFree()];
-		 if freeGarages <> []
-		 		then return hd freeGarages
-		 else return nil;) -- Handle event <NoFreeGarages> 		 -- handle event no free garage
-pre APS`garages <> [];
---	let freeGarage in seq APS`garages be st elevGarag.isGarageFree()
---	in
---		return freeGarage
-
+	let freeGarage in seq APS`garages be st freeGarage.isGarageFree()
+	in
+		return freeGarage;) 
+pre ((APS`garages <> []) => (exists x in seq APS`garages & x.isGarageFree()));
 		 
-public retriveCar : PaymentInfo * [LicensePlate] ==> ParkingFee -- return nat?
+public retriveCar : PaymentInfo * LicensePlate ==> ()
 retriveCar(ppi, plp) == (
 	dcl freeGarage : [ElevationGarage] := findFreeGarage();
+	dcl parkingFee : ParkingFee;
+	
 	if freeGarage <> nil
 		
 		then if APS`validationService.validatePaymentInfo(ppi)
-					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 -- Check if more license to one payment
-									 then (freeGarage.retriveCar(plp);
-									 			 let y in set APS`garageDB be st y.license = plp
-									 			 in
-									 			 return APS`transactionService.calculateParkingFee(plp, ppi, y.parkTime);)
+					 then if card {x.license | x in set APS`garageDB & x.info = ppi} > 1 
+								
+								then (let y in set APS`garageDB be st y.license = plp
+								in
+								(parkingFee := APS`transactionService.calculateParkingFee(plp, ppi, y.parkTime);
+							  printRetrivingReceipt(plp, ppi, y.parkTime, parkingFee););
+								freeGarage.retriveCar(plp);
+								APS`io.print("STATUS: garageDB contains: ");APS`io.print(APS`garageDB); APS`io.print("\n");)
 					 else 
+							 
 							 (let parkedCarInfo in set APS`garageDB be st parkedCarInfo.info = ppi
 								in (
 								freeGarage.retriveCar(parkedCarInfo.license);
-								return APS`transactionService.calculateParkingFee(plp, ppi, parkedCarInfo.parkTime);)) 
-		else return 0--handle hvis kortet ikke er valid <PaymentCardInvalid>
-	else return 0  --handle  hvis der ikke er fri garage <NoFreeGarages>
-)
-pre APS`garageDB <> {};-- Check om db er empty -> må den ikke
+								parkingFee := APS`transactionService.calculateParkingFee(plp, ppi, parkedCarInfo.parkTime);
+								printRetrivingReceipt(plp, ppi, parkedCarInfo.parkTime, parkingFee););
+								APS`io.print("STATUS: garageDB contains: ");APS`io.print(APS`garageDB); APS`io.print("\n"))
+		
+		else APS`io.print("STATUS: Error - <PaymentCardInvalid>\n")
+else APS`io.print("STATUS: Error - <NoFreeGarages>\n");)
+pre APS`garageDB <> {};
 	
 public registerCar : LicensePlate * PaymentInfo * Time ==> () 
 registerCar(plp, ppi, ptime) ==
 	APS`garageDB := APS`garageDB union {mk_ParkedCarInfo(plp, ppi, ptime)}
 pre mk_ParkedCarInfo(plp, ppi, ptime) not in set APS`garageDB;
 
-
 public unRegisterCar : LicensePlate ==> ()
 unRegisterCar(plp) ==
 	APS`garageDB := APS`garageDB \ { parkedCarInfo|
 	parkedCarInfo in set APS`garageDB & parkedCarInfo.license = plp}
-pre let y in set APS`garageDB be st y.license = plp in y in set APS`garageDB;
+pre exists x in set APS`garageDB & x.license = plp;
+
+public printRetrivingReceipt : LicensePlate * PaymentInfo * Time * ParkingFee ==> ()
+printRetrivingReceipt(plp, ppi, ptime, pfee) == (
+		APS`io.print("---------------------\n"); 
+		APS`io.print("  Receiving Receipt  \n"); 
+		APS`io.print("Car: "); APS`io.print(plp); APS`io.print("\n");
+		APS`io.print("Parked at time: "); APS`io.print(ptime); APS`io.print("\n");
+		APS`io.print("Current time: "); APS`io.print(World`timeRef.getTime()); APS`io.print("\n");
+		APS`io.print("Payment method: ");
+		if is_ParkingCard(ppi)
+			then APS`io.print("Parking Card\n")
+		else APS`io.print("Credit Card\n");
+		APS`io.print("Payment fee: "); APS`io.print(pfee); APS`io.print("\n");
+		APS`io.print("---------------------\n"););
+
+
 
 end InformationStation

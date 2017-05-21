@@ -8,7 +8,7 @@ public String = seq of char;
 public Time = nat;
 
 -- Car  --
-public CountryIdentifier = [<Danish> | <European> | <Other>];
+public CountryIdentifier = <Danish> | <European> | <Other>;
 
 public RegistrationLetters = String
 inv rl == len rl = 2;
@@ -23,19 +23,19 @@ public LicensePlate :: ci : CountryIdentifier
 public Car :: licensePlate : LicensePlate
 							parkingPermit : bool;				   		         
 
--- Driver --
+-- PaymentInfo --
 
 public CreditCard = seq of nat
-inv num == len num = 6; -- lav noget forall elements in num  <= 9 
+inv num == len num = 6 and forall x in seq num & x <= 9;
 
 public ParkingCard = String
 inv pc == len pc = 6;
-
+		
 public PaymentInfo = CreditCard | ParkingCard;
 
 public ParkingFee = nat;
 
--- Validation --
+-- garageDB --
 
 public ParkedCarInfo ::
 	license  : LicensePlate

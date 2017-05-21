@@ -1,10 +1,9 @@
 class ValidationService is subclass of GLOBAL
-
+-- Ref: https://da.wikipedia.org/wiki/Nummerplade
 values
 
 alphabet = {'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','R','S','T','U','V','X','Y','Z'};
 
--- Ref: https://da.wikipedia.org/wiki/Nummerplade
 bannedRegistrationCombinations = {"BH", "BU", "CC", "CD", "DK", "DU", "EU", "KZ", "MU", "PY", "SS", "UD", "UN", "VC", ""};
 bannedRegistrationLetters = {'I', 'Q', 'Æ', 'Ø', 'Å', ' '};
 
@@ -14,6 +13,7 @@ public validateLicensePlate : LicensePlate ==> bool
 validateLicensePlate(plp) == (
 	return validateRegistrationLetters(plp) and validateNumberSeries(plp) and
 		 plp not in set {x.license | x in set APS`garageDB};);
+
 
 functions
 
@@ -39,7 +39,7 @@ validatePaymentInfo(ppi, pHasParkingPermit) ==
 	else if is_ParkingCard(ppi) and pHasParkingPermit
 		 then validateParkingCard(ppi)
 	else false
-pre forall x in seq ppi & x <> ' '; -- requirsiv? 
+pre forall x in seq ppi & x <> ' '; 
 
 public validatePaymentInfo : PaymentInfo -> bool -- For retrival
 validatePaymentInfo(ppi) ==
@@ -47,14 +47,16 @@ validatePaymentInfo(ppi) ==
 		 then validateCreditCard(ppi)
 	else if is_ParkingCard(ppi)
 		 then validateParkingCard(ppi)
-	else false;	
+	else false;
 
 public validateCreditCard : PaymentInfo -> bool -- [1,2,3,4,5,6]
 validateCreditCard(ppi) == 
-	len ppi = 6;
+	len ppi = 6
+pre ppi <> [];
 	
 public validateParkingCard : PaymentInfo -> bool -- [p,1,2,3,4,5]
 validateParkingCard(ppi) ==
-	len ppi = 6 and hd ppi = 'p';
+	len ppi = 6 and hd ppi = 'p' 
+pre ppi <> [];
 
 end ValidationService

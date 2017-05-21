@@ -13,7 +13,6 @@ World() ==
 
 public Run : () ==> ()
 Run() ==
-	(env.Run();
-	 env.showResult());
+	(env.Run(););
 
 end World

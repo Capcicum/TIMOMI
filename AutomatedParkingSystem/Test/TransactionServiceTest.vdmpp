@@ -32,7 +32,5 @@ calculateParkingFeeTest() == (
 	assertTrue(transactionService.calculateParkingFee(car1.licensePlate, payInfo_cred1, parkingTime) = 20);
 	assertTrue(transactionService.calculateParkingFee(car1.licensePlate, payInfo_park1, parkingTime) = 0););
 
-
-
 end TransactionServiceTest
 
