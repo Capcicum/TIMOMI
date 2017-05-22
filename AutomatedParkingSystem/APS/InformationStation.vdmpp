@@ -6,8 +6,8 @@ pure public findFreeGarage : () ==> [ElevationGarage]
 findFreeGarage() == (
 	let freeGarage in seq APS`garages be st freeGarage.isGarageFree()
 	in
-		return freeGarage;) 
-pre ((APS`garages <> []) => (exists x in seq APS`garages & x.isGarageFree()));
+		return freeGarage;)
+pre APS`garages <> [] and exists x in seq APS`garages & x.isGarageFree();
 		 
 public retriveCar : PaymentInfo * LicensePlate ==> ()
 retriveCar(ppi, plp) == (
@@ -37,7 +37,7 @@ retriveCar(ppi, plp) == (
 		else APS`io.print("STATUS: Error - <PaymentCardInvalid>\n")
 else APS`io.print("STATUS: Error - <NoFreeGarages>\n");)
 pre APS`garageDB <> {};
-	
+
 public registerCar : LicensePlate * PaymentInfo * Time ==> () 
 registerCar(plp, ppi, ptime) ==
 	APS`garageDB := APS`garageDB union {mk_ParkedCarInfo(plp, ppi, ptime)}
@@ -49,7 +49,7 @@ unRegisterCar(plp) ==
 	parkedCarInfo in set APS`garageDB & parkedCarInfo.license = plp}
 pre exists x in set APS`garageDB & x.license = plp;
 
-public printRetrivingReceipt : LicensePlate * PaymentInfo * Time * ParkingFee ==> ()
+private printRetrivingReceipt : LicensePlate * PaymentInfo * Time * ParkingFee ==> ()
 printRetrivingReceipt(plp, ppi, ptime, pfee) == (
 		APS`io.print("---------------------\n"); 
 		APS`io.print("  Receiving Receipt  \n"); 
@@ -57,12 +57,11 @@ printRetrivingReceipt(plp, ppi, ptime, pfee) == (
 		APS`io.print("Parked at time: "); APS`io.print(ptime); APS`io.print("\n");
 		APS`io.print("Current time: "); APS`io.print(World`timeRef.getTime()); APS`io.print("\n");
 		APS`io.print("Payment method: ");
-		if is_ParkingCard(ppi)
-			then APS`io.print("Parking Card\n")
-		else APS`io.print("Credit Card\n");
+		cases is_ParkingCard(ppi):
+			true -> APS`io.print("Parking Card\n"),
+			false -> APS`io.print("Credit Card\n")
+		end;
 		APS`io.print("Payment fee: "); APS`io.print(pfee); APS`io.print("\n");
 		APS`io.print("---------------------\n"););
-
-
 
 end InformationStation

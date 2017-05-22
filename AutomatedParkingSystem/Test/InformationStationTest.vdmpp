@@ -1,11 +1,9 @@
 class InformationStationTest is subclass of TestCase, GLOBAL
 
-
 values
 
 car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "PT", 49000), true);
 car2 : Car = mk_Car(mk_LicensePlate(<Other>, "GT", 49001), true); 
-
 
 parkingTime1 : real = 1;
 parkingTime2 : real = 5;
@@ -37,6 +35,5 @@ registerAndUnregisterCarTest() == (
 	assertTrue(APS`garageDB = {mk_ParkedCarInfo(car2.licensePlate,payInfo_park1,parkingTime2)});
 	informationStation.unRegisterCar(car2.licensePlate);
 	assertTrue(APS`garageDB = {}););
-
 
 end InformationStationTest

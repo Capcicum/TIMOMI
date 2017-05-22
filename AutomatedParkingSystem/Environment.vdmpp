@@ -76,8 +76,7 @@ createSignal() ==
 			 			    		 		else retrivingDone := true)
 			 			    else retrivingDone := true))
 	 else busy := false)	
-pre parkingUsers <> [] => retrivingUsers <> [] 
-post is_((APS`informationStation.findFreeGarage)(), ElevationGarage);			 			    		 				 
+pre parkingUsers <> [] => retrivingUsers <> [];		 			    		 				 
 			 			    		 				 			 	  
 public Run : () ==> ()
 Run() == (

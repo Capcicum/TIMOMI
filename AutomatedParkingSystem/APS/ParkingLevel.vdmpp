@@ -1,42 +1,46 @@
 class ParkingLevel is subclass of GLOBAL
 
 instance variables
-	parkingSpots : set of Car := {};
-inv forall x,y in set parkingSpots &
-	x <> y => x.licensePlate <> y.licensePlate
+parkingSpots : map LicensePlate to Car := {|->};
+inv forall x,y in set rng parkingSpots & x <> y => x.licensePlate <> y.licensePlate
 
 operations
 
 public parkCar : Car ==> ()
-parkCar(pc) ==
-	parkingSpots := parkingSpots union {pc}
-pre pc.licensePlate not in set {x.licensePlate | x in set parkingSpots};
+parkCar(pcar) ==
+	parkingSpots := parkingSpots munion {pcar.licensePlate |-> pcar}
+pre forall i in set rng parkingSpots & pcar.licensePlate <> i.licensePlate;
 
 public retriveCar : LicensePlate ==> Car
 retriveCar(plp) == (
-	dcl car : Car := getCar(plp);
-	removeCar(plp);
-	return car);
+	dcl car : Car := parkingSpots(plp); 
+	parkingSpots := {plp} <-: parkingSpots;
+	return car;)
+pre plp in set dom parkingSpots;
 	
-public removeCar : LicensePlate ==> ()
-removeCar(plp) ==
-	parkingSpots := parkingSpots \ {getCar(plp)}
-pre isCarParked(plp, parkingSpots);
-
-public getCar : LicensePlate ==> Car
-getCar(plp) ==
-	let Car in set parkingSpots be st Car.licensePlate = plp
-	in return Car
-pre isCarParked(plp,parkingSpots);
-
-public getParkingSpots : () ==> set of Car
-getParkingSpots() == 
-	return parkingSpots;
-
+-- For testing purpose only:
+pure public getParkingSpotsMap : () ==> map LicensePlate to Car
+getParkingSpotsMap() == 
+  return  parkingSpots;
+ 
 functions
 
-private isCarParked: LicensePlate * set of Car -> bool
-isCarParked(plpi,pps) ==
-	exists Car in set pps & Car.licensePlate = plpi
+-- For testing purpose only:
+public getNumberOfParkedCars : map LicensePlate to Car -> nat
+getNumberOfParkedCars(pps) ==
+	if pps = {|->}
+	then 0
+	else
+		let y in set dom pps 
+		in 
+			1 + getNumberOfParkedCars(({y} <-: pps))
+measure Card;
 
+Card : map LicensePlate to Car -> nat
+Card(pps) ==
+	card dom pps
+ 
+  
 end ParkingLevel
+
+

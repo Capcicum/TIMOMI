@@ -3,9 +3,6 @@ class ValidationServiceTest is subclass of TestCase, GLOBAL
 values
 car1 : Car = mk_Car(mk_LicensePlate(<Danish>, "GF", 49000), true); 
 car2 : Car = mk_Car(mk_LicensePlate(<Danish>, "BH", 10000), true);
---car3 : Car = mk_Car(mk_LicensePlate(<European>, "GI", 10000), true);
---car4 : Car = mk_Car(mk_LicensePlate(<Danish>, "GO", 5400), true); 
---car5 : Car = mk_Car(mk_LicensePlate(<Other>, "ее", 80000), true);
 
 payInfo_cred1 : PaymentInfo = [1,2,3,4,5,6];
 payInfo_cred2 : PaymentInfo = [0,0,0,0,0,0];
@@ -27,26 +24,19 @@ protected validateLicensePlateTest : () ==> ()
 validateLicensePlateTest() == (
 	dcl validationService : ValidationService := new ValidationService();
 	assertTrue(validationService.validateLicensePlate(car1.licensePlate) = true););
-	--assertTrue(validationService.validateLicensePlate(car5.licensePlate) = false););
 
 protected validateRegistrationLettersTest : () ==> ()
 validateRegistrationLettersTest() ==	(
 	dcl validationService : ValidationService := new ValidationService();
 	assertTrue(validationService.validateRegistrationLetters(car1.licensePlate) = true);
 	assertTrue(validationService.validateRegistrationLetters(car2.licensePlate) = false););
-	--assertTrue(validationService.validateRegistrationLetters(car3.licensePlate) = false);
-	--assertTrue(validationService.validateRegistrationLetters(car4.licensePlate) = false);
-	--assertTrue(validationService.validateRegistrationLetters(car5.licensePlate) = false););
-	
+
 protected validateNumberSeriesTest : () ==> ()
 validateNumberSeriesTest() ==	(
 	dcl validationService : ValidationService := new ValidationService();
 	assertTrue(validationService.validateNumberSeries(car1.licensePlate) = true);
 	assertTrue(validationService.validateNumberSeries(car2.licensePlate) = false););
-	--assertTrue(validationService.validateNumberSeries(car3.licensePlate) = false);
-	--assertTrue(validationService.validateNumberSeries(car4.licensePlate) = false);
-	--assertTrue(validationService.validateNumberSeries(car5.licensePlate) = false););
-	
+
 protected validatePaymentInfoTest : () ==> () 
 validatePaymentInfoTest() == (
 	dcl validationService : ValidationService := new ValidationService();
