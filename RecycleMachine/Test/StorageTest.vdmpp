@@ -20,7 +20,6 @@ runTest() ==
 	StorePreTest();
 	ExistValidEmptyBoxTest();
 	StoreTest();
-	--StorageAvailableTest();
 	ClearStorageTest(););
 	
 protected StorageInvTest : () ==> ()
@@ -69,11 +68,6 @@ StoreTest() ==
 			in 
 				assertTrue(card (dom y.ri) = 2); 
 		);
-
-protected StorageAvailableTest : () ==> ()
-StorageAvailableTest() ==
-	(	dcl storage : Storage := new Storage(4, 4);
-		storage.Store(item1));
 		
 protected ClearStorageTest : () ==> ()
 ClearStorageTest() ==

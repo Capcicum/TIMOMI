@@ -1,4 +1,4 @@
-class RecycleRulesTest is subclass of TestCase, GLOBAL
+class RecycleServiceTest is subclass of TestCase, GLOBAL
 	
 values
  
@@ -42,7 +42,7 @@ IsRecycleValidTest() ==
 protected GetBoxPriceTest : () ==> ()
 GetBoxPriceTest() == 
 	(dcl rr : RecycleService := new RecycleService();
-	assertTrue(rr.GetBoxPrice() = 12.5));
+	assertTrue(rr.GetBoxPrice() = 12.5)); 
 	
 
-end RecycleRulesTest
+end RecycleServiceTest

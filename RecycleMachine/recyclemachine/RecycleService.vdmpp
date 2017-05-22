@@ -46,5 +46,5 @@ mk_ItemProperties(<B>, true, nil) |-> 1.5,
 mk_ItemProperties(<C>, true, nil) |-> 3};
 
 BoxPrice = 12.5;
-	
+
 end RecycleService

@@ -1,0 +1,28 @@
+class StorageTraceTest is subclass of GLOBAL
+
+
+instance variables
+
+sto : Storage := new Storage(100, 100);
+
+values
+RecylceMarksSet = {<A>, <B>, <C>, nil};
+RecycleShapes = {<Disp>,  <Can>, <GUHL>, <GOHL>, <PUL>, <POL>, nil};
+RecycleBarcode = {true, false};
+
+traces
+
+TestIsValid : 
+	let x in set RecylceMarksSet
+	in 
+		let y in set RecycleShapes
+		in
+			let z in set RecycleBarcode
+			in
+				let item = mk_Item(mk_token(1), mk_ItemProperties(x, z, y))
+				in 
+					(sto.Store(item);
+					sto.ClearItemStorage())
+
+end StorageTraceTest
+
