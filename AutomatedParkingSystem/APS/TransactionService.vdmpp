@@ -1,7 +1,7 @@
 class TransactionService is subclass of GLOBAL
 
 values
-public parkingRateDB : map CountryIdentifier to ParkingFee
+public parkingRateDB : inmap CountryIdentifier to ParkingFee
 					= {<Danish> |-> 5,
 						 <European> |-> 10,
 						 <Other> |-> 15};

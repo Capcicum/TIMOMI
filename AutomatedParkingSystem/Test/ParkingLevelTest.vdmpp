@@ -8,45 +8,32 @@ operations
 protected runTest : () ==> ()
 runTest() == 
 	(parkCarTest();
-		removeCarTest();
-		getCarTest();
-		retriveCarTest(););
-	
+	 retriveCarTest();
+	 GetNumberOfParkedCarsTest(););
+
 protected parkCarTest : () ==> ()
 parkCarTest() == (
-	dcl parkingLevel : ParkingLevel := new ParkingLevel();
-	parkingLevel.parkCar(car1);
-	assertTrue(card parkingLevel.getParkingSpots() = 1);
-	parkingLevel.parkCar(car2);
-	assertTrue(parkingLevel.getCar(car1.licensePlate).licensePlate = car1.licensePlate);
-	assertTrue(parkingLevel.getCar(car2.licensePlate) = car2);
-	assertTrue(card parkingLevel.getParkingSpots() = 2););
-
-protected removeCarTest : () ==> ()
-removeCarTest() == (
-	dcl parkingLevel : ParkingLevel := new ParkingLevel();
-	parkingLevel.parkCar(car1);
-	parkingLevel.parkCar(car2);
-	assertTrue(card parkingLevel.getParkingSpots() = 2);
-	parkingLevel.removeCar(car1.licensePlate);
-	parkingLevel.removeCar(car2.licensePlate);	
-	assertTrue(card parkingLevel.getParkingSpots() = 0););
-
-protected getCarTest : () ==> ()
-getCarTest() == (
-	dcl parkingLevel : ParkingLevel := new ParkingLevel();
-	parkingLevel.parkCar(car1);
-	parkingLevel.parkCar(car2);
-	assertTrue(is_Car(parkingLevel.getCar(car1.licensePlate)));
-	assertTrue(is_Car(parkingLevel.getCar(car2.licensePlate))););
+  dcl parkingLevel : ParkingLevel := new ParkingLevel();
+  parkingLevel.parkCar(car1);
+  assertTrue(parkingLevel.getNumberOfParkedCars(parkingLevel.getParkingSpotsMap()) = 1);
+  parkingLevel.parkCar(car2);
+	assertTrue(parkingLevel.getNumberOfParkedCars(parkingLevel.getParkingSpotsMap()) = 2););
 
 protected retriveCarTest : () ==> ()
 retriveCarTest() == (
 	dcl parkingLevel : ParkingLevel := new ParkingLevel();
 	parkingLevel.parkCar(car1);
 	parkingLevel.parkCar(car2);
-	assertTrue(is_Car(parkingLevel.retriveCar(car1.licensePlate)));
-	assertTrue(is_Car(parkingLevel.retriveCar(car2.licensePlate)));
-	assertTrue(card parkingLevel.getParkingSpots() = 0););
+	assertTrue(parkingLevel.getNumberOfParkedCars(parkingLevel.getParkingSpotsMap()) = 2);
+	assertTrue(parkingLevel.retriveCar(car1.licensePlate) = car1);
+	assertTrue(parkingLevel.retriveCar(car2.licensePlate) = car2);	
+	assertTrue(parkingLevel.getNumberOfParkedCars(parkingLevel.getParkingSpotsMap()) = 0););
+
+protected GetNumberOfParkedCarsTest : () ==> ()
+GetNumberOfParkedCarsTest() == (
+	dcl parkingLevel : ParkingLevel := new ParkingLevel();
+	parkingLevel.parkCar(car1);
+	parkingLevel.parkCar(car2);
+	assertTrue(parkingLevel.getNumberOfParkedCars(parkingLevel.getParkingSpotsMap()) = 2));
 
 end ParkingLevelTest

@@ -2,7 +2,7 @@ class ElevationGarage is subclass of GLOBAL
 
 types
 
-public GateState = [<Open> | <Closed>];
+public GateState = <Open> | <Closed>;
 
 instance variables
 	EntranceGate : GateState := <Open>;
@@ -82,16 +82,17 @@ public getGateStates: () ==> seq of GateState
 getGateStates() ==
 	return [EntranceGate, ExitGate];
 
-public printParkingReceipt : PaymentInfo ==> ()
+private printParkingReceipt : PaymentInfo ==> ()
 printParkingReceipt(ppi) == (
 		APS`io.print("---------------------\n"); 
 		APS`io.print("  Parking Receipt  \n"); 
 		APS`io.print("Car: "); APS`io.print(parkedCar); APS`io.print("\n");
 		APS`io.print("Current time: "); APS`io.print(World`timeRef.getTime()); APS`io.print("\n");
 		APS`io.print("Payment method: ");
-		if is_ParkingCard(ppi)
-			then APS`io.print("Parking Card\n")
-		else APS`io.print("Credit Card\n");
+		cases is_ParkingCard(ppi):
+			true -> APS`io.print("Parking Card\n"),
+			false -> APS`io.print("Credit Card\n")
+		end;
 		APS`io.print("---------------------\n"););
 
 end ElevationGarage
