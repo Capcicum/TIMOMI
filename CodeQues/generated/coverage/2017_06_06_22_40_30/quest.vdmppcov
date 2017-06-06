@@ -1,0 +1,31 @@
+class quest
+
+instance variables
+
+operations
+
+public Run : () ==> nat
+Run() ==
+	return recursive({1 |-> [1,2,2], 2|->[1,2,3,4]});
+
+functions
+
+recursive : map nat to seq of real -> nat
+recursive(pm) ==
+	if pm = {|->}
+	then 0 
+	else
+		let ps in set dom pm
+		in 
+			if ps mod 2 = 0
+			then
+				len pm(ps) + recursive(({ps} <-: pm))
+			else
+				0 + recursive(({ps} <-: pm))
+measure Card;
+
+Card : map nat to seq of real -> nat
+Card(pm) ==
+	card dom pm;
+
+end quest

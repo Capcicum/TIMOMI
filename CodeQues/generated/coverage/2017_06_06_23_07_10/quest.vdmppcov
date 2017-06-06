@@ -1,0 +1,51 @@
+class quest
+
+instance variables
+
+operations
+
+public Run : () ==> nat * bool * bool * bool *bool
+Run() ==
+let 
+	n1 = recursive({1 |-> [1,2,2], 2|->[1,2,3,4]}),
+	b1 = quest41([[mk_token(1), mk_token(2)],[mk_token(1), mk_token(2)]]),
+	b2 = quest41([[mk_token(1), mk_token(1)],[mk_token(1), mk_token(2)]]),
+	b3 = quest42([[mk_token(1), mk_token(2)],[mk_token(1), mk_token(2)]]),
+	b4 = quest42([[mk_token(1), mk_token(1)],[mk_token(1), mk_token(2)]])
+	in
+	return mk_(n1,b1,b2,b3,b4);
+
+functions
+
+recursive : map nat to seq of real -> nat
+recursive(pm) ==
+	if pm = {|->}
+	then 0 
+	else
+		let ps in set dom pm
+		in 
+			if ps mod 2 = 0
+			then
+				len pm(ps) + recursive(({ps} <-: pm))
+			else
+				0 + recursive(({ps} <-: pm))
+measure Card;
+
+Card : map nat to seq of real -> nat
+Card(pm) ==
+	card dom pm;
+
+quest41 : seq of seq of token -> bool 
+quest41(pss) ==
+	forall p in set inds pss & 
+		forall i, j in set inds pss(p) & 
+			 i<>j => pss(p)(i) <> pss(p)(j);
+
+quest42 : seq of seq of token -> bool 
+quest42(pss) ==
+	not exists p in set inds pss & 
+		exists i, j in set inds pss(p) & 
+			 i<>j and pss(p)(i) = pss(p)(j);
+
+
+end quest
